@@ -19,3 +19,5 @@ foreach(SFML_LIB ${SFML_LIBRARIES})
         COMMAND ${CMAKE_COMMAND} -E copy "${SFML_BUILD_DIRECTORY}/${SFML_LIB}-3.dll" $<TARGET_FILE_DIR:mustard-bastard>
     )
 endforeach()
+
+add_subdirectory(model)
