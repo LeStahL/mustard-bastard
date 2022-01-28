@@ -1,12 +1,12 @@
-#include <InputController.h>
+#include <GameInputController.hpp>
 
 #include <SFML/Window.hpp>
 
-InputController::InputController(GameLogic& gameLogic) :
+GameInputController::GameInputController(GameLogic& gameLogic) :
         gameLogic(gameLogic) {
 }
 
-void InputController::pullEvents() {
+void GameInputController::pullEvents() {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         gameLogic.moveForward();
     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
