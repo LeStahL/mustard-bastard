@@ -5,9 +5,10 @@
 
 
 Model::Model() :
-        player(Player(WorldPosition(6.0, 1, true))) {
-    entities.push_back(new Player(WorldPosition(5.0, 1, true)));
-    entities.push_back(new Player(WorldPosition(5.0, 1, true)));
+        player(Player(GraphicsId::player_standing, WorldPosition(6.0, 1, true))) {
+
+    // add player drawing to layer 1
+    gameViewModel.getLayer(1)->push_back(&player);
 }
 
 std::vector<Entity*>& Model::getEntities() {

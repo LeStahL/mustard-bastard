@@ -4,21 +4,19 @@
 #include <vector>
 #include <Player.h>
 #include <Entity.h>
+#include <GameViewModel.hpp>
 
 class Model {
     public:
-    enum class MenuTextureId {
-        background
-    };
-    enum class MenuSpriteId {
-    };
-    enum class GameTextureId {
-        background
-    };
-    enum class GameSpriteId {
+    enum GraphicsId {
+        menu_background,
+        game_background,
+        player_standing,
+        player_moving
     };
 
     private:
+    GameViewModel gameViewModel;
     Player player;
     std::vector<Entity*> entities;
 
