@@ -14,6 +14,8 @@ add_executable(mustard-bastard Main.cpp
     model/GameViewModel.cpp
     model/Object.cpp
 
+    view/ViewStuff.cpp
+
     logic/GameLogic.cpp
     logic/InputController.cpp
 
@@ -27,6 +29,14 @@ target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/logic/"
     "${PROJECT_SOURCE_DIR}/view/"
     "${PROJECT_SOURCE_DIR}/utility/"
+    utility/Animation.cpp
+)
+target_include_directories(mustard-bastard PUBLIC
+    "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
+    "${PROJECT_SOURCE_DIR}/"
+    "${PROJECT_SOURCE_DIR}/model/"
+    "${PROJECT_SOURCE_DIR}/logic/"
+    "${PROJECT_SOURCE_DIR}/view/"
 )
 target_link_directories(mustard-bastard PUBLIC ${SFML_BUILD_DIRECTORY})
 set(SFML_LIBRARIES

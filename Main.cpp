@@ -10,10 +10,16 @@
 #include <InputController.h>
 #include <GameView.hpp>
 #include "utility/Animation.hpp"
+#include <ViewStuff.h>
+#include <const.h>
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+    printf("Hi.");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Mustard Bastard / 2022 Global Game Jam / Team210 at work (hardly)", sf::Style::Default, settings);
+    printf("Created window.\n");
 
     sf::Clock inputClock;
     sf::Clock animationClock;
@@ -21,9 +27,19 @@ int main()
     GameLogic gameLogic(model);
     InputController inputController(gameLogic);
     GameView gameView(&window, model.getGameViewModel());
-
     gameView.setUp();
     
+    sf::Texture bastardTexture;
+    bastardTexture.loadFromFile("assets/bastard.png");
+
+    sf::Sprite bastardSprite;
+    bastardSprite.setTexture(bastardTexture);
+    Animation bastardAnimation(&bastardSprite, .1);
+    for(int i=0; i<4; ++i)
+        bastardAnimation.addFrame(96*i, 0, 96, 160);
+
+    ViewStuff viewStuff(&window);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -39,6 +55,11 @@ int main()
 
         window.clear(sf::Color::Black);    
         gameView.draw(animationClock.getElapsedTime().asSeconds());
+
+        viewStuff.DrawBackground();
+
+        bastardAnimation.update(animationClock.getElapsedTime().asSeconds());
+        window.draw(bastardSprite);
 
         window.display();
     }
