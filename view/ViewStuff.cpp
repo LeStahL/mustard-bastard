@@ -4,7 +4,7 @@
 
 ViewStuff::ViewStuff(sf::RenderWindow *window) :
         window(window),
-        IsDrawable(0, IsDrawable::DrawType::primitive)
+        IsDrawable(0, IsDrawable::DrawType::primitive, WorldPosition(0, 0, true))
 { }
 
 constexpr float FLOOR_LINE_THICKNESS = 1.5;

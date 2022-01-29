@@ -3,6 +3,7 @@
 #include <WorldPosition.h>
 #include <Player.h>
 #include <Object.h>
+#include <iostream>
 
 const WorldPosition START_PLAYER1 = WorldPosition(20., 1, true);
 
@@ -25,3 +26,8 @@ Player* Model::getPlayer(int player_number) {
 int Model::getNumberOfPlayers() {
     return players.size();
 }
+
+std::vector<Enemy*>& Model::getEnemies() {
+    return enemies;
+}
+

@@ -12,6 +12,7 @@ add_executable(mustard-bastard Main.cpp
     model/WorldPosition.cpp
     model/WorldOrientation.cpp
     model/Player.cpp
+    model/Enemy.cpp
     model/GameViewModel.cpp
     model/Object.cpp
     model/MainMenuState.cpp
