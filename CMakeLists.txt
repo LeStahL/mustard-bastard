@@ -29,6 +29,7 @@ add_executable(mustard-bastard Main.cpp
     controller/MainMenuInputController.cpp
     controller/GameInputController.cpp
     controller/MenuController.cpp
+    controller/HighscoreMenuInputController.cpp
 )
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"

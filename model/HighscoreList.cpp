@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <algorithm>
+#include <iostream>
 
 const std::string HighscoreList::highscoreFileName = "assets/highscore.ini";
 const int HighscoreList::nEntries = 10;
@@ -10,7 +11,7 @@ HighscoreList::HighscoreList()
 {
     std::ifstream t(HighscoreList::highscoreFileName);
     std::string data;
-    while(!t.eof())
+    while(t.peek() != EOF)
     {
         getline(t, data, ':');
         std::string name;
