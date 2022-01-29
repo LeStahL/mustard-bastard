@@ -26,8 +26,12 @@ void GameLogic::move_x(int player_number, int sign) {
 }
 
 void GameLogic::updatePlayer(Player* player, float timeElapsed) {
+    // move model
     player->position.x += player->x_speed * timeElapsed;
+
+    // sync view model (IsDrawable)
     player->x = player->position.x;
+    player->facing_left = player->orientation.facing_left;
 }
 
 int GameLogic::nPlayers() {

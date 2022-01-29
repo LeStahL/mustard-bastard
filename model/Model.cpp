@@ -4,13 +4,15 @@
 #include <Player.h>
 #include <Object.h>
 
+const WorldPosition START_PLAYER1 = WorldPosition(20., 1, true);
+
 Model::Model() {
     // ignore background for now
     // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldPosition(0, 0, true));
     // gameViewModel.getLayer(0)->push_back(&background);
 
     // add player 1
-    players.push_back(new Player(GraphicsId::player_standing, WorldPosition(6.0, 1, true)));
+    players.push_back(new Player(GraphicsId::player_standing, START_PLAYER1));
     // add player 1 drawing to layer 1
     gameViewModel.getLayer(1)->push_back(players[0]);
 

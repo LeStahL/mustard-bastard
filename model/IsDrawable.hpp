@@ -9,9 +9,10 @@ class IsDrawable {
         animation,
         primitive
     };
- 
+
     float x;
     float y;
+    bool facing_left;
 
     protected:
     int graphicId;

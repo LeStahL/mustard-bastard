@@ -1,6 +1,7 @@
 #include <GameView.hpp>
 #include <IsDrawable.hpp>
 #include <iostream>
+#include "ViewConst.h"
 
 GameView::GameView(sf::RenderWindow *renderWindow, GameViewModel& model) :
     _renderWindow(renderWindow),
@@ -19,6 +20,7 @@ bool GameView::draw(double time) {
                 case IsDrawable::DrawType::animation:
                     _animations.at(id).update(time);
                     _sprites.at(id).setPosition(position);
+                    _sprites.at(id).setScale(sf::Vector2f((*it)->facing_left ? -1 : 1, 1));
                     _renderWindow->draw(_sprites.at(id));
                     break;
 
@@ -43,8 +45,12 @@ bool GameView::setUp() {
 
     Animation bastardAnimation(&_sprites[0], .1);
     for(int i=0; i<4; ++i)
-        bastardAnimation.addFrame(96*i, 0, 96, 160);
+        bastardAnimation.addFrame(BASTARD_PIXEL_WIDTH*i, 0, BASTARD_PIXEL_WIDTH, BASTARD_PIXEL_HEIGHT);
     _animations.push_back(bastardAnimation);
+
+    _spriteCenters.clear();
+    _spriteCenters.push_back(sf::Vector2f(0.5 * BASTARD_PIXEL_WIDTH, BASTARD_PIXEL_HEIGHT));
+    _spriteCenters.push_back(sf::Vector2f());
 
     return true;
 }

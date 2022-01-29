@@ -12,6 +12,7 @@ class GameView {
     private:
     std::vector<sf::Texture> _textures;
     std::vector<sf::Sprite> _sprites;
+    std::vector<sf::Vector2f> _spriteCenters;
     std::vector<sf::IntRect> _rects;
     std::vector<Animation> _animations;
 
