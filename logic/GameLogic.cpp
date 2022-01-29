@@ -14,12 +14,15 @@ void GameLogic::update(float timeElapsed) {
 
 void GameLogic::move_x(int player_number, int sign, bool retreat) {
     auto player = model->getPlayer(player_number);
-    bool switch_direction = player->orientation.facing_left && (sign > 0)
-        || !player->orientation.facing_left && (sign < 0);
+    bool would_switch_direction = player->orientation.facing_left && (sign > 0)
+        || !player->orientation.facing_left && (sign < 0)
+        ;
 
-    if (switch_direction) {
+    if (would_switch_direction && !retreat) {
         player->x_speed = 0;
         player->orientation.facing_left = !player->orientation.facing_left;
+    } else if (retreat) {
+        player->x_speed =-sign * PLAYER_SPEED;
     } else {
         player->x_speed = sign * PLAYER_SPEED;
     }
