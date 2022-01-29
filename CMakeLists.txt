@@ -10,8 +10,11 @@ add_executable(mustard-bastard Main.cpp
     model/Entity.cpp
     model/WorldPosition.cpp
     model/Player.cpp
+
+    logic/GameLogic.cpp
+    logic/InputController.cpp
 )
-target_include_directories(mustard-bastard PUBLIC "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/" "${PROJECT_SOURCE_DIR}/model/")
+target_include_directories(mustard-bastard PUBLIC "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/" "${PROJECT_SOURCE_DIR}/model/"  "${PROJECT_SOURCE_DIR}/logic/")
 target_link_directories(mustard-bastard PUBLIC ${SFML_BUILD_DIRECTORY})
 set(SFML_LIBRARIES
     SFML-window

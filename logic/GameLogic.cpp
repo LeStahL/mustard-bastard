@@ -5,8 +5,12 @@ GameLogic::GameLogic(Model& model) :
         moveState(0) {
 }
 
-void GameLogic::update(int timeElapsed) {
+void GameLogic::update(float timeElapsed) {
     updatePlayer(timeElapsed);
+}
+
+void GameLogic::stay() {
+    moveState = 0;
 }
 
 void GameLogic::moveForward() {
@@ -17,6 +21,6 @@ void GameLogic::moveBackward() {
     moveState = -1;
 }
 
-void GameLogic::updatePlayer(int timeElapsed) {
-    model.getPlayer().position.x = PLAYER_SPEED*moveState*timeElapsed;
+void GameLogic::updatePlayer(float timeElapsed) {
+    model.getPlayer().position.x += PLAYER_SPEED*moveState*timeElapsed;
 }

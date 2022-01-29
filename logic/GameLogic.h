@@ -1,7 +1,7 @@
 #ifndef GAMELOGIC_H
 #define GAMELOGIC_H
 
-#include <model/Model.h>
+#include <Model.h>
 
 class GameLogic {
     private:
@@ -12,12 +12,13 @@ class GameLogic {
 
     public:
     GameLogic(Model& model);
-    void update(int elapsedTime);
+    void update(float elapsedTime);
+    void stay();
     void moveForward();
     void moveBackward();
 
     private:
-    void updatePlayer(int elapsedTime);
-}
+    void updatePlayer(float elapsedTime);
+};
 
 #endif /* GAMELOGIC_H */

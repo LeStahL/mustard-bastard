@@ -1,8 +1,11 @@
 #include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 
 #include <stdio.h>
 
 #include <Model.h>
+#include <GameLogic.h>
+#include <InputController.h>
 
 int main()
 {
@@ -10,11 +13,10 @@ int main()
     sf::Window window(sf::VideoMode(960, 540), "My window");
     printf("Created window.\n");
 
-    // create model and print entitiy ids for testing
+    sf::Clock clock;
     Model model;
-    for(auto it = std::begin(model.getEntities()); it != std::end(model.getEntities()); ++it) {
-        printf("%d\n", (*it)->id);
-    }
+    GameLogic gameLogic(model);
+    InputController inputController(gameLogic);
 
     while (window.isOpen())
     {
@@ -23,6 +25,11 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            sf::Time time = clock.getElapsedTime();
+            clock.restart();
+            inputController.pullEvents();
+            gameLogic.update(time.asSeconds());
         }
     }
 

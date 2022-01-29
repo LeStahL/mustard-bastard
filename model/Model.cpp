@@ -5,7 +5,7 @@
 
 
 Model::Model() :
-        player(Player(WorldPosition(5.0, 1, true))) {
+        player(Player(WorldPosition(6.0, 1, true))) {
     entities.push_back(new Player(WorldPosition(5.0, 1, true)));
     entities.push_back(new Player(WorldPosition(5.0, 1, true)));
 }
