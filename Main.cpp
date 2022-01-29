@@ -10,13 +10,14 @@
 #include <InputController.h>
 #include "utility/Animation.hpp"
 #include <ViewStuff.h>
+#include <const.h>
 
 int main()
 {
     printf("Hi.");
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode(960, 540), "Mustard Bastard / 2022 Global Game Jam / Team210 at work (hardly)", sf::Style::Default, settings);
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Mustard Bastard / 2022 Global Game Jam / Team210 at work (hardly)", sf::Style::Default, settings);
     printf("Created window.\n");
 
     sf::Clock inputClock;
@@ -51,10 +52,10 @@ int main()
 
         window.clear(sf::Color::Black);
 
+        viewStuff.DrawBackground();
+
         bastardAnimation.update(animationClock.getElapsedTime().asSeconds());
         window.draw(bastardSprite);
-
-        viewStuff.ViewSomeLines();
 
         window.display();
     }

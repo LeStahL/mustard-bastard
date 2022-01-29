@@ -18,7 +18,9 @@ add_executable(mustard-bastard Main.cpp
 
     utility/Animation.cpp
 )
-target_include_directories(mustard-bastard PUBLIC "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
+target_include_directories(mustard-bastard PUBLIC
+    "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
+    "${PROJECT_SOURCE_DIR}/"
     "${PROJECT_SOURCE_DIR}/model/"
     "${PROJECT_SOURCE_DIR}/logic/"
     "${PROJECT_SOURCE_DIR}/view/"

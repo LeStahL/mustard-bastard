@@ -11,7 +11,7 @@ class ViewStuff
 
     public:
         ViewStuff(sf::RenderWindow *window);
-        void ViewSomeLines();
+        void DrawBackground();
 };
 
 #endif
