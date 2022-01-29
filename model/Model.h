@@ -14,6 +14,8 @@ class Model {
     enum GraphicsId {
         player_standing,
         zombie,
+        iceberg,
+        cat,
         game_background
     };
 

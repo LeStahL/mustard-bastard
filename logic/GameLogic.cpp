@@ -25,13 +25,55 @@ void GameLogic::updateEnemies(float timeElapsed) {
     for(Enemy* enemy : model.getEnemies()) {
         enemy->position.x -= enemy->speed*timeElapsed;
         enemy->x = enemy->position.x;
+
+        if(isEnemyToFarAway(enemy))
+            killEnemy(enemy);
     }
 }
 
 void GameLogic::spawnEnemy() {
-    Enemy* enemy = new Enemy(Model::GraphicsId::zombie, WorldPosition(1000.0f, 0, true));
+    Model::GraphicsId graphicsId;
+    switch(rand()%3) {
+        case 0:
+            graphicsId = Model::GraphicsId::zombie;
+            break;
+        case 1:
+            graphicsId = Model::GraphicsId::iceberg;
+            break;
+        case 2:
+            graphicsId = Model::GraphicsId::cat;
+            break;
+    }
+
+    Enemy* enemy = new Enemy(graphicsId, WorldPosition(1000.0f, 0, true));
     model.getEnemies().push_back(enemy);
     model.getGameViewModel().getLayer(1)->push_back(enemy);
+}
+
+bool GameLogic::isEnemyToFarAway(Enemy* enemy) {
+    return abs(enemy->position.x) > 2000; // TODO Screen width
+}
+
+void GameLogic::killEnemy(Enemy *enemy) {
+    int id = enemy->id;
+
+    for(auto it = model.getEnemies().begin(); it != model.getEnemies().end(); it++) {
+        if((*it)->id == id) {
+            model.getEnemies().erase(it);
+            break;
+        }
+    }
+
+    for(int i = 0; i < Z_LAYER_COUNT; i++) {
+        auto layer = *model.getGameViewModel().getLayer(i);
+
+        for(auto it = layer.begin(); it != layer.end(); it++) {
+            if((*it)->id == id) {
+                layer.erase(it);
+                return;
+            }
+        }
+    }
 }
 
 void GameLogic::stay() {

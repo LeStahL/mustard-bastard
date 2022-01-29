@@ -21,6 +21,8 @@ class GameLogic {
     void updatePlayer(float elapsedTime);
     void updateEnemies(float elapsedTime);
     void spawnEnemy();
+    bool isEnemyToFarAway(Enemy* enemy);
+    void killEnemy(Enemy* enemy);
 };
 
 #endif /* GAMELOGIC_H */

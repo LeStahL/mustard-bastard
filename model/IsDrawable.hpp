@@ -1,6 +1,8 @@
 #pragma once
 
-class IsDrawable {
+#include <Entity.h>
+
+class IsDrawable : public Entity { // each drawable item is also an entity
     public:
     enum class DrawType {
         texture,
@@ -16,7 +18,7 @@ class IsDrawable {
     DrawType drawType;
 
     public:
-    IsDrawable(int graphicId, DrawType drawType);
+    IsDrawable(int graphicId, DrawType drawType, WorldPosition position);
     int getGraphicId();
     DrawType getDrawType();
     virtual void customDraw(double time) {};

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Entity.h>
 #include <IsDrawable.hpp>
 
-class Enemy : public Entity, public IsDrawable {
+class Enemy : public IsDrawable {
     public:
     float health;
     float speed;
