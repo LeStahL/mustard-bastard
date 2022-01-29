@@ -6,19 +6,17 @@
 class GameLogic {
     private:
     Model& model;
-    int moveState;
 
     const double PLAYER_SPEED = 160.0;
 
     public:
     GameLogic(Model& model);
     void update(float elapsedTime);
-    void stay();
-    void moveForward();
-    void moveBackward();
+    void move_x(int player, int sign);
+    int nPlayers();
 
     private:
-    void updatePlayer(float elapsedTime);
+    void updatePlayer(Player* player, float elapsedTime);
 };
 
 #endif /* GAMELOGIC_H */

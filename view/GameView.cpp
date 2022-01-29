@@ -3,8 +3,8 @@
 #include <iostream>
 
 GameView::GameView(sf::RenderWindow *renderWindow, GameViewModel& model) :
-        _renderWindow(renderWindow),
-        model(model) {
+    _renderWindow(renderWindow),
+    model(model) {
 }
 
 bool GameView::draw(double time) {

@@ -1,28 +1,35 @@
 #include <GameLogic.h>
+#include <iostream>
 
 GameLogic::GameLogic(Model& model) :
-        model(model),
-        moveState(0) {
+    model(model) {
 }
 
 void GameLogic::update(float timeElapsed) {
-    updatePlayer(timeElapsed);
-
-    model.getPlayer().x = model.getPlayer().position.x;
+    for (int p = 0; p < nPlayers(); p++)
+    {
+        updatePlayer(model.getPlayer(p), timeElapsed);
+    }
 }
 
-void GameLogic::stay() {
-    moveState = 0;
+void GameLogic::move_x(int player_number, int sign) {
+    auto player = model.getPlayer(player_number);
+    bool switch_direction = player->orientation.facing_left && (sign > 0)
+        || !player->orientation.facing_left && (sign < 0);
+
+    if (switch_direction) {
+        player->x_speed = 0;
+        player->orientation.facing_left = !player->orientation.facing_left;
+    } else {
+        player->x_speed = sign * PLAYER_SPEED;
+    }
 }
 
-void GameLogic::moveForward() {
-    moveState = 1;
+void GameLogic::updatePlayer(Player* player, float timeElapsed) {
+    player->position.x += player->x_speed * timeElapsed;
+    player->x = player->position.x;
 }
 
-void GameLogic::moveBackward() {
-    moveState = -1;
-}
-
-void GameLogic::updatePlayer(float timeElapsed) {
-    model.getPlayer().position.x += PLAYER_SPEED*moveState*timeElapsed;
+int GameLogic::nPlayers() {
+    return model.getNumberOfPlayers();
 }

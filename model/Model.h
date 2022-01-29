@@ -18,8 +18,8 @@ class Model {
 
     private:
     GameViewModel gameViewModel;
-    Player player;
-    Object background;
+    std::vector<Player*> players;
+    // Object background;
     std::vector<Entity*> entities;
 
     public:
@@ -28,7 +28,8 @@ class Model {
     GameViewModel& getGameViewModel();
 
     std::vector<Entity*>& getEntities();
-    Player& getPlayer();
+    Player* getPlayer(int player_number);
+    int getNumberOfPlayers();
 };
 
 #endif /* MODEL_H */

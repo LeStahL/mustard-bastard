@@ -1,7 +1,6 @@
 #ifndef VIEW_STUFF_H
 #define VIEW_STUFF_H
 
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
 class ViewStuff

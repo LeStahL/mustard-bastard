@@ -3,7 +3,7 @@
 
 class WorldOrientation {
     public:
-        float rotation ;
+        float rotation;
         bool facing_left;
 
         WorldOrientation(float rotation, bool facing_left);

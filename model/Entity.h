@@ -11,6 +11,7 @@ class Entity {
         int id;
         WorldPosition position;
         WorldOrientation orientation;
+        float x_speed = 0;
 
     public:
         Entity(WorldPosition position, WorldOrientation orientation) :
