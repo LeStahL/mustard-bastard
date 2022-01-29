@@ -18,6 +18,8 @@
 #include <const.h>
 #include <GameView.hpp>
 
+constexpr bool QM_QUICKDEVEL = true;
+
 int main()
 {
     sf::ContextSettings settings;
@@ -27,13 +29,13 @@ int main()
     sf::Clock inputClock;
     sf::Clock gameClock;
     sf::Clock animationClock;
-    
+
     ViewStuff viewStuff(&window);
     Model model(&viewStuff);
     GameLogic gameLogic(model);
     GameInputController gameInputController(gameLogic);
     GameView gameView(&window, model.getGameViewModel());
-    
+
     MenuState menuState;
     MainMenuState mainMenuState;
     MainMenuView mainMenuView(&window, &menuState, &mainMenuState);
@@ -41,7 +43,7 @@ int main()
     MainMenuInputController mainMenuInputController(&mainMenuState, &menuController);
     menuController.setGameInputController(&gameInputController);
     menuController.setMainMenuInputController(&mainMenuInputController);
-    menuController.enterState(MenuState::MenuType::MainMenu);
+    menuController.enterState(QM_QUICKDEVEL ? MenuState::Game : MenuState::MenuType::MainMenu);
 
     while (window.isOpen())
     {
