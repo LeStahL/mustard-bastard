@@ -11,4 +11,4 @@ class WorldPosition {
         void toggleWorld();
 };
 
-#endif /* WOLRD_POSITION_H */
+#endif /* WORLD_POSITION_H */

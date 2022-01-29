@@ -6,7 +6,7 @@
 class Object : public Entity {
     public:
     Object();
-    
-}
+
+};
 
 #endif /* OBJECT_H */
