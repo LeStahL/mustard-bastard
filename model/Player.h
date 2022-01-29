@@ -5,7 +5,7 @@
 
 class Player : public Entity {
     public:
-        Player();
+        Player(WorldPosition position);
 };
 
 #endif /* PLAYER_H */

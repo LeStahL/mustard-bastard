@@ -4,13 +4,15 @@
 #include <WorldPosition.h>
 
 class Entity {
-    protected:
+    private:
+        static int id_counter;
+    public:
         int id;
         WorldPosition position;
 
     public:
-        Entity(int id, WorldPosition position) :
-        id(id),
+        Entity(WorldPosition position) :
+        id(id_counter++),
         position(position) {
 
         }

@@ -5,9 +5,13 @@ project(mustard-bastard-model)
 add_executable(${PROJECT_NAME}-test
     modelTest.cpp
 
+    Model.h
     Entity.h
+    WorldPosition.h
     Player.h
 
+    Model.cpp
+    Entity.cpp
     WorldPosition.cpp
     Player.cpp
 )
