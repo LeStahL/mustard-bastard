@@ -20,6 +20,8 @@ bool GameView::draw(double time) {
                     _animations.at(id).update(time);
                     _sprites.at(id).setPosition(position);
                     _renderWindow->draw(_sprites.at(id));
+
+                    std::cout <<  "Layer: " << layer << " id: " << id << std::endl;
                     break;
 
                 case IsDrawable::DrawType::texture:
@@ -37,18 +39,23 @@ bool GameView::draw(double time) {
 }
 
 bool GameView::setUp() {
-    _textures.resize(2);
+    _textures.resize(3);
     _textures[0].loadFromFile("assets/bastard.png");
-    _textures[1].loadFromFile("assets/mainscreen.png");
+    _textures[1].loadFromFile("assets/Zombie_01.png");
+    _textures[2].loadFromFile("assets/mainscreen.png");
 
-    _sprites.resize(2);
+    _sprites.resize(3);
     _sprites[0].setTexture(_textures[0]);
     _sprites[1].setTexture(_textures[1]);
+    _sprites[2].setTexture(_textures[2]);
 
-    Animation bastardAnimation(&_sprites[0], .1);
+    _animations.push_back(Animation(&_sprites[0], .1));
     for(int i=0; i<4; ++i)
-        bastardAnimation.addFrame(96*i, 0, 96, 160);
-    _animations.push_back(bastardAnimation);
+        _animations[0].addFrame(96*i, 0, 96, 160);
+
+    _animations.push_back(Animation(&_sprites[1], .1));
+    for(int i=0; i<2; ++i)
+        _animations[1].addFrame(150*i, 0, 150, 210);
 
     return true;
 }

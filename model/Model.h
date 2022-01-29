@@ -4,6 +4,7 @@
 #include <vector>
 #include <Player.h>
 #include <Entity.h>
+#include <Enemy.hpp>
 #include <Object.h>
 #include <GameViewModel.hpp>
 #include <ViewStuff.h>
@@ -12,9 +13,8 @@ class Model {
     public:
     enum GraphicsId {
         player_standing,
-        game_background,
-        player_moving,
-        menu_background
+        zombie,
+        game_background
     };
 
     private:
@@ -22,6 +22,7 @@ class Model {
     ViewStuff* viewStuff;
     Player player;
     Object background;
+    std::vector<Enemy*> enemies;
     std::vector<Entity*> entities;
 
     public:
@@ -30,6 +31,7 @@ class Model {
     GameViewModel& getGameViewModel();
 
     std::vector<Entity*>& getEntities();
+    std::vector<Enemy*>& getEnemies();
     Player& getPlayer();
 };
 
