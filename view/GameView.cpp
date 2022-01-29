@@ -15,12 +15,14 @@ bool GameView::draw(double time) {
             int id = (*it)->getGraphicId();
             sf::Vector2f position((*it)->x, (*it)->y);
 
-            std::cout << position.x << std::endl;
-
             switch((*it)->getDrawType()) {
                 case IsDrawable::DrawType::animation:
                     _animations.at(id).update(time);
                     _sprites.at(id).setPosition(position);
+                    _renderWindow->draw(_sprites.at(id));
+                    break;
+
+                case IsDrawable::DrawType::texture:
                     _renderWindow->draw(_sprites.at(id));
                     break;
             }
@@ -31,19 +33,15 @@ bool GameView::draw(double time) {
 }
 
 bool GameView::setUp() {
-    sf::Texture bastardTexture;
-    
-    if( bastardTexture.loadFromFile("assets/bastard.png")) {
-        std::cout << "loaded" << std::endl;
-    }
-   
-    _textures.push_back(bastardTexture);
+    _textures.resize(2);
+    _textures[0].loadFromFile("assets/bastard.png");
+    _textures[1].loadFromFile("assets/mainscreen.png");
 
-    sf::Sprite bastardSprite;
-    bastardSprite.setTexture(_textures.back());
-    _sprites.push_back(bastardSprite);
+    _sprites.resize(2);
+    _sprites[0].setTexture(_textures[0]);
+    _sprites[1].setTexture(_textures[1]);
 
-    Animation bastardAnimation(&_sprites.back(), .1);
+    Animation bastardAnimation(&_sprites[0], .1);
     for(int i=0; i<4; ++i)
         bastardAnimation.addFrame(96*i, 0, 96, 160);
     _animations.push_back(bastardAnimation);

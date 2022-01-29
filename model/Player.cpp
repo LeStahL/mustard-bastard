@@ -7,7 +7,7 @@ Player::Player() :
         
 }
 
-Player::Player(int graphicType, WorldPosition position) :
+Player::Player(int graphicId, WorldPosition position) :
         IsDrawable(graphicId, DrawType::animation),
         Entity(position) {
 

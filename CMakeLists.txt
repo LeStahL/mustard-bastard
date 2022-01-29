@@ -12,6 +12,7 @@ add_executable(mustard-bastard Main.cpp
     model/WorldPosition.cpp
     model/Player.cpp
     model/GameViewModel.cpp
+    model/Object.cpp
 
     logic/GameLogic.cpp
     logic/InputController.cpp

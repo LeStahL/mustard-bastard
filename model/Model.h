@@ -4,20 +4,22 @@
 #include <vector>
 #include <Player.h>
 #include <Entity.h>
+#include <Object.h>
 #include <GameViewModel.hpp>
 
 class Model {
     public:
     enum GraphicsId {
         player_standing,
+        game_background,
         player_moving,
-        menu_background,
-        game_background
+        menu_background
     };
 
     private:
     GameViewModel gameViewModel;
     Player player;
+    Object background;
     std::vector<Entity*> entities;
 
     public:
