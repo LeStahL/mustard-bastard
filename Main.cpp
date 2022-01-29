@@ -7,7 +7,7 @@
 int main()
 {
     printf("Hi.");
-    sf::Window window(sf::VideoMode(800, 600), "My window");
+    sf::Window window(sf::VideoMode(960, 540), "My window");
     printf("Created window.\n");
 
     // create model and print entitiy ids for testing
