@@ -7,6 +7,8 @@ GameLogic::GameLogic(Model& model) :
 
 void GameLogic::update(float timeElapsed) {
     updatePlayer(timeElapsed);
+
+    model.getPlayer().x = model.getPlayer().position.x;
 }
 
 void GameLogic::stay() {

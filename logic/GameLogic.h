@@ -8,7 +8,7 @@ class GameLogic {
     Model& model;
     int moveState;
 
-    const double PLAYER_SPEED = 0.5;
+    const double PLAYER_SPEED = 100.0;
 
     public:
     GameLogic(Model& model);
