@@ -7,6 +7,9 @@
 #include "GameInputController.hpp"
 #include "MainMenuInputController.hpp"
 #include "InputController.hpp"
+#include "HighscoreList.hpp"
+#include "HighscoreMenuInputController.hpp"
+#include "HighscoreMenuView.hpp"
 
 class MenuController
 {
@@ -19,11 +22,15 @@ class MenuController
     GameInputController *_gameInputController;
     MainMenuInputController *_mainMenuInputController;
     InputController *_inputController;
+    HighscoreMenuView *_highscoreMenuView;
+    HighscoreMenuInputController *_highscoreMenuInputController;
+    HighscoreList *_highscoreList;
 
     public:
-    MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView);
+    MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView);
     void setMainMenuInputController(MainMenuInputController *mainMenuInputController);
     void setGameInputController(GameInputController *gameInputController);
+    void setHighscoreMenuInputController(HighscoreMenuInputController *highscoreMenuInputController);
     bool canEnterState(MenuState::MenuType type);
     bool exitCurrentState();
     bool enterState(MenuState::MenuType type);

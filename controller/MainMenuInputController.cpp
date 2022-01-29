@@ -2,7 +2,7 @@
 #include "MenuController.hpp"
 #include <SFML/Window.hpp>
 
-const double MainMenuInputController::disableTime = .1;
+const double MainMenuInputController::disableTime = .15;
 
 MainMenuInputController::MainMenuInputController(MainMenuState *mainMenuState, MenuController *menuController)
     : _mainMenuState(mainMenuState)
@@ -32,6 +32,11 @@ void MainMenuInputController::pullEvents() {
         {
             _menuController->exitCurrentState();
             _menuController->enterState(MenuState::MenuType::Exit);
+        }
+        else if(_mainMenuState->selectedIndex() == 2)
+        {
+            _menuController->exitCurrentState();
+            _menuController->enterState(MenuState::MenuType::HighScoreMenu);
         }
         else if(_mainMenuState->selectedIndex() == 0)
         {

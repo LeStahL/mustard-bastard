@@ -6,16 +6,12 @@ class MenuController;
 
 #include <SFML/System.hpp>
 
-class MainMenuInputController : public InputController 
+class HighscoreMenuInputController : public InputController 
 {
     MainMenuState *_mainMenuState;
     MenuController *_menuController;
-    sf::Clock _disableClock;
-    bool _disabled;
 
 public:
-    MainMenuInputController(MainMenuState *mainMenuState, MenuController *menuController);
+    HighscoreMenuInputController(MainMenuState *mainMenuState, MenuController *menuController);
     void pullEvents() override;
-
-    static const double disableTime;
 };

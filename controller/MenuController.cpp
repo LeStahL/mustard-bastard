@@ -1,6 +1,6 @@
 #include "MenuController.hpp"
 
-MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView)
+MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView)
     : _state(state)
     , _window(window)
     , _mainMenuState(mainMenuState)
@@ -8,6 +8,8 @@ MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainM
     , _gameView(gameView)
     , _view(nullptr)
     , _inputController(nullptr)
+    , _highscoreList(highscoreList)
+    , _highscoreMenuView(highscoreMenuView)
 {
 }
 
@@ -19,6 +21,11 @@ void MenuController::setGameInputController(GameInputController *gameInputContro
 void MenuController::setMainMenuInputController(MainMenuInputController *mainMenuInputController)
 {
     _mainMenuInputController = mainMenuInputController;
+}
+
+void MenuController::setHighscoreMenuInputController(HighscoreMenuInputController *highscoreMenuInputController)
+{
+    _highscoreMenuInputController = highscoreMenuInputController;
 }
 
 bool MenuController::canEnterState(MenuState::MenuType type)
@@ -76,11 +83,15 @@ bool MenuController::enterState(MenuState::MenuType type)
         return true;
 
         case MenuState::MenuType::HighScoreMenu:
+        _view = _highscoreMenuView;
+        _inputController = _highscoreMenuInputController;
+        _view->setUp();
         break;
 
         case MenuState::MenuType::MainMenu:
         _view = _mainMenuView;
         _inputController = _mainMenuInputController;
+        _view->setUp();
         return true;
 
         case MenuState::MenuType::PauseMenu:

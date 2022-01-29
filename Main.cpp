@@ -18,8 +18,9 @@
 #include <ViewStuff.h>
 #include <const.h>
 #include <GameView.hpp>
+#include "HighscoreList.hpp"
 
-constexpr bool QM_QUICKDEVEL = true;
+constexpr bool QM_QUICKDEVEL = false;
 
 int main()
 {
@@ -48,11 +49,16 @@ int main()
     MenuState menuState;
     MainMenuState mainMenuState;
     MainMenuView mainMenuView(&window, &menuState, &mainMenuState);
-    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView);
+    HighscoreList highscoreList;
+    HighscoreMenuView highscoreMenuView(&window, &menuState, &highscoreList);
+    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView);
     MainMenuInputController mainMenuInputController(&mainMenuState, &menuController);
+    HighscoreMenuInputController highscoreMenuInputController(&mainMenuState, &menuController);
     menuController.setGameInputController(&gameInputController);
     menuController.setMainMenuInputController(&mainMenuInputController);
+    menuController.setHighscoreMenuInputController(&highscoreMenuInputController);
     menuController.enterState(QM_QUICKDEVEL ? MenuState::Game : MenuState::MenuType::MainMenu);
+
 
     while (window.isOpen())
     {
