@@ -5,8 +5,6 @@
 #include <Player.h>
 #include <Entity.h>
 #include <Object.h>
-#include <GameViewModel.hpp>
-#include <ViewStuff.h>
 
 class Model {
     public:
@@ -18,19 +16,16 @@ class Model {
     };
 
     private:
-    GameViewModel gameViewModel;
-    ViewStuff* viewStuff;
-    Player player;
-    Object background;
+    std::vector<Player*> players;
+    // Object background;
     std::vector<Entity*> entities;
 
     public:
-    Model(ViewStuff* viewStuff);
-
-    GameViewModel& getGameViewModel();
+    Model();
 
     std::vector<Entity*>& getEntities();
-    Player& getPlayer();
+    Player* getPlayer(int player_number);
+    int getNumberOfPlayers();
 };
 
 #endif /* MODEL_H */

@@ -1,13 +1,29 @@
 #include <GameView.hpp>
 #include <IsDrawable.hpp>
 #include <iostream>
+#include "ViewConst.h"
 
 GameView::GameView(sf::RenderWindow *renderWindow, GameViewModel& model) :
-        _renderWindow(renderWindow),
-        model(model) {
+    _renderWindow(renderWindow),
+    model(model) {
+}
+
+void GameView::adjustSprite(IsDrawable *it)
+{
+    int id = it->getGraphicId();
+    sf::Vector2f position(it->x, it->y);
+    sf::Vector2f shift = _spriteCenters.at(id);
+
+    float x_sign = it->facing_left ? -1 : 1;
+    _sprites.at(id).setPosition(position - sf::Vector2f(x_sign * shift.x, shift.y));
+    _sprites.at(id).setScale(sf::Vector2f(x_sign, 1));
 }
 
 bool GameView::draw(double time) {
+
+    // hack: this is for the Entity <-> IsDrawable sync for coordinates etc.
+    model.syncDrawableEntities();
+
     for(size_t layer = 0; layer < Z_LAYER_COUNT; layer++) {
         std::vector<IsDrawable*>* drawableList = model.getLayer(layer);
 
@@ -18,7 +34,7 @@ bool GameView::draw(double time) {
             switch((*it)->getDrawType()) {
                 case IsDrawable::DrawType::animation:
                     _animations.at(id).update(time);
-                    _sprites.at(id).setPosition(position);
+                    adjustSprite(*it);
                     _renderWindow->draw(_sprites.at(id));
                     break;
 
@@ -47,8 +63,12 @@ bool GameView::setUp() {
 
     Animation bastardAnimation(&_sprites[0], .1);
     for(int i=0; i<4; ++i)
-        bastardAnimation.addFrame(96*i, 0, 96, 160);
+        bastardAnimation.addFrame(BASTARD_PIXEL_WIDTH*i, 0, BASTARD_PIXEL_WIDTH, BASTARD_PIXEL_HEIGHT);
     _animations.push_back(bastardAnimation);
+
+    _spriteCenters.clear();
+    _spriteCenters.push_back(sf::Vector2f(0.5 * BASTARD_PIXEL_WIDTH, BASTARD_PIXEL_HEIGHT));
+    _spriteCenters.push_back(sf::Vector2f());
 
     return true;
 }

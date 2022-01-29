@@ -4,26 +4,24 @@
 #include <Player.h>
 #include <Object.h>
 
-Model::Model(ViewStuff* viewStuff) :
-        viewStuff(viewStuff),
-        player(Player(GraphicsId::player_standing, WorldPosition(6.0, 1, true))),
-        background(Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldPosition(0, 0, true))) {
+const WorldPosition START_PLAYER1 = WorldPosition(20., 1, true);
 
-    // add player drawing to layer 1
-    gameViewModel.getLayer(0)->push_back(&background);
-    gameViewModel.getLayer(0)->push_back(viewStuff);
-    gameViewModel.getLayer(1)->push_back(&player);
-    
-}
+Model::Model()
+{
+    // ignore background for now
+    // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldPosition(0, 0, true));
 
-GameViewModel& Model::getGameViewModel() {
-    return gameViewModel;
+    players.push_back(new Player(GraphicsId::player_standing, START_PLAYER1));
 }
 
 std::vector<Entity*>& Model::getEntities() {
     return entities;
 }
 
-Player& Model::getPlayer() {
-    return player;
+Player* Model::getPlayer(int player_number) {
+    return players[player_number];
+}
+
+int Model::getNumberOfPlayers() {
+    return players.size();
 }
