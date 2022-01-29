@@ -9,10 +9,15 @@
 #include <GameLogic.h>
 #include <InputController.h>
 #include "utility/Animation.hpp"
+#include <ViewStuff.h>
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+    printf("Hi.");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(sf::VideoMode(960, 540), "Mustard Bastard / 2022 Global Game Jam / Team210 at work (hardly)", sf::Style::Default, settings);
+    printf("Created window.\n");
 
     sf::Clock inputClock;
     sf::Clock animationClock;
@@ -28,7 +33,9 @@ int main()
     Animation bastardAnimation(&bastardSprite, .1);
     for(int i=0; i<4; ++i)
         bastardAnimation.addFrame(96*i, 0, 96, 160);
-    
+
+    ViewStuff viewStuff(&window);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -46,6 +53,8 @@ int main()
 
         bastardAnimation.update(animationClock.getElapsedTime().asSeconds());
         window.draw(bastardSprite);
+
+        viewStuff.ViewSomeLines();
 
         window.display();
     }
