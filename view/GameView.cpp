@@ -20,8 +20,6 @@ bool GameView::draw(double time) {
                     _animations.at(id).update(time);
                     _sprites.at(id).setPosition(position);
                     _renderWindow->draw(_sprites.at(id));
-
-                    std::cout <<  "Layer: " << layer << " id: " << id << std::endl;
                     break;
 
                 case IsDrawable::DrawType::texture:

@@ -19,6 +19,8 @@ class GameLogic {
 
     private:
     void updatePlayer(float elapsedTime);
+    void updateEnemies(float elapsedTime);
+    void spawnEnemy();
 };
 
 #endif /* GAMELOGIC_H */
