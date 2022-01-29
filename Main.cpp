@@ -46,8 +46,9 @@ int main()
 
         window.clear(sf::Color::Black);
 
-        viewStuff.DrawBackground();
+        
         gameView.draw(animationClock.getElapsedTime().asSeconds());
+        viewStuff.DrawBackground();
 
         window.display();
     }
