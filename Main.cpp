@@ -38,7 +38,7 @@ int main()
     std::cout << "Init GameViewModel?" << std::endl;
     GameViewModel gameViewModel(&viewStuff, &model);
     std::cout << "Init GameLogic?" << std::endl;
-    GameLogic gameLogic(&model);
+    GameLogic gameLogic(&model, &gameViewModel);
     std::cout << "Init GameInputContrller?" << std::endl;
     GameInputController gameInputController(gameLogic);
     std::cout << "Init GameView?" << std::endl;

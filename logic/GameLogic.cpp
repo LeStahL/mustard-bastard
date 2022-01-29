@@ -3,8 +3,8 @@
 #include <random>
 #include <iostream>
 
-GameLogic::GameLogic(Model* model) :
-        model(model) {
+GameLogic::GameLogic(Model* model, GameViewModel* gameViewModel) :
+        model(model), gameViewModel(gameViewModel) {
     srand(1337); // TODO: replace with time
 }
 
@@ -39,11 +39,11 @@ void GameLogic::updateEnemies(float timeElapsed) {
         spawnEnemy();
 
     // move all enemies by their own speed
-    for(Enemy* enemy : model.getEnemies()) {
+    for(Enemy* enemy : model->getEnemies()) {
         enemy->position.x -= enemy->speed*timeElapsed;
         enemy->x = enemy->position.x;
 
-        if(isEnemyToFarAway(enemy))
+        if (isEnemyToFarAway(enemy))
             killEnemy(enemy);
     }
 }
@@ -63,8 +63,8 @@ void GameLogic::spawnEnemy() {
     }
 
     Enemy* enemy = new Enemy(graphicsId, WorldPosition(1000.0f, 0, true));
-    model.getEnemies().push_back(enemy);
-    model.getGameViewModel().getLayer(1)->push_back(enemy);
+    model->getEnemies().push_back(enemy);
+    gameViewModel->getLayer(1)->push_back(enemy);
 }
 
 bool GameLogic::isEnemyToFarAway(Enemy* enemy) {
@@ -74,15 +74,16 @@ bool GameLogic::isEnemyToFarAway(Enemy* enemy) {
 void GameLogic::killEnemy(Enemy *enemy) {
     int id = enemy->id;
 
-    for(auto it = model.getEnemies().begin(); it != model.getEnemies().end(); it++) {
+    for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
         if((*it)->id == id) {
-            model.getEnemies().erase(it);
+            model->getEnemies().erase(it);
             break;
         }
     }
 
+    /*
     for(int i = 0; i < Z_LAYER_COUNT; i++) {
-        auto layer = *model.getGameViewModel().getLayer(i);
+        auto layer = gameViewModel->getLayer(i);
 
         for(auto it = layer.begin(); it != layer.end(); it++) {
             if((*it)->id == id) {
@@ -91,6 +92,7 @@ void GameLogic::killEnemy(Enemy *enemy) {
             }
         }
     }
+    */
 }
 
 void GameLogic::move_z(int player_number, int sign) {

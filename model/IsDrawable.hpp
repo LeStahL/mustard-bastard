@@ -19,7 +19,10 @@ class IsDrawable : public Entity { // each drawable item is also an entity
     DrawType drawType;
 
     public:
-    IsDrawable(int graphicId, DrawType drawType, WorldPosition position);
+    IsDrawable(int graphicId, DrawType drawType, WorldPosition position, WorldOrientation orientation);
+    IsDrawable(int graphicId, DrawType drawType, WorldPosition position)
+        : IsDrawable(graphicId, drawType, position, WorldOrientation()) {}
+
     int getGraphicId();
     DrawType getDrawType();
     virtual void customDraw(double time) {};

@@ -11,7 +11,6 @@ Model::Model()
 {
     // ignore background for now
     // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldPosition(0, 0, true));
-
     players.push_back(new Player(GraphicsId::player_standing, START_PLAYER1));
 }
 

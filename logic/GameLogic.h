@@ -3,11 +3,13 @@
 
 #include <map>
 #include <Model.h>
+#include <GameViewModel.hpp>
 #include <AttackState.hpp>
 
 class GameLogic {
     private:
     Model* model;
+    GameViewModel* gameViewModel;
 
     const double PLAYER_SPEED = 160.0;
     const std::map<Weapon, double> ATTACK_COOLDOWN = {
@@ -17,7 +19,7 @@ class GameLogic {
     };
 
     public:
-    GameLogic(Model* model);
+    GameLogic(Model* model, GameViewModel* gameViewModel);
     void update(float elapsedTime);
     void move_x(int player, int sign, bool retreat);
     void move_z(int player, int sign);
@@ -33,3 +35,4 @@ class GameLogic {
 };
 
 #endif /* GAMELOGIC_H */
+

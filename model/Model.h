@@ -20,9 +20,6 @@ class Model {
     private:
     std::vector<Player*> players;
     // Object background;
-    GameViewModel gameViewModel;
-    ViewStuff* viewStuff;
-    Player player;
     std::vector<Enemy*> enemies;
     std::vector<Entity*> entities;
 
