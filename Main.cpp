@@ -13,7 +13,7 @@ int main()
     // create model and print entitiy ids for testing
     Model model;
     for(auto it = std::begin(model.getEntities()); it != std::end(model.getEntities()); ++it) {
-        printf("%d\n", it->id);
+        printf("%d\n", (*it)->id);
     }
 
     while (window.isOpen())
