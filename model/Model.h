@@ -7,15 +7,15 @@
 
 class Model {
     public:
-    enum MenuTextureId {
+    enum class MenuTextureId {
         background
     };
-    enum MenuSpriteId {
+    enum class MenuSpriteId {
     };
-    enum GameTextureId {
+    enum class GameTextureId {
         background
     };
-    enum GameSpriteId {
+    enum class GameSpriteId {
     };
 
     private:
