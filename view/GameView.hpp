@@ -20,6 +20,8 @@ class GameView : public View {
     sf::RenderWindow *_renderWindow;
     GameViewModel& model;
 
+    void adjustSprite(IsDrawable *drawable);
+
     public:
     GameView(sf::RenderWindow *renderWindow, GameViewModel& model);
 

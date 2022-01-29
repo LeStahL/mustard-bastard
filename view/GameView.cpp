@@ -8,6 +8,17 @@ GameView::GameView(sf::RenderWindow *renderWindow, GameViewModel& model) :
     model(model) {
 }
 
+void GameView::adjustSprite(IsDrawable *it)
+{
+    int id = it->getGraphicId();
+    sf::Vector2f position(it->x, it->y);
+    sf::Vector2f shift = _spriteCenters.at(id);
+
+    float x_sign = it->facing_left ? -1 : 1;
+    _sprites.at(id).setPosition(position - sf::Vector2f(x_sign * shift.x, shift.y));
+    _sprites.at(id).setScale(sf::Vector2f(x_sign, 1));
+}
+
 bool GameView::draw(double time) {
 
     // hack: this is for the Entity <-> IsDrawable sync for coordinates etc.
@@ -23,8 +34,7 @@ bool GameView::draw(double time) {
             switch((*it)->getDrawType()) {
                 case IsDrawable::DrawType::animation:
                     _animations.at(id).update(time);
-                    _sprites.at(id).setPosition(position - _spriteCenters.at(id));
-                    _sprites.at(id).setScale(sf::Vector2f((*it)->facing_left ? -1 : 1, 1));
+                    adjustSprite(*it);
                     _renderWindow->draw(_sprites.at(id));
                     break;
 
