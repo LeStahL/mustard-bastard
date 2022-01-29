@@ -11,6 +11,10 @@ Model::Model() :
     gameViewModel.getLayer(1)->push_back(&player);
 }
 
+GameViewModel& Model::getGameViewModel() {
+    return gameViewModel;
+}
+
 std::vector<Entity*>& Model::getEntities() {
     return entities;
 }

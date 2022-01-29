@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 class IsDrawable {
     public:
     enum class DrawType {
@@ -8,6 +10,9 @@ class IsDrawable {
         primitive
     };
  
+    float x;
+    float y;
+
     protected:
     int graphicId;
     DrawType drawType;

@@ -9,10 +9,10 @@
 class Model {
     public:
     enum GraphicsId {
-        menu_background,
-        game_background,
         player_standing,
-        player_moving
+        player_moving,
+        menu_background,
+        game_background
     };
 
     private:
@@ -22,6 +22,9 @@ class Model {
 
     public:
     Model();
+
+    GameViewModel& getGameViewModel();
+
     std::vector<Entity*>& getEntities();
     Player& getPlayer();
 };

@@ -8,6 +8,7 @@
 #include <Model.h>
 #include <GameLogic.h>
 #include <InputController.h>
+#include <GameView.hpp>
 #include "utility/Animation.hpp"
 #include <ViewStuff.h>
 #include <const.h>
@@ -25,18 +26,11 @@ int main()
     Model model;
     GameLogic gameLogic(model);
     InputController inputController(gameLogic);
-
-    sf::Texture bastardTexture;
-    bastardTexture.loadFromFile("assets/bastard.png");
-
-    sf::Sprite bastardSprite;
-    bastardSprite.setTexture(bastardTexture);
-    Animation bastardAnimation(&bastardSprite, .1);
-    for(int i=0; i<4; ++i)
-        bastardAnimation.addFrame(96*i, 0, 96, 160);
+    GameView gameView(&window, model.getGameViewModel());
 
     ViewStuff viewStuff(&window);
-
+    gameView.setUp();
+    
     while (window.isOpen())
     {
         sf::Event event;
@@ -53,9 +47,7 @@ int main()
         window.clear(sf::Color::Black);
 
         viewStuff.DrawBackground();
-
-        bastardAnimation.update(animationClock.getElapsedTime().asSeconds());
-        window.draw(bastardSprite);
+        gameView.draw(animationClock.getElapsedTime().asSeconds());
 
         window.display();
     }
