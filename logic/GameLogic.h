@@ -29,7 +29,7 @@ class GameLogic {
     private:
     void updatePlayer(Player* player, float elapsedTime);
     void updateEnemies(float elapsedTime);
-    void spawnEnemy();
+    void maybeSpawnEnemy(EnemyType type);
     bool isEnemyToFarAway(Enemy* enemy);
     void killEnemy(Enemy* enemy);
 };

@@ -27,30 +27,34 @@ void GameLogic::move_x(int player_number, int sign, bool retreat) {
         player->x_speed = 0;
         player->orientation.facing_left = !player->orientation.facing_left;
     } else if (retreat) {
-        player->x_speed =-sign * PLAYER_SPEED;
+        player->x_speed = -sign * PLAYER_SPEED;
     } else {
         player->x_speed = sign * PLAYER_SPEED;
     }
 }
 
+const Model::GraphicsId enemyIds[] = {Model::GraphicsId}
+
 void GameLogic::updateEnemies(float timeElapsed) {
     // spwan new enemies with probabilty of 5% for 100 calls
-    if(rand() % 500 < 1)
-        spawnEnemy();
+
+    maybeSpawnEnemy(EnemyType::ZombieAndCat);
+    maybeSpawnEnemy(EnemyType::IcebergAndFairy);
 
     // move all enemies by their own speed
     for(Enemy* enemy : model->getEnemies()) {
         enemy->position.x -= enemy->speed*timeElapsed;
         enemy->x = enemy->position.x;
 
-        if (isEnemyToFarAway(enemy))
+        if (isEnemyToFarAway(enemy)) {
             killEnemy(enemy);
+        }
     }
 }
 
-void GameLogic::spawnEnemy() {
+void GameLogic::maybeSpawnEnemy(EnemyType type) {
     Model::GraphicsId graphicsId;
-    switch(rand()%3) {
+    switch (rand() % 3) {
         case 0:
             graphicsId = Model::GraphicsId::zombie;
             break;
@@ -81,9 +85,8 @@ void GameLogic::killEnemy(Enemy *enemy) {
         }
     }
 
-    /*
     for(int i = 0; i < Z_LAYER_COUNT; i++) {
-        auto layer = gameViewModel->getLayer(i);
+        auto layer = *(gameViewModel->getLayer(i));
 
         for(auto it = layer.begin(); it != layer.end(); it++) {
             if((*it)->id == id) {
@@ -92,7 +95,6 @@ void GameLogic::killEnemy(Enemy *enemy) {
             }
         }
     }
-    */
 }
 
 void GameLogic::move_z(int player_number, int sign) {

@@ -2,10 +2,18 @@
 
 #include <IsDrawable.hpp>
 
-class Enemy : public IsDrawable {
-    public:
-    float health;
-    float speed;
+enum EnemyType {
+    ZombieAndCat,
+    IcebergAndFairy
+};
 
-    Enemy(int graphicId, WorldPosition position);
+class Enemy : public IsDrawable {
+    private:
+    EnemyType type;
+
+    public:
+    float health = 0;
+    float speed = 0;
+
+    Enemy(int graphicId, EnemyType type, WorldPosition position);
 };
