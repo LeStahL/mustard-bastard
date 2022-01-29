@@ -14,7 +14,8 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 
-    sf::Clock clock;
+    sf::Clock inputClock;
+    sf::Clock animationClock;
     Model model;
     GameLogic gameLogic(model);
     InputController inputController(gameLogic);
@@ -35,16 +36,15 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-
-            sf::Time time = clock.getElapsedTime();
-            clock.restart();
-            inputController.pullEvents();
-            gameLogic.update(time.asSeconds());
         }
+
+        inputController.pullEvents();
+        gameLogic.update(inputClock.getElapsedTime().asSeconds());
+        inputClock.restart();
 
         window.clear(sf::Color::Black);
 
-        bastardAnimation.update(clock.getElapsedTime().asSeconds());
+        bastardAnimation.update(animationClock.getElapsedTime().asSeconds());
         window.draw(bastardSprite);
 
         window.display();
