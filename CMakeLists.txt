@@ -14,17 +14,24 @@ add_executable(mustard-bastard Main.cpp
     model/Player.cpp
     model/GameViewModel.cpp
     model/Object.cpp
-
-    logic/GameLogic.cpp
-    logic/InputController.cpp
+    model/MainMenuState.cpp
+    model/MenuState.cpp
 
     view/ViewStuff.cpp
     view/GameView.cpp
+    view/MainMenuView.cpp
 
+    logic/GameLogic.cpp
+    
     utility/Animation.cpp
+    
+    controller/MainMenuInputController.cpp
+    controller/GameInputController.cpp
+    controller/MenuController.cpp
 )
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
+<<<<<<< HEAD
     "${PROJECT_SOURCE_DIR}/model/"
     "${PROJECT_SOURCE_DIR}/logic/"
     "${PROJECT_SOURCE_DIR}/view/"
@@ -33,9 +40,11 @@ target_include_directories(mustard-bastard PUBLIC
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
     "${PROJECT_SOURCE_DIR}/."
-    "${PROJECT_SOURCE_DIR}/model/"
+    "${PROJECT_SOURCE_DIR}/model/"  
+    "${PROJECT_SOURCE_DIR}/view/"  
+    "${PROJECT_SOURCE_DIR}/controller/"
+    "${PROJECT_SOURCE_DIR}/utility/"    
     "${PROJECT_SOURCE_DIR}/logic/"
-    "${PROJECT_SOURCE_DIR}/view/"
 )
 target_link_directories(mustard-bastard PUBLIC ${SFML_BUILD_DIRECTORY})
 set(SFML_LIBRARIES
@@ -54,5 +63,3 @@ endforeach()
 add_custom_command(TARGET mustard-bastard POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:mustard-bastard>/assets"
 )
-
-add_subdirectory(model)

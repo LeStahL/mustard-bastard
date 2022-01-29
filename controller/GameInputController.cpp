@@ -1,9 +1,9 @@
 #include <map>
-#include <InputController.h>
+#include <GameInputController.hpp>
 #include <SFML/Window.hpp>
 #include <const.h>
 
-InputController::InputController(GameLogic& gameLogic) :
+GameInputController::GameInputController(GameLogic& gameLogic) :
         gameLogic(gameLogic) {
 }
 
@@ -38,7 +38,7 @@ std::map<int, std::map<Key, sf::Keyboard::Key>> PlayerKey = {
     } }
 };
 
-void InputController::pullEvents() {
+void GameInputController::pullEvents() {
 
     for (int p = 0; p < gameLogic.nPlayers(); p++)
     {

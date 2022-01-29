@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 class IsDrawable {
     public:
     enum class DrawType {
@@ -22,4 +20,5 @@ class IsDrawable {
     IsDrawable(int graphicId, DrawType drawType);
     int getGraphicId();
     DrawType getDrawType();
+    virtual void customDraw(double time) {};
 };

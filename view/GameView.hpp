@@ -7,8 +7,9 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include "View.hpp"
 
-class GameView {
+class GameView : public View {
     private:
     std::vector<sf::Texture> _textures;
     std::vector<sf::Sprite> _sprites;
@@ -22,7 +23,7 @@ class GameView {
     public:
     GameView(sf::RenderWindow *renderWindow, GameViewModel& model);
 
-    bool draw(double time);
-    bool setUp();
-    bool tearDown();
+    bool draw(double time) override;
+    bool setUp() override;
+    bool tearDown() override;
 };
