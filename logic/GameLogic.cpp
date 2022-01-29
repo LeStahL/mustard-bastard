@@ -12,7 +12,7 @@ void GameLogic::update(float timeElapsed) {
     }
 }
 
-void GameLogic::move_x(int player_number, int sign) {
+void GameLogic::move_x(int player_number, int sign, bool retreat) {
     auto player = model->getPlayer(player_number);
     bool switch_direction = player->orientation.facing_left && (sign > 0)
         || !player->orientation.facing_left && (sign < 0);
@@ -23,6 +23,14 @@ void GameLogic::move_x(int player_number, int sign) {
     } else {
         player->x_speed = sign * PLAYER_SPEED;
     }
+}
+
+void GameLogic::move_z(int player_number, int sign) {
+
+}
+
+void GameLogic::attack(int player_number) {
+
 }
 
 void GameLogic::updatePlayer(Player* player, float timeElapsed) {

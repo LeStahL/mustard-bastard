@@ -42,12 +42,18 @@ void GameInputController::pullEvents() {
 
     for (int p = 0; p < gameLogic.nPlayers(); p++)
     {
-        int x_sign = sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Right])
-            ? 1
-            : sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Left])
-            ? -1
-            : 0;
+        bool right = sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Right]);
+        bool left = sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Left]);
+        bool up = sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Up]);
+        bool down = sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Down]);
+        bool attack = sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Attack]);
+        bool retreat = sf::Keyboard::isKeyPressed(PlayerKey[p][Key::Retreat]);
 
-        gameLogic.move_x(p, x_sign);
+        int x_sign = (right && !left) ? 1 : (left && !right) ? -1 : 0;
+        int z_sign = (up && !down) ? 1 : (down && !up) ? -1 : 0;
+
+        gameLogic.move_x(p, x_sign, retreat);
+        gameLogic.move_z(p, z_sign);
+        gameLogic.attack(p);
     }
 }

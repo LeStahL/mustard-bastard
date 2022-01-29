@@ -5,6 +5,9 @@
 #include <IsDrawable.hpp>
 
 class Player : public Entity, public IsDrawable{
+    private:
+    AttackState attack_state;
+
     public:
     Player();
     Player(int graphicId, WorldPosition position);
