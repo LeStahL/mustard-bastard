@@ -29,13 +29,13 @@ bool MenuController::canEnterState(MenuState::MenuType type)
 
 bool MenuController::exitCurrentState()
 {
-    
+    if(_view != nullptr) _view->tearDown();
+
     switch(_state->currentType())
     {
         case MenuState::MenuType::Game:
         // TODO: Reset game, player, level, score state etc
         // TODO: Unload game scene
-        if(_view != nullptr) _view->tearDown();
         break;
 
         case MenuState::MenuType::HighScoreMenu:
