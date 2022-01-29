@@ -8,8 +8,11 @@ set(SFML_BUILD_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/SFML/lib/Releas
 add_executable(mustard-bastard Main.cpp
     model/Model.cpp
     model/Entity.cpp
+    model/IsDrawable.cpp
     model/WorldPosition.cpp
     model/Player.cpp
+    model/GameViewModel.cpp
+
 
     view/ViewStuff.cpp
 

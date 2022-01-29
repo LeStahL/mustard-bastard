@@ -2,7 +2,13 @@
 #include <WorldPosition.h>
 
 Player::Player() :
-Entity(WorldPosition(0.0, 0, true)) {}
+        IsDrawable(0, DrawType::animation),
+        Entity(WorldPosition(0.0, 0, true)) {
+        
+}
 
-Player::Player(WorldPosition position) :
-Entity(position) {}
+Player::Player(int graphicType, WorldPosition position) :
+        IsDrawable(graphicId, DrawType::animation),
+        Entity(position) {
+
+}
