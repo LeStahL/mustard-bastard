@@ -16,6 +16,7 @@ add_executable(mustard-bastard Main.cpp
     model/Object.cpp
     model/MainMenuState.cpp
     model/MenuState.cpp
+    model/HighscoreList.cpp
 
     view/ViewStuff.cpp
     view/GameView.cpp
@@ -28,14 +29,6 @@ add_executable(mustard-bastard Main.cpp
     controller/MainMenuInputController.cpp
     controller/GameInputController.cpp
     controller/MenuController.cpp
-)
-target_include_directories(mustard-bastard PUBLIC
-    "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
-<<<<<<< HEAD
-    "${PROJECT_SOURCE_DIR}/model/"
-    "${PROJECT_SOURCE_DIR}/logic/"
-    "${PROJECT_SOURCE_DIR}/view/"
-    "${PROJECT_SOURCE_DIR}/utility/"
 )
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
