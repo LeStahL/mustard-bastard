@@ -24,14 +24,20 @@ auto createHorizontalLine = [](float y, float width, float thickness, sf::Color 
     return line;
 };
 
-auto drawLinesForWorld = [](int sign, sf::Color color, sf::RenderWindow *window)
+auto yForLine = [](int z, bool upWorld)
 {
+    int sign = upWorld ? -1 : 1;
     double center = 0.5 * (HEIGHT + sign * MIDDLE_MARGIN);
-    auto line = createHorizontalLine(center, WIDTH, FLOOR_LINE_THICKNESS, color);
+    return center + sign * z * LINE_DISTANCE;
+};
+
+auto drawLinesForWorld = [](bool upWorld, sf::Color color, sf::RenderWindow *window)
+{
+    auto line = createHorizontalLine(0, WIDTH, FLOOR_LINE_THICKNESS, color);
     for (int l = 0; l < LINES; l++)
     {
+        line.setPosition(sf::Vector2f(0, yForLine(l, upWorld)));
         window->draw(line);
-        line.move(sf::Vector2f(0, sign * LINE_DISTANCE));
     }
 };
 
@@ -40,9 +46,9 @@ auto drawMargin = [](sf::RenderWindow *window)
     window->draw(createHorizontalLine(0.5 * HEIGHT, WIDTH, MIDDLE_MARGIN, MARGIN_COLOR));
 };
 
-auto drawBackground = [](int sign, sf::Color color, sf::RenderWindow *window)
+auto drawBackground = [](bool upWorld, sf::Color color, sf::RenderWindow *window)
 {
-    double y = sign == -1 ? 0 : 0.5 * HEIGHT;
+    double y = upWorld ? 0 : 0.5 * HEIGHT;
     auto rect = sf::RectangleShape(sf::Vector2f(WIDTH, 0.5 * HEIGHT));
     rect.setPosition(sf::Vector2f(0, y));
     rect.setFillColor(color * sf::Color(255, 255, 255, 40));
@@ -51,13 +57,19 @@ auto drawBackground = [](int sign, sf::Color color, sf::RenderWindow *window)
 
 void ViewStuff::DrawBackground()
 {
-    drawBackground(-1, TOP_COLOR, window);
-    drawLinesForWorld(-1, TOP_COLOR, window);
-    drawBackground(+1, BOTTOM_COLOR, window);
-    drawLinesForWorld(+1, BOTTOM_COLOR, window);
+    drawBackground(true, TOP_COLOR, window);
+    drawLinesForWorld(true, TOP_COLOR, window);
+    drawBackground(false, BOTTOM_COLOR, window);
+    drawLinesForWorld(false, BOTTOM_COLOR, window);
     drawMargin(window);
 }
 
 void ViewStuff::customDraw(double time) {
     DrawBackground();
+}
+
+int ViewStuff::getBackgroundBaseLine(WorldPosition position) {
+    int z = position.z;
+    bool upWorld = position.upWorld;
+    return 0.5 * (yForLine(z, upWorld) + yForLine(z + 1, upWorld));
 }

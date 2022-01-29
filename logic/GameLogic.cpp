@@ -31,6 +31,7 @@ void GameLogic::updatePlayer(Player* player, float timeElapsed) {
 
     // sync view model (IsDrawable)
     player->x = player->position.x;
+    player->y = model.viewStuff->getBackgroundBaseLine(player->position);
     player->facing_left = player->orientation.facing_left;
 }
 

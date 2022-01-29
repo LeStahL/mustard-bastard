@@ -18,17 +18,16 @@ class Model {
     };
 
     private:
-    GameViewModel gameViewModel;
-    ViewStuff* viewStuff;
+    GameViewModel gameViewModel; // see below, one could move gameViewModel out of Model, together with viewStuff
     std::vector<Player*> players;
     // Object background;
     std::vector<Entity*> entities;
 
     public:
     Model(ViewStuff* viewStuff);
-
     GameViewModel& getGameViewModel();
 
+    ViewStuff* viewStuff; // should not be here, but it is! lel! move whenever you feel like it.
     std::vector<Entity*>& getEntities();
     Player* getPlayer(int player_number);
     int getNumberOfPlayers();

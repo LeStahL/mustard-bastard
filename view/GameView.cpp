@@ -19,7 +19,7 @@ bool GameView::draw(double time) {
             switch((*it)->getDrawType()) {
                 case IsDrawable::DrawType::animation:
                     _animations.at(id).update(time);
-                    _sprites.at(id).setPosition(position);
+                    _sprites.at(id).setPosition(position - _spriteCenters.at(id));
                     _sprites.at(id).setScale(sf::Vector2f((*it)->facing_left ? -1 : 1, 1));
                     _renderWindow->draw(_sprites.at(id));
                     break;

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <IsDrawable.hpp>
+#include <WorldPosition.h>
 
 class ViewStuff : public IsDrawable
 {
@@ -14,6 +15,7 @@ class ViewStuff : public IsDrawable
         ViewStuff(sf::RenderWindow *window);
         void DrawBackground();
         void customDraw(double time) override;
+        int getBackgroundBaseLine(WorldPosition position);
 };
 
 #endif
