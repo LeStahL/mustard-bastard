@@ -21,6 +21,7 @@ add_executable(mustard-bastard Main.cpp
     view/ViewStuff.cpp
     view/GameView.cpp
     view/MainMenuView.cpp
+    view/HighscoreMenuView.cpp
 
     logic/GameLogic.cpp
     
@@ -56,4 +57,14 @@ foreach(SFML_LIB ${SFML_LIBRARIES})
 endforeach()
 add_custom_command(TARGET mustard-bastard POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:mustard-bastard>/assets"
+)
+
+find_file(FONT NAMES Fira_Code_v6.2.zip HINTS ${CMAKE_CURRENT_BINARY_DIR})
+if(${FONT} MATCHES FONT-NOTFOUND)
+    message(STATUS "Font not found. Will download.")
+    file(DOWNLOAD https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip Fira_Code_v6.2.zip SHOW_PROGRESS)
+    file(ARCHIVE_EXTRACT INPUT Fira_Code_v6.2.zip DESTINATION Fira_Code_v6.2 VERBOSE)
+endif()
+add_custom_command(TARGET mustard-bastard POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/Fira_Code_v6.2/ttf/FiraCode-Regular.ttf" "$<TARGET_FILE_DIR:mustard-bastard>/assets/FiraCode-Regular.ttf"
 )

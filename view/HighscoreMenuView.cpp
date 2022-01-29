@@ -1,43 +1,44 @@
 #include "HighscoreMenuView.hpp"
 #include <SFML/Graphics.hpp>
 
+#include <iostream>
+
 HighscoreMenuView::HighscoreMenuView(sf::RenderWindow *renderWindow, MenuState *menuState, HighscoreList *highscoreList)
     : _menuState(menuState)
     , _renderWindow(renderWindow)
     , _highscoreList(highscoreList)
 {
-    _textures.resize(2);
-    _textures[0].loadFromFile("assets/mainscreen.png");
-    _textures[1].loadFromFile("assets/mainscreen_highlights.png");
+    _textures.resize(1);
+    _textures[0].loadFromFile("assets/highscore_bg.png");
 
-    _sprites.resize(3);
-    for(int i=0; i<2; ++i)
-        _sprites[i].setTexture(_textures[i]);
+    _sprites.resize(1);
+    _sprites[0].setTexture(_textures[0]);
 
-    _rects.resize(4);
-    for(int i=0; i<4; ++i)
-    {
-        _rects[i].left = i*960;
-        _rects[i].top = 0;
-        _rects[i].width = 960;
-        _rects[i].height = 540;
-    }
+    _font.loadFromFile("assets/FiraCode-Regular.ttf");
 }
 
 bool HighscoreMenuView::draw(double time)
 {
-    _sprites[1].setTextureRect(_rects[_mainMenuState->selectedIndex()]);
-    
-    for(int i=0; i<_sprites.size(); ++i)
-        _renderWindow->draw(_sprites[i]);
+    _renderWindow->draw(_sprites[0]);
+
+    for(int i=0; i<HighscoreList::nEntries; ++i)
+    {
+        HighscoreListEntry entry = _highscoreList->entry(i);
+
+        sf::Text text;
+        text.setFont(_font);
+        text.setString(std::to_string(i+1) + ". " + std::to_string(entry.score()) + " - " + entry.name());
+        text.setCharacterSize(24);
+        text.setFillColor(sf::Color::Red);
+        text.setPosition(sf::Vector2f(150,200+25*i));
+        _renderWindow->draw(text);
+    }
 
     return true;
 }
 
 bool HighscoreMenuView::setUp()
 {
-    _mainMenuState->selectIndex(0);
-
     return true;
 }
 

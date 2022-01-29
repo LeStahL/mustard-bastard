@@ -61,3 +61,8 @@ bool HighscoreListEntry::compare(HighscoreListEntry a, HighscoreListEntry b)
 {
     return a.score() > b.score();
 }
+
+HighscoreListEntry HighscoreList::entry(int index)
+{
+    return _entries.at(index);
+}

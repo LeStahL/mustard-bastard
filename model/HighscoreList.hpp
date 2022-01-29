@@ -20,6 +20,7 @@ class HighscoreList {
     public:
     HighscoreList();
     void add(std::string name, int score);
+    HighscoreListEntry entry(int index);
 
     static const std::string highscoreFileName;
     static const int nEntries;
