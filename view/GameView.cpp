@@ -9,6 +9,10 @@ GameView::GameView(sf::RenderWindow *renderWindow, GameViewModel& model) :
 }
 
 bool GameView::draw(double time) {
+
+    // hack: this is for the Entity <-> IsDrawable sync for coordinates etc.
+    model.syncDrawableEntities();
+
     for(size_t layer = 0; layer < Z_LAYER_COUNT; layer++) {
         std::vector<IsDrawable*>* drawableList = model.getLayer(layer);
 

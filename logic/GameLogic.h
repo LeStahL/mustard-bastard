@@ -5,12 +5,12 @@
 
 class GameLogic {
     private:
-    Model& model;
+    Model* model;
 
     const double PLAYER_SPEED = 160.0;
 
     public:
-    GameLogic(Model& model);
+    GameLogic(Model* model);
     void update(float elapsedTime);
     void move_x(int player, int sign);
     int nPlayers();

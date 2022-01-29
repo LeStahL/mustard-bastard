@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <stdio.h>
+#include <iostream>
 
 #include <Model.h>
 #include <GameLogic.h>
@@ -30,11 +31,19 @@ int main()
     sf::Clock gameClock;
     sf::Clock animationClock;
 
+    std::cout << "Init ViewStuff?" << std::endl;
     ViewStuff viewStuff(&window);
-    Model model(&viewStuff);
-    GameLogic gameLogic(model);
+    std::cout << "Init Model?" << std::endl;
+    Model model;
+    std::cout << "Init GameViewModel?" << std::endl;
+    GameViewModel gameViewModel(&viewStuff, &model);
+    std::cout << "Init GameLogic?" << std::endl;
+    GameLogic gameLogic(&model);
+    std::cout << "Init GameInputContrller?" << std::endl;
     GameInputController gameInputController(gameLogic);
-    GameView gameView(&window, model.getGameViewModel());
+    std::cout << "Init GameView?" << std::endl;
+    GameView gameView(&window, gameViewModel);
+    std::cout << "Survived initialization." << std::endl;
 
     MenuState menuState;
     MainMenuState mainMenuState;
