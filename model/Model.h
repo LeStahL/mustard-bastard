@@ -6,6 +6,18 @@
 #include <Entity.h>
 
 class Model {
+    public:
+    enum MenuTextureId {
+        background
+    };
+    enum MenuSpriteId {
+    };
+    enum GameTextureId {
+        background
+    };
+    enum GameSpriteId {
+    };
+
     private:
     Player player;
     std::vector<Entity*> entities;
