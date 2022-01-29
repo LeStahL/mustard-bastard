@@ -27,19 +27,10 @@ int main()
     GameLogic gameLogic(model);
     InputController inputController(gameLogic);
     GameView gameView(&window, model.getGameViewModel());
-    gameView.setUp();
-    
-    sf::Texture bastardTexture;
-    bastardTexture.loadFromFile("assets/bastard.png");
-
-    sf::Sprite bastardSprite;
-    bastardSprite.setTexture(bastardTexture);
-    Animation bastardAnimation(&bastardSprite, .1);
-    for(int i=0; i<4; ++i)
-        bastardAnimation.addFrame(96*i, 0, 96, 160);
 
     ViewStuff viewStuff(&window);
-
+    gameView.setUp();
+    
     while (window.isOpen())
     {
         sf::Event event;
@@ -53,13 +44,10 @@ int main()
         gameLogic.update(inputClock.getElapsedTime().asSeconds());
         inputClock.restart();
 
-        window.clear(sf::Color::Black);    
+        window.clear(sf::Color::Black);
+
         gameView.draw(animationClock.getElapsedTime().asSeconds());
-
         viewStuff.DrawBackground();
-
-        bastardAnimation.update(animationClock.getElapsedTime().asSeconds());
-        window.draw(bastardSprite);
 
         window.display();
     }
