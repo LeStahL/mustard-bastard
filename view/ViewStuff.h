@@ -4,7 +4,9 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-class ViewStuff
+#include <IsDrawable.hpp>
+
+class ViewStuff : public IsDrawable
 {
     private:
         sf::RenderWindow *window;
@@ -12,6 +14,7 @@ class ViewStuff
     public:
         ViewStuff(sf::RenderWindow *window);
         void DrawBackground();
+        void customDraw(double time) override;
 };
 
 #endif

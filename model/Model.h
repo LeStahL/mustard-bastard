@@ -6,6 +6,7 @@
 #include <Entity.h>
 #include <Object.h>
 #include <GameViewModel.hpp>
+#include <ViewStuff.h>
 
 class Model {
     public:
@@ -18,12 +19,13 @@ class Model {
 
     private:
     GameViewModel gameViewModel;
+    ViewStuff* viewStuff;
     Player player;
     Object background;
     std::vector<Entity*> entities;
 
     public:
-    Model();
+    Model(ViewStuff* viewStuff);
 
     GameViewModel& getGameViewModel();
 

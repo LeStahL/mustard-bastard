@@ -25,6 +25,10 @@ bool GameView::draw(double time) {
                 case IsDrawable::DrawType::texture:
                     _renderWindow->draw(_sprites.at(id));
                     break;
+
+                case IsDrawable::DrawType::primitive:
+                    (*it)->customDraw(time);
+                    break;
             }
         }
     }

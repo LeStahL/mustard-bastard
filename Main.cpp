@@ -26,26 +26,18 @@ int main()
 
     sf::Clock inputClock;
     sf::Clock gameClock;
-    Model model;
+    sf::Clock animationClock;
+    
+    ViewStuff viewStuff(&window);
+    Model model(&viewStuff);
     GameLogic gameLogic(model);
     GameInputController gameInputController(gameLogic);
     GameView gameView(&window, model.getGameViewModel());
-
-    ViewStuff viewStuff(&window);
     
-    sf::Texture bastardTexture;
-    bastardTexture.loadFromFile("assets/bastard.png");
-
-    sf::Sprite bastardSprite;
-    bastardSprite.setTexture(bastardTexture);
-    Animation bastardAnimation(&bastardSprite, .1);
-    for(int i=0; i<4; ++i)
-        bastardAnimation.addFrame(96*i, 0, 96, 160);
-
     MenuState menuState;
     MainMenuState mainMenuState;
     MainMenuView mainMenuView(&window, &menuState, &mainMenuState);
-    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &viewStuff);
+    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView);
     MainMenuInputController mainMenuInputController(&mainMenuState, &menuController);
     menuController.setGameInputController(&gameInputController);
     menuController.setMainMenuInputController(&mainMenuInputController);

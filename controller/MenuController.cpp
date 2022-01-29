@@ -1,12 +1,11 @@
 #include "MenuController.hpp"
 
-MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, ViewStuff *viewStuff)
+MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView)
     : _state(state)
     , _window(window)
     , _mainMenuState(mainMenuState)
     , _mainMenuView(mainMenuView)
     , _gameView(gameView)
-    , _viewStuff(viewStuff)
     , _view(nullptr)
     , _inputController(nullptr)
 {
@@ -99,9 +98,6 @@ bool MenuController::enterState(MenuState::MenuType type)
 
 bool MenuController::draw(double time)
 {
-    if(_state->currentType() == MenuState::MenuType::Game)
-        _viewStuff->DrawBackground();
-
     if(_inputController != nullptr) _inputController->pullEvents();
 
     if(_view != nullptr) return _view->draw(time);

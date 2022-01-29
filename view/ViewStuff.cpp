@@ -2,7 +2,10 @@
 
 #include <const.h>
 
-ViewStuff::ViewStuff(sf::RenderWindow *window) : window(window) { }
+ViewStuff::ViewStuff(sf::RenderWindow *window) :
+        window(window),
+        IsDrawable(0, IsDrawable::DrawType::primitive)
+{ }
 
 constexpr float FLOOR_LINE_THICKNESS = 1.5;
 constexpr float LINE_DISTANCE = 32.;
@@ -53,4 +56,8 @@ void ViewStuff::DrawBackground()
     drawBackground(+1, BOTTOM_COLOR, window);
     drawLinesForWorld(+1, BOTTOM_COLOR, window);
     drawMargin(window);
+}
+
+void ViewStuff::customDraw(double time) {
+    DrawBackground();
 }
