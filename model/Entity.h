@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include <WorldPosition.h>
+#include <WorldOrientation.h>
 
 class Entity {
     private:
@@ -9,13 +10,18 @@ class Entity {
     public:
         int id;
         WorldPosition position;
+        WorldOrientation orientation;
 
     public:
-        Entity(WorldPosition position) :
+        Entity(WorldPosition position, WorldOrientation orientation) :
         id(id_counter++),
-        position(position) {
+        position(position),
+        orientation(orientation)
+        { }
 
-        }
+        Entity(WorldPosition position) : Entity(position, WorldOrientation())
+        { }
+
         virtual ~Entity() {}
         //virtual void OverrideMe() = 0;
 };

@@ -10,6 +10,7 @@ add_executable(mustard-bastard Main.cpp
     model/Entity.cpp
     model/IsDrawable.cpp
     model/WorldPosition.cpp
+    model/WorldOrientation.cpp
     model/Player.cpp
     model/GameViewModel.cpp
     model/Object.cpp
@@ -22,9 +23,9 @@ add_executable(mustard-bastard Main.cpp
 
     utility/Animation.cpp
 )
-target_include_directories(mustard-bastard PUBLIC 
+target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
-    "${PROJECT_SOURCE_DIR}/model/" 
+    "${PROJECT_SOURCE_DIR}/model/"
     "${PROJECT_SOURCE_DIR}/logic/"
     "${PROJECT_SOURCE_DIR}/view/"
     "${PROJECT_SOURCE_DIR}/utility/"
