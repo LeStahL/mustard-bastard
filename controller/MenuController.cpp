@@ -1,6 +1,6 @@
 #include "MenuController.hpp"
 
-MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView, MusicPlayer *musicPlayer)
+MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView, MusicPlayer *musicPlayer, HeadsUpDisplayView *headsUpDisplayView)
     : _state(state)
     , _window(window)
     , _mainMenuState(mainMenuState)
@@ -11,6 +11,7 @@ MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainM
     , _highscoreList(highscoreList)
     , _highscoreMenuView(highscoreMenuView)
     , _musicPlayer(musicPlayer)
+    , _headsUpDisplayView(headsUpDisplayView)
 {
 }
 
@@ -43,6 +44,7 @@ bool MenuController::exitCurrentState()
     switch(_state->currentType())
     {
         case MenuState::MenuType::Game:
+        _headsUpDisplayView->tearDown();
         // TODO: Reset game, player, level, score state etc
         // TODO: Unload game scene
         break;
@@ -71,6 +73,7 @@ bool MenuController::exitCurrentState()
 
 bool MenuController::enterState(MenuState::MenuType type)
 {
+    _state->setType(type);
     switch(type)
     {
         case MenuState::MenuType::Exit:
@@ -78,6 +81,7 @@ bool MenuController::enterState(MenuState::MenuType type)
         return true;
 
         case MenuState::MenuType::Game:
+        _headsUpDisplayView->setUp();
         _view = _gameView;
         _inputController = _gameInputController;
         _view->setUp();
@@ -113,7 +117,11 @@ bool MenuController::draw(double time)
 {
     if(_inputController != nullptr) _inputController->pullEvents();
 
-    if(_view != nullptr) return _view->draw(time);
+    bool result = false;
+    if(_view != nullptr) result = _view->draw(time);
 
-    return false;
+    if(_state->currentType() == MenuState::MenuType::Game)
+        _headsUpDisplayView->draw(time);
+
+    return result;
 }

@@ -24,6 +24,7 @@ add_executable(mustard-bastard Main.cpp
     view/GameView.cpp
     view/MainMenuView.cpp
     view/HighscoreMenuView.cpp
+    view/HeadsUpDisplayView.cpp
 
     logic/GameLogic.cpp
 

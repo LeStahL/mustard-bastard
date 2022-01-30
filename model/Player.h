@@ -4,6 +4,8 @@
 #include <IsDrawable.hpp>
 #include <AttackState.hpp>
 
+#include <string>
+
 enum PlayerState {
     Standing,
     Walking,
@@ -17,6 +19,8 @@ class Player : public IsDrawable {
     AttackState attack_state;
     float power = 1;
     long points = 0;
+    float health = .5;
+    std::string name = "Eumel";
 
     Player(int graphicId, WorldPosition position, WorldOrientation orientation);
 

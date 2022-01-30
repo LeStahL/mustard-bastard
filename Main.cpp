@@ -20,6 +20,7 @@
 #include <GameView.hpp>
 #include "HighscoreList.hpp"
 #include "MusicPlayer.hpp"
+#include "HeadsUpDisplayView.hpp"
 
 constexpr bool QM_QUICKDEVEL = true;
 
@@ -50,13 +51,27 @@ int main()
     MusicPlayer musicPlayer;
 
     MenuState menuState;
+    
     MainMenuState mainMenuState;
     MainMenuView mainMenuView(&window, &menuState, &mainMenuState);
+    
     HighscoreList highscoreList;
     HighscoreMenuView highscoreMenuView(&window, &menuState, &highscoreList);
-    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView, &musicPlayer);
+    
+    Player *player1 = nullptr;
+    Player *player2 = nullptr;
+    if(model.getNumberOfPlayers() >= 1)
+        player1 = model.getPlayer(0);
+    if(model.getNumberOfPlayers() == 2)
+        player2 = model.getPlayer(1);
+
+    HeadsUpDisplayView headsUpDisplayView(&window, &menuState, player1, player2);
+
+    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView, &musicPlayer, &headsUpDisplayView);
+    
     MainMenuInputController mainMenuInputController(&mainMenuState, &menuController);
     HighscoreMenuInputController highscoreMenuInputController(&mainMenuState, &menuController);
+    
     menuController.setGameInputController(&gameInputController);
     menuController.setMainMenuInputController(&mainMenuInputController);
     menuController.setHighscoreMenuInputController(&highscoreMenuInputController);
