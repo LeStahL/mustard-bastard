@@ -16,6 +16,7 @@ class Player : public IsDrawable {
     float move_z_cooldown;
     AttackState attack_state;
     float power = 1;
+    float health = 100;
     long points = 0;
 
     Player(int graphicId, WorldPosition position, WorldOrientation orientation);

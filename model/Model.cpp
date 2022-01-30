@@ -30,3 +30,6 @@ std::vector<Enemy*>& Model::getEnemies() {
     return enemies;
 }
 
+std::vector<FloorThing*>& Model::getFloorThings() {
+    return floorThings;
+}

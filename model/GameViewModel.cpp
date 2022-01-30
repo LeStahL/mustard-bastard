@@ -37,4 +37,23 @@ void GameViewModel::syncDrawableEntities()
         player->y = viewStuff->getBackgroundBaseLine(player->position);
         player->facing_left = player->orientation.facing_left;
     }
+
+    for (FloorThing* floory : model->getFloorThings())
+    {
+        floory->x = floory->position.x;
+        floory->y = viewStuff->getBackgroundBaseLine(floory->position);
+    }
+}
+
+void GameViewModel::removeById(int id)
+{
+    for(int i = 0; i < Z_LAYER_COUNT; i++) {
+        auto layer = *getLayer(i);
+        for(auto it = layer.begin(); it != layer.end(); it++) {
+            if((*it)->id == id) {
+                layer.erase(it);
+                return;
+            }
+        }
+    }
 }

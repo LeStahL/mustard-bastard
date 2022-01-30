@@ -18,5 +18,6 @@ class GameViewModel {
 
     size_t getZLayerCount();
     std::vector<IsDrawable*>* getLayer(int layerIndex);
+    void removeById(int id);
     void syncDrawableEntities();
 };

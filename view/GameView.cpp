@@ -21,7 +21,7 @@ void GameView::adjustSprite(IsDrawable *it)
 
 bool GameView::draw(double time) {
 
-    // hack: this is for the Entity <-> IsDrawable sync for coordinates etc.
+    // hack: this is for the Entity <-> IsDrawable sync for Player coordinates etc.
     model.syncDrawableEntities();
 
     for(size_t layer = 0; layer < Z_LAYER_COUNT; layer++) {
@@ -43,7 +43,7 @@ bool GameView::draw(double time) {
                     break;
 
                 case IsDrawable::DrawType::primitive:
-                    (*it)->customDraw(time);
+                    (*it)->customDraw(_renderWindow, time);
                     break;
             }
         }
@@ -51,6 +51,8 @@ bool GameView::draw(double time) {
 
     return true;
 }
+
+#pragma warning( disable : 4834 )
 
 bool GameView::setUp() {
     _textures.resize(5);

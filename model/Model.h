@@ -5,6 +5,7 @@
 #include <Player.h>
 #include <Entity.h>
 #include <Enemy.hpp>
+#include <FloorThing.hpp>
 #include <Object.h>
 
 class Model {
@@ -22,6 +23,7 @@ class Model {
     // Object background;
     std::vector<Enemy*> enemies;
     std::vector<Entity*> entities;
+    std::vector<FloorThing*> floorThings;
 
     public:
     Model();
@@ -30,6 +32,7 @@ class Model {
     Player* getPlayer(int player_number);
     int getNumberOfPlayers();
     std::vector<Enemy*>& getEnemies();
+    std::vector<FloorThing*>& getFloorThings();
 };
 
 #endif /* MODEL_H */

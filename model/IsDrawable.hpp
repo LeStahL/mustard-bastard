@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Entity.h>
+#include <SFML/Graphics.hpp>
 
 class IsDrawable : public Entity { // each drawable item is also an entity
     public:
@@ -26,5 +27,5 @@ class IsDrawable : public Entity { // each drawable item is also an entity
 
     int getGraphicId();
     DrawType getDrawType();
-    virtual void customDraw(double time) {};
+    virtual void customDraw(sf::RenderWindow *window, double time) {};
 };

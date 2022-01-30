@@ -12,6 +12,7 @@ GameLogic::GameLogic(Model* model, GameViewModel* gameViewModel) :
 
 void GameLogic::update(float timeElapsed) {
     updateEnemies(timeElapsed);
+    updateFloorThings(timeElapsed);
 
     for (int p = 0; p < nPlayers(); p++)
     {
@@ -68,7 +69,6 @@ void GameLogic::updateEnemies(float timeElapsed) {
 
     //maybeSpawnEnemy(EnemyType::ZombieAndCat);
     //maybeSpawnEnemy(EnemyType::IcebergAndFairy);
-    maybeSpawnFloorThing(FloorThingType::Portal);
 
     // move all enemies by their own speed
     for(Enemy* enemy : model->getEnemies()) {
@@ -95,13 +95,13 @@ void GameLogic::maybeSpawnEnemy(EnemyType type) {
             break;
     }
 
-    Enemy* enemy = new Enemy(graphicsId, type, WorldPosition(1000.0f, 0, true));
+    Enemy* enemy = new Enemy(graphicsId, type, WorldPosition(WIDTH + 500., 0, true));
     model->getEnemies().push_back(enemy);
     gameViewModel->getLayer(1)->push_back(enemy);
 }
 
 bool GameLogic::isEnemyToFarAway(Enemy* enemy) {
-    return abs(enemy->position.x) > 2000; // TODO Screen width
+    return abs(enemy->position.x) > 2 * WIDTH;
 }
 
 void GameLogic::killEnemy(Enemy *enemy) {
@@ -114,16 +114,7 @@ void GameLogic::killEnemy(Enemy *enemy) {
         }
     }
 
-    for(int i = 0; i < Z_LAYER_COUNT; i++) {
-        auto layer = *(gameViewModel->getLayer(i));
-
-        for(auto it = layer.begin(); it != layer.end(); it++) {
-            if((*it)->id == id) {
-                layer.erase(it);
-                return;
-            }
-        }
-    }
+    gameViewModel->removeById(id);
 }
 
 void GameLogic::updatePlayer(Player* player, float timeElapsed) {
@@ -142,15 +133,79 @@ int GameLogic::nPlayers() {
 
 void GameLogic::maybeSpawnFloorThing(FloorThingType type)
 {
+    // for now, there's only type FloorThingType::Portal
 
+    bool doSpawn = rand() % PORTAL_SPAWN_MODULO < 1;
+    if (!doSpawn)
+        return;
+
+    float random_x = PLAYER_X_BORDER_MARGIN
+        + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
+    int random_z = rand() % Z_PLANES;
+
+    // std::cout << "FloorThing spawned on " << random_x << "  " << random_z << std::endl;
+
+    FloorThing* floory = new FloorThing(type, WorldPosition(random_x, random_z, true));
+    floory->size = PORTAL_EPSILON_SIZE;
+    model->getFloorThings().push_back(floory);
+    gameViewModel->getLayer(random_z)->push_back(floory);
+
+    // workaround: just add another one in the other world
+    floory = new FloorThing(type, WorldPosition(random_x, random_z, false));
+    floory->size = PORTAL_EPSILON_SIZE;
+    model->getFloorThings().push_back(floory);
+    gameViewModel->getLayer(random_z)->push_back(floory);
 }
+
+auto updatePortal = [](FloorThing* floory, float elapsedTime) {
+    if (floory->spawning) {
+        if (floory->size < 1) {
+            floory->size *= PORTAL_GROW_FACTOR;
+        } else {
+            floory->size = 1.;
+            floory->spawning = false;
+            floory->lifetime = PORTAL_ACTIVE_SECONDS;
+        }
+    } else {
+        if (floory->lifetime > 0) {
+            floory->lifetime = std::max(floory->lifetime - elapsedTime, 0.f);
+        } else if (floory->size >= PORTAL_EPSILON_SIZE) {
+            floory->size *= PORTAL_WANE_FACTOR;
+        } else {
+            floory->size = 0;
+            return false;
+        }
+    }
+    return true;
+};
 
 void GameLogic::updateFloorThings(float elapsedTime)
 {
+    maybeSpawnFloorThing(FloorThingType::Portal);
 
+    for (FloorThing* floory : model->getFloorThings()) {
+        switch (floory->type) {
+            case FloorThingType::Portal:
+                if (!updatePortal(floory, elapsedTime)) {
+                    killFloorThing(floory);
+                };
+                break;
+            // again: there are no other types yet.
+        }
+    }
 }
 
 void GameLogic::killFloorThing(FloorThing* floorThing)
 {
+    int id = floorThing->id;
 
+    auto modelList = model->getFloorThings();
+    for(auto it = modelList.begin(); it != modelList.end(); it++) {
+        if((*it)->id == id) {
+            modelList.erase(it);
+            break;
+        }
+    }
+
+    gameViewModel->removeById(id);
 }
