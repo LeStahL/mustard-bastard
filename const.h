@@ -1,3 +1,4 @@
+#include <SFML/Graphics/Color.hpp>
 
 constexpr unsigned int WIDTH = 66 * 16;
 constexpr unsigned int HEIGHT = 66 * 9;

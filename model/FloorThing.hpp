@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-#include <IsDrawable.hpp>
+#include <Entity.h>
 
 enum FloorThingType {
     Portal,
@@ -9,7 +9,7 @@ enum FloorThingType {
     // etc.
 };
 
-class FloorThing : public IsDrawable {
+class FloorThing : public Entity {
     private:
     FloorThingType type;
 

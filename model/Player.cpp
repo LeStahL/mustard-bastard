@@ -3,7 +3,7 @@
 #include <WorldOrientation.h>
 
 Player::Player(int graphicId, WorldPosition position, WorldOrientation orientation) :
-        IsDrawable(graphicId, DrawType::animation, position, orientation) {
+        Entity(position) {
     state = PlayerState::Standing;
     attack_state = AttackState();
 }

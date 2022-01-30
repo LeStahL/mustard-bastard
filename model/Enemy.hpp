@@ -1,19 +1,19 @@
 #pragma once
 
-#include <IsDrawable.hpp>
+#include <Entity.h>
 
 enum EnemyType {
     ZombieAndCat,
     IcebergAndFairy
 };
 
-class Enemy : public IsDrawable {
-    private:
+class Enemy : public Entity {
+    public:
     EnemyType type;
 
     public:
     float health = 0;
-    float speed = 0;
+    float speed = 100;
 
-    Enemy(int graphicId, EnemyType type, WorldPosition position);
+    Enemy(EnemyType type, WorldPosition position);
 };

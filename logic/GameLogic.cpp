@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <const.h>
 
-GameLogic::GameLogic(Model* model, GameViewModel* gameViewModel) :
-        model(model), gameViewModel(gameViewModel) {
+GameLogic::GameLogic(Model* model) :
+        model(model) {
     srand(1337); // TODO: replace with time
 }
 
@@ -45,7 +45,6 @@ void GameLogic::move_z(int player_number, int sign) {
     if (player->move_z_cooldown <= 0) {
         player->position.z = std::clamp(player->position.z + sign, 0, (int)Z_PLANES - 1);
         player->move_z_cooldown = PLAYER_MOVE_Z_COOLDONW;
-
     }
 }
 
@@ -62,7 +61,6 @@ void GameLogic::attack(int player_number) {
     }
 }
 
-
 void GameLogic::updateEnemies(float timeElapsed) {
     // spwan new enemies with probabilty of 5% for 100 calls
 
@@ -70,41 +68,33 @@ void GameLogic::updateEnemies(float timeElapsed) {
     //maybeSpawnEnemy(EnemyType::IcebergAndFairy);
     maybeSpawnFloorThing(FloorThingType::Portal);
 
-    // move all enemies by their own speed
-    for(Enemy* enemy : model->getEnemies()) {
-        enemy->position.x -= enemy->speed*timeElapsed;
-        enemy->x = enemy->position.x;
+    std::cout << model->getEnemies().size() << std::endl;
 
-        if (isEnemyToFarAway(enemy)) {
-            killEnemy(enemy);
-        }
+    // move all enemies by their own speed
+    for(Enemy enemy : model->getEnemies()) {
+        enemy.position.x -= enemy.speed*timeElapsed;
+        
+
+        //std::cout << "move " << enemy.position.x << std::endl;
+        //if (isEnemyToFarAway(enemy)) {
+        //    killEnemy(enemy);
+        //}
     }
 }
 
 void GameLogic::maybeSpawnEnemy(EnemyType type) {
-    Model::GraphicsId graphicsId;
-    switch (rand() % 3) {
-        case 0:
-            graphicsId = Model::GraphicsId::zombie;
-            break;
-        case 1:
-            graphicsId = Model::GraphicsId::iceberg;
-            break;
-        case 2:
-            graphicsId = Model::GraphicsId::cat;
-            break;
-    }
+    if(!(rand() % 100 < 1) && model->getEnemies().size() < 1)
+        return;
 
-    Enemy* enemy = new Enemy(graphicsId, type, WorldPosition(1000.0f, 0, true));
+    Enemy enemy(type, WorldPosition(1000.0f, 2, true));
     model->getEnemies().push_back(enemy);
-    gameViewModel->getLayer(1)->push_back(enemy);
 }
 
 bool GameLogic::isEnemyToFarAway(Enemy* enemy) {
     return abs(enemy->position.x) > 2000; // TODO Screen width
 }
 
-void GameLogic::killEnemy(Enemy *enemy) {
+/*void GameLogic::killEnemy(Enemy *enemy) {
     int id = enemy->id;
 
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
@@ -113,18 +103,7 @@ void GameLogic::killEnemy(Enemy *enemy) {
             break;
         }
     }
-
-    for(int i = 0; i < Z_LAYER_COUNT; i++) {
-        auto layer = *(gameViewModel->getLayer(i));
-
-        for(auto it = layer.begin(); it != layer.end(); it++) {
-            if((*it)->id == id) {
-                layer.erase(it);
-                return;
-            }
-        }
-    }
-}
+}*/
 
 void GameLogic::updatePlayer(Player* player, float timeElapsed) {
     player->position.x = std::clamp(

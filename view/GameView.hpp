@@ -1,8 +1,9 @@
 #pragma once
 
 #include <vector>
-#include <GameViewModel.hpp>
+#include <Model.h>
 #include <Animation.hpp>
+#include <ViewStuff.h>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -18,14 +19,19 @@ class GameView : public View {
     std::vector<Animation> _animations;
 
     sf::RenderWindow *_renderWindow;
-    GameViewModel& model;
+    Model& model;
+    ViewStuff viewStuff;
 
-    void adjustSprite(IsDrawable *drawable);
+    void adjustSprite(int spriteId, Entity& entity, bool upworld);
 
     public:
-    GameView(sf::RenderWindow *renderWindow, GameViewModel& model);
+    GameView(sf::RenderWindow *renderWindow, Model& model);
 
     bool draw(double time) override;
     bool setUp() override;
     bool tearDown() override;
+
+    private:
+    sf::Vector2f convertWorldPosition(WorldPosition position);
+    bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
 };

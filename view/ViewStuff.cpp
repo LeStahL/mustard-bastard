@@ -3,8 +3,7 @@
 #include <const.h>
 
 ViewStuff::ViewStuff(sf::RenderWindow *window) :
-        window(window),
-        IsDrawable(0, IsDrawable::DrawType::primitive, WorldPosition(0, 0, true))
+        window(window)
 { }
 
 auto createHorizontalLine = [](float y, float width, float thickness, sf::Color color)
@@ -53,10 +52,6 @@ void ViewStuff::DrawBackground()
     drawBackground(false, BOTTOM_COLOR, window);
     drawLinesForWorld(false, BOTTOM_COLOR, window);
     drawMiddleMargin(window);
-}
-
-void ViewStuff::customDraw(double time) {
-    DrawBackground();
 }
 
 int ViewStuff::getBackgroundBaseLine(WorldPosition position) {
