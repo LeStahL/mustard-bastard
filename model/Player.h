@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <IsDrawable.hpp>
+#include <Entity.h>
 #include <AttackState.hpp>
 
 enum PlayerState {
@@ -10,7 +10,7 @@ enum PlayerState {
     Attacking
 };
 
-class Player : public IsDrawable {
+class Player : public Entity {
     public:
     PlayerState state;
     float move_z_cooldown;

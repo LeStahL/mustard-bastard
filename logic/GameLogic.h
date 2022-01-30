@@ -3,7 +3,6 @@
 
 #include <map>
 #include <Model.h>
-#include <GameViewModel.hpp>
 #include <AttackState.hpp>
 #include <FloorThing.hpp>
 
@@ -21,7 +20,6 @@ constexpr float PLAYER_MIN_REQUIRED_POWER = 0.3;
 class GameLogic {
     private:
     Model* model;
-    GameViewModel* gameViewModel;
 
     const std::map<Weapon, double> ATTACK_COOLDOWN = {
         {Weapon::Hand, 500.},
@@ -30,7 +28,7 @@ class GameLogic {
     };
 
     public:
-    GameLogic(Model* model, GameViewModel* gameViewModel);
+    GameLogic(Model* model);
     void update(float elapsedTime);
     void move_x(int player, int sign, bool retreat);
     void move_z(int player, int sign);
@@ -39,11 +37,11 @@ class GameLogic {
 
     private:
     void updatePlayer(Player* player, float elapsedTime);
-    void updatePlayerSprite(Player* player);
+    //void updatePlayerSprite(Player* player);
     void updateEnemies(float elapsedTime);
     void maybeSpawnEnemy(EnemyType type);
     bool isEnemyToFarAway(Enemy* enemy);
-    void killEnemy(Enemy* enemy);
+    //void killEnemy(Enemy* enemy);
     void maybeSpawnFloorThing(FloorThingType type);
     void updateFloorThings(float elapsedTime);
     void killFloorThing(FloorThing* floorThing);

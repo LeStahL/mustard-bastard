@@ -24,7 +24,6 @@ class Entity {
         { }
 
         virtual ~Entity() {}
-        //virtual void OverrideMe() = 0;
 };
 
 #endif /* ENTITY_H */

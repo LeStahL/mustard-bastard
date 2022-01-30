@@ -3,9 +3,8 @@
 
 #include <vector>
 #include <Player.h>
-#include <Entity.h>
 #include <Enemy.hpp>
-#include <Object.h>
+#include <FloorThing.hpp>
 
 class Model {
     public:
@@ -20,18 +19,17 @@ class Model {
     };
 
     private:
-    std::vector<Player*> players;
-    // Object background;
-    std::vector<Enemy*> enemies;
-    std::vector<Entity*> entities;
+    std::vector<Player> players;
+    std::vector<Enemy> enemies;
+    std::vector<FloorThing> floorThings;
 
     public:
     Model();
 
-    std::vector<Entity*>& getEntities();
     Player* getPlayer(int player_number);
     int getNumberOfPlayers();
-    std::vector<Enemy*>& getEnemies();
+    std::vector<Enemy>& getEnemies();
+    std::vector<FloorThing>& getFloorThings();
 };
 
 #endif /* MODEL_H */
