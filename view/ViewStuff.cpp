@@ -7,15 +7,6 @@ ViewStuff::ViewStuff(sf::RenderWindow *window) :
         IsDrawable(0, IsDrawable::DrawType::primitive, WorldPosition(0, 0, true))
 { }
 
-constexpr float FLOOR_LINE_THICKNESS = 1.5;
-constexpr float LINE_DISTANCE = 32.;
-constexpr int LINES = 4;
-constexpr float MIDDLE_MARGIN = 3;
-
-constexpr sf::Color TOP_COLOR(170, 170, 0);
-constexpr sf::Color BOTTOM_COLOR(0, 150, 200);
-constexpr sf::Color MARGIN_COLOR(210, 13, 13);
-
 auto createHorizontalLine = [](float y, float width, float thickness, sf::Color color)
 {
     sf::RectangleShape line(sf::Vector2f(width, thickness));
@@ -27,7 +18,7 @@ auto createHorizontalLine = [](float y, float width, float thickness, sf::Color 
 auto yForLine = [](int z, bool upWorld)
 {
     int sign = upWorld ? -1 : 1;
-    double center = 0.5 * (HEIGHT + sign * MIDDLE_MARGIN);
+    double center = 0.5 * (GAME_HEIGHT + sign * MIDDLE_MARGIN);
     return center + sign * z * LINE_DISTANCE;
 };
 
@@ -41,15 +32,15 @@ auto drawLinesForWorld = [](bool upWorld, sf::Color color, sf::RenderWindow *win
     }
 };
 
-auto drawMargin = [](sf::RenderWindow *window)
+auto drawMiddleMargin = [](sf::RenderWindow *window)
 {
-    window->draw(createHorizontalLine(0.5 * HEIGHT, WIDTH, MIDDLE_MARGIN, MARGIN_COLOR));
+    window->draw(createHorizontalLine(0.5 * GAME_HEIGHT, WIDTH, MIDDLE_MARGIN, MARGIN_COLOR));
 };
 
 auto drawBackground = [](bool upWorld, sf::Color color, sf::RenderWindow *window)
 {
-    double y = upWorld ? 0 : 0.5 * HEIGHT;
-    auto rect = sf::RectangleShape(sf::Vector2f(WIDTH, 0.5 * HEIGHT));
+    double y = upWorld ? 0 : 0.5 * GAME_HEIGHT;
+    auto rect = sf::RectangleShape(sf::Vector2f(WIDTH, 0.5 * GAME_HEIGHT));
     rect.setPosition(sf::Vector2f(0, y));
     rect.setFillColor(color * sf::Color(255, 255, 255, 40));
     window->draw(rect);
@@ -61,7 +52,7 @@ void ViewStuff::DrawBackground()
     drawLinesForWorld(true, TOP_COLOR, window);
     drawBackground(false, BOTTOM_COLOR, window);
     drawLinesForWorld(false, BOTTOM_COLOR, window);
-    drawMargin(window);
+    drawMiddleMargin(window);
 }
 
 void ViewStuff::customDraw(double time) {

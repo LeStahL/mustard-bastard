@@ -4,16 +4,24 @@
 #include <IsDrawable.hpp>
 #include <AttackState.hpp>
 
-class Player : public IsDrawable {
-    private:
-    AttackState attack_state;
+enum PlayerState {
+    Standing,
+    Walking,
+    Attacking
+};
 
+class Player : public IsDrawable {
     public:
+    PlayerState state;
+    float move_z_cooldown;
+    AttackState attack_state;
+    float power = 1;
+    long points = 0;
+
     Player(int graphicId, WorldPosition position, WorldOrientation orientation);
 
     Player(int graphicId, WorldPosition position) : Player(graphicId, position, WorldOrientation())
     {}
-
 
 };
 

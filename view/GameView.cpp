@@ -53,18 +53,12 @@ bool GameView::draw(double time) {
 }
 
 bool GameView::setUp() {
-    bool result;
     _textures.resize(5);
-    result = _textures[0].loadFromFile("assets/bastard.png");
-    std::cout << "TEX0? " << result << std::endl;
-    result = _textures[1].loadFromFile("assets/Zombie_01.png");
-    std::cout << "TEX1? " << result << std::endl;
-    result = _textures[2].loadFromFile("assets/Eisberg_01.png");
-    std::cout << "TEX2? " << result << std::endl;
-    result = _textures[3].loadFromFile("assets/katze_01.png");
-    std::cout << "TEX3? " << result << std::endl;
-    result = _textures[4].loadFromFile("assets/mainscreen.png");
-    std::cout << "TEX4? " << result << std::endl;
+    _textures[0].loadFromFile("assets/bastard.png");
+    _textures[1].loadFromFile("assets/Zombie_01.png");
+    _textures[2].loadFromFile("assets/Eisberg_01.png");
+    _textures[3].loadFromFile("assets/katze_01.png");
+    _textures[4].loadFromFile("assets/mainscreen.png");
 
     _sprites.resize(5);
     _sprites[0].setTexture(_textures[0]);

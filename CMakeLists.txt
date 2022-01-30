@@ -13,6 +13,7 @@ add_executable(mustard-bastard Main.cpp
     model/WorldOrientation.cpp
     model/Player.cpp
     model/Enemy.cpp
+    model/FloorThing.cpp
     model/GameViewModel.cpp
     model/Object.cpp
     model/MainMenuState.cpp
@@ -25,9 +26,9 @@ add_executable(mustard-bastard Main.cpp
     view/HighscoreMenuView.cpp
 
     logic/GameLogic.cpp
-    
+
     utility/Animation.cpp
-    
+
     controller/MainMenuInputController.cpp
     controller/GameInputController.cpp
     controller/MenuController.cpp
@@ -36,10 +37,10 @@ add_executable(mustard-bastard Main.cpp
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
     "${PROJECT_SOURCE_DIR}/."
-    "${PROJECT_SOURCE_DIR}/model/"  
-    "${PROJECT_SOURCE_DIR}/view/"  
+    "${PROJECT_SOURCE_DIR}/model/"
+    "${PROJECT_SOURCE_DIR}/view/"
     "${PROJECT_SOURCE_DIR}/controller/"
-    "${PROJECT_SOURCE_DIR}/utility/"    
+    "${PROJECT_SOURCE_DIR}/utility/"
     "${PROJECT_SOURCE_DIR}/logic/"
 )
 target_link_directories(mustard-bastard PUBLIC ${SFML_BUILD_DIRECTORY})

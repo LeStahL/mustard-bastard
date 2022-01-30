@@ -5,7 +5,7 @@ GameViewModel::GameViewModel(ViewStuff *viewStuff, Model *model) :
     {
     zLayer = std::vector<std::vector<IsDrawable*>>(Z_LAYER_COUNT);
 
-        // gameViewModel.getLayer(0)->push_back(&background);
+    // gameViewModel.getLayer(0)->push_back(&background);
 
     getLayer(0)->push_back(viewStuff);
 

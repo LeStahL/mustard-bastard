@@ -5,7 +5,7 @@
 #include <Object.h>
 #include <iostream>
 
-const WorldPosition START_PLAYER1 = WorldPosition(20., 1, true);
+const WorldPosition START_PLAYER1 = WorldPosition(40., 1, true);
 
 Model::Model()
 {

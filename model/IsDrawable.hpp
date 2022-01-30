@@ -19,6 +19,7 @@ class IsDrawable : public Entity { // each drawable item is also an entity
     DrawType drawType;
 
     public:
+    IsDrawable(WorldPosition position);
     IsDrawable(int graphicId, DrawType drawType, WorldPosition position, WorldOrientation orientation);
     IsDrawable(int graphicId, DrawType drawType, WorldPosition position)
         : IsDrawable(graphicId, drawType, position, WorldOrientation()) {}
