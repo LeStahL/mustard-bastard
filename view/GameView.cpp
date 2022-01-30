@@ -67,7 +67,7 @@ bool GameView::setUp() {
     loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT);
     loadAnimation("assets/katze_01.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
     loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
-    loadAnimation("assests/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_WIDTH, FAIRY_FRAME_COUNT);
+    loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_WIDTH, FAIRY_FRAME_COUNT);
     
     return true;
 }
