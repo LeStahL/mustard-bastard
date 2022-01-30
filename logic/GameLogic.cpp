@@ -62,7 +62,6 @@ void GameLogic::attack(int player_number) {
     }
 }
 
-
 void GameLogic::updateEnemies(float timeElapsed) {
     // spwan new enemies with probabilty of 5% for 100 calls
 
@@ -134,6 +133,18 @@ void GameLogic::updatePlayer(Player* player, float timeElapsed) {
     );
     player->move_z_cooldown = std::max(player->move_z_cooldown - timeElapsed, 0.f);
     player->attack_state.coolDown(timeElapsed);
+
+    updatePlayerSprite(player);
+}
+
+void GameLogic::updatePlayerSprite(Player* player) {
+    std::map<int, int> playerStateToSprite = {
+        { PlayerState::Standing , Model::GraphicsId::player_standing },
+        { PlayerState::Walking  , Model::GraphicsId::player_walking },
+        { PlayerState::Attacking, Model::GraphicsId::player_attack }
+    };
+
+    player->graphicId = playerStateToSprite[player->state];
 }
 
 int GameLogic::nPlayers() {

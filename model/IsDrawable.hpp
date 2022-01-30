@@ -14,7 +14,7 @@ class IsDrawable : public Entity { // each drawable item is also an entity
     float y;
     bool facing_left;
 
-    protected:
+    public:
     int graphicId;
     DrawType drawType;
 

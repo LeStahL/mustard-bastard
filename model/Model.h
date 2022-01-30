@@ -11,10 +11,11 @@ class Model {
     public:
     enum GraphicsId {
         player_standing,
+        player_walking,
+        player_attack,
         zombie,
         iceberg,
-        cat,
-        game_background
+        cat
     };
 
     private:
