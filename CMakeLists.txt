@@ -55,6 +55,7 @@ set(SFML_LIBRARIES
 target_link_libraries(mustard-bastard ${SFML_LIBRARIES})
 set_property(TARGET mustard-bastard PROPERTY CXX_STANDARD 17)
 
+# Put SFML libraries into place
 foreach(SFML_LIB ${SFML_LIBRARIES})
     add_custom_command(TARGET mustard-bastard POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy "${SFML_BUILD_DIRECTORY}/${SFML_LIB}-3.dll" $<TARGET_FILE_DIR:mustard-bastard>
@@ -75,4 +76,9 @@ if(${FONT} MATCHES FONT-NOTFOUND)
 endif()
 add_custom_command(TARGET mustard-bastard POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/Fira_Code_v6.2/ttf/FiraCode-Regular.ttf" "$<TARGET_FILE_DIR:mustard-bastard>/assets/FiraCode-Regular.ttf"
+)
+
+# Pack release archive
+add_custom_command(TARGET mustard-bastard POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E tar "cfv" "mustard-bastard-team210.zip" --format=zip "$<TARGET_FILE_DIR:mustard-bastard>"
 )
