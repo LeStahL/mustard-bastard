@@ -28,4 +28,7 @@ class GameView : public View {
     bool draw(double time) override;
     bool setUp() override;
     bool tearDown() override;
+
+    private:
+    bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
 };
