@@ -19,6 +19,7 @@
 #include <const.h>
 #include <GameView.hpp>
 #include "HighscoreList.hpp"
+#include "MusicPlayer.hpp"
 
 constexpr bool QM_QUICKDEVEL = true;
 
@@ -46,12 +47,14 @@ int main()
     GameView gameView(&window, gameViewModel);
     std::cout << "Survived initialization." << std::endl;
 
+    MusicPlayer musicPlayer;
+
     MenuState menuState;
     MainMenuState mainMenuState;
     MainMenuView mainMenuView(&window, &menuState, &mainMenuState);
     HighscoreList highscoreList;
     HighscoreMenuView highscoreMenuView(&window, &menuState, &highscoreList);
-    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView);
+    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView, &musicPlayer);
     MainMenuInputController mainMenuInputController(&mainMenuState, &menuController);
     HighscoreMenuInputController highscoreMenuInputController(&mainMenuState, &menuController);
     menuController.setGameInputController(&gameInputController);

@@ -10,6 +10,7 @@
 #include "HighscoreList.hpp"
 #include "HighscoreMenuInputController.hpp"
 #include "HighscoreMenuView.hpp"
+#include "MusicPlayer.hpp"
 
 class MenuController
 {
@@ -25,9 +26,10 @@ class MenuController
     HighscoreMenuView *_highscoreMenuView;
     HighscoreMenuInputController *_highscoreMenuInputController;
     HighscoreList *_highscoreList;
+    MusicPlayer *_musicPlayer;
 
     public:
-    MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView);
+    MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView, MusicPlayer *musicPlayer);
     void setMainMenuInputController(MainMenuInputController *mainMenuInputController);
     void setGameInputController(GameInputController *gameInputController);
     void setHighscoreMenuInputController(HighscoreMenuInputController *highscoreMenuInputController);

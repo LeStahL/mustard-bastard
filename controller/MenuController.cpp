@@ -1,6 +1,6 @@
 #include "MenuController.hpp"
 
-MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView)
+MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView, MusicPlayer *musicPlayer)
     : _state(state)
     , _window(window)
     , _mainMenuState(mainMenuState)
@@ -10,6 +10,7 @@ MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainM
     , _inputController(nullptr)
     , _highscoreList(highscoreList)
     , _highscoreMenuView(highscoreMenuView)
+    , _musicPlayer(musicPlayer)
 {
 }
 
@@ -37,6 +38,7 @@ bool MenuController::canEnterState(MenuState::MenuType type)
 bool MenuController::exitCurrentState()
 {
     if(_view != nullptr) _view->tearDown();
+    _musicPlayer->stop();
 
     switch(_state->currentType())
     {
@@ -76,10 +78,10 @@ bool MenuController::enterState(MenuState::MenuType type)
         return true;
 
         case MenuState::MenuType::Game:
-        // TODO: Start game
         _view = _gameView;
         _inputController = _gameInputController;
         _view->setUp();
+        _musicPlayer->playSound(MusicPlayer::SoundType::GameSound);
         return true;
 
         case MenuState::MenuType::HighScoreMenu:

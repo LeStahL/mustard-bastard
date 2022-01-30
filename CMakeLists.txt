@@ -28,6 +28,7 @@ add_executable(mustard-bastard Main.cpp
     logic/GameLogic.cpp
 
     utility/Animation.cpp
+    utility/MusicPlayer.cpp
 
     controller/MainMenuInputController.cpp
     controller/GameInputController.cpp
@@ -48,6 +49,7 @@ set(SFML_LIBRARIES
     SFML-window
     SFML-system
     SFML-graphics
+    SFML-audio
 )
 target_link_libraries(mustard-bastard ${SFML_LIBRARIES})
 set_property(TARGET mustard-bastard PROPERTY CXX_STANDARD 17)
@@ -59,6 +61,9 @@ foreach(SFML_LIB ${SFML_LIBRARIES})
 endforeach()
 add_custom_command(TARGET mustard-bastard POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:mustard-bastard>/assets"
+)
+add_custom_command(TARGET mustard-bastard POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/thirdparty/SFML/extlibs/bin/x64/openal32.dll" "$<TARGET_FILE_DIR:mustard-bastard>"
 )
 
 find_file(FONT NAMES Fira_Code_v6.2.zip HINTS ${CMAKE_CURRENT_BINARY_DIR})
