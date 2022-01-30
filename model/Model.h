@@ -14,8 +14,9 @@ class Model {
         player_walking,
         player_attack,
         zombie,
+        cat,
         iceberg,
-        cat
+        fairy
     };
 
     private:
