@@ -64,46 +64,38 @@ void GameLogic::attack(int player_number) {
 void GameLogic::updateEnemies(float timeElapsed) {
     // spwan new enemies with probabilty of 5% for 100 calls
 
-    //maybeSpawnEnemy(EnemyType::ZombieAndCat);
-    //maybeSpawnEnemy(EnemyType::IcebergAndFairy);
-    maybeSpawnFloorThing(FloorThingType::Portal);
+    maybeSpawnEnemy(EnemyType::ZombieAndCat);
+    maybeSpawnEnemy(EnemyType::IcebergAndFairy);
+    //maybeSpawnFloorThing(FloorThingType::Portal);
 
-    std::cout << model->getEnemies().size() << std::endl;
+    for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
+        it->position.x -= it->speed * timeElapsed;
 
-    // move all enemies by their own speed
-    for(Enemy enemy : model->getEnemies()) {
-        enemy.position.x -= enemy.speed*timeElapsed;
-        
-
-        //std::cout << "move " << enemy.position.x << std::endl;
-        //if (isEnemyToFarAway(enemy)) {
-        //    killEnemy(enemy);
-        //}
+        if(isEnemyToFarAway(*it))
+            killEnemy(*it);
     }
 }
 
 void GameLogic::maybeSpawnEnemy(EnemyType type) {
-    if(!(rand() % 100 < 1) && model->getEnemies().size() < 1)
+    if(!(rand() % 1000 < 1))
         return;
 
-    Enemy enemy(type, WorldPosition(1000.0f, 2, true));
+    Enemy enemy(type, WorldPosition(1000.0f, rand()%3, true));
     model->getEnemies().push_back(enemy);
 }
 
-bool GameLogic::isEnemyToFarAway(Enemy* enemy) {
-    return abs(enemy->position.x) > 2000; // TODO Screen width
+bool GameLogic::isEnemyToFarAway(Enemy &enemy) {
+    return abs(enemy.position.x) > 2000; // TODO Screen width
 }
 
-/*void GameLogic::killEnemy(Enemy *enemy) {
-    int id = enemy->id;
-
+void GameLogic::killEnemy(Enemy &enemy) {
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
-        if((*it)->id == id) {
+        if(it->id == enemy.id) {
             model->getEnemies().erase(it);
             break;
         }
     }
-}*/
+}
 
 void GameLogic::updatePlayer(Player* player, float timeElapsed) {
     player->position.x = std::clamp(

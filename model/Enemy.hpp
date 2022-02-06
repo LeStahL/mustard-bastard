@@ -13,7 +13,7 @@ class Enemy : public Entity {
 
     public:
     float health = 0;
-    float speed = 100;
+    float speed = 100.0f;
 
     Enemy(EnemyType type, WorldPosition position);
 };
