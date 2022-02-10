@@ -56,4 +56,3 @@ class GameLogic {
 };
 
 #endif /* GAMELOGIC_H */
-

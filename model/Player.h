@@ -20,7 +20,6 @@ class Player : public Entity {
     float power = 1;
     float health = 100;
     long points = 0;
-    float health = .5;
     std::string name = "Eumel";
 
     Player(int graphicId, WorldPosition position, WorldOrientation orientation);
