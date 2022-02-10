@@ -5,13 +5,13 @@
 
 #include <WorldPosition.h>
 
-class ViewStuff
+class FloorView
 {
     private:
         sf::RenderWindow *window;
 
     public:
-        ViewStuff(sf::RenderWindow *window);
+        FloorView(sf::RenderWindow *window);
         void DrawBackground();
         void customDraw(sf::RenderWindow *window, double time);
         int getBackgroundBaseLine(WorldPosition position);

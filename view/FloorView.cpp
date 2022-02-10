@@ -1,8 +1,8 @@
-#include "ViewStuff.h"
+#include "FloorView.h"
 
 #include <const.h>
 
-ViewStuff::ViewStuff(sf::RenderWindow *window) :
+FloorView::FloorView(sf::RenderWindow *window) :
         window(window)
 { }
 
@@ -47,7 +47,7 @@ auto drawBackground = [](bool upWorld, sf::Color color, sf::RenderWindow *window
     window->draw(rect);
 };
 
-void ViewStuff::DrawBackground()
+void FloorView::DrawBackground()
 {
     drawBackground(true, TOP_COLOR, window);
     drawLinesForWorld(true, TOP_COLOR, window);
@@ -56,11 +56,11 @@ void ViewStuff::DrawBackground()
     drawMiddleMargin(window);
 }
 
-void ViewStuff::customDraw(sf::RenderWindow *window, double time) {
+void FloorView::customDraw(sf::RenderWindow *window, double time) {
     DrawBackground();
 }
 
-int ViewStuff::getBackgroundBaseLine(WorldPosition position) {
+int FloorView::getBackgroundBaseLine(WorldPosition position) {
     int z = position.z;
     bool upWorld = position.upWorld;
     return 0.5 * (yForLine(z, upWorld) + yForLine(z + 1, upWorld));

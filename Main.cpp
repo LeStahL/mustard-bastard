@@ -16,7 +16,7 @@
 #include "MainMenuInputController.hpp"
 #include "GameInputController.hpp"
 #include <const.h>
-#include <gamelogic_const.h>
+#include <GameLogicConst.h>
 #include <GameView.hpp>
 #include "HighscoreList.hpp"
 #include "MusicPlayer.hpp"

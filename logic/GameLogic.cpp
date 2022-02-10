@@ -4,10 +4,11 @@
 #include <iostream>
 #include <algorithm>
 #include <const.h>
+#include <time.h>
 
 GameLogic::GameLogic(Model* model) :
         model(model) {
-    srand(1337); // TODO: replace with time
+    srand(time(NULL));
 }
 
 void GameLogic::update(float timeElapsed) {
@@ -126,8 +127,6 @@ void GameLogic::maybeSpawnPortal()
     float random_x = PLAYER_X_BORDER_MARGIN
         + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
     int random_z = rand() % Z_PLANES;
-
-    std::cout << "FloorThing spawned on " << random_x << "  " << random_z << std::endl;
 
     Portal* portal = new Portal(WorldPosition(random_x, random_z, true));
     portal->size = PORTAL_EPSILON_SIZE;

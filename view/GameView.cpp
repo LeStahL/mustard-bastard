@@ -4,7 +4,7 @@
 #include <Entity.h>
 #include <algorithm>
 #include <GameLogic.h>
-#include <gamelogic_const.h>
+#include <GameLogicConst.h>
 #include <const.h>
 #include <cmath>
 
@@ -17,14 +17,14 @@ std::map<int, int> playerStateToSprite = {
 GameView::GameView(sf::RenderWindow *renderWindow, Model& model) :
     _renderWindow(renderWindow),
     model(model),
-    viewStuff(ViewStuff(_renderWindow)) {
+    floorView(FloorView(_renderWindow)) {
 }
 
 sf::Vector2f GameView::convertWorldPosition(WorldPosition position) {
     sf::Vector2f pixelPos;
 
     pixelPos.x = position.x;
-    pixelPos.y = viewStuff.getBackgroundBaseLine(position);
+    pixelPos.y = floorView.getBackgroundBaseLine(position);
 
     return pixelPos;
 }
@@ -51,10 +51,10 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool upworld)
     }
 }
 
-auto drawPortal = [](Portal* portal, ViewStuff viewStuff, double time) {
-    auto halfwidth = portal->size * PORTAL_MAX_HALFWIDTH;
+auto drawPortal = [](Portal* portal, FloorView floorView, double time) {
+    auto halfwidth = portal->getHalfWidth();
     auto result = sf::CircleShape(halfwidth);
-    auto floory_y = viewStuff.getBackgroundBaseLine(portal->position);
+    auto floory_y = floorView.getBackgroundBaseLine(portal->position);
     result.setPosition(sf::Vector2f(
         portal->position.x - halfwidth,
         floory_y - halfwidth * PORTAL_HEIGHT_RATIO + 2
@@ -70,7 +70,7 @@ auto drawPortal = [](Portal* portal, ViewStuff viewStuff, double time) {
 };
 
 bool GameView::draw(double time) {
-    viewStuff.DrawBackground();
+    floorView.DrawBackground();
 
     for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
 
@@ -80,7 +80,7 @@ bool GameView::draw(double time) {
                 continue;
 
             if(portal->position.z == layer) {
-                _renderWindow->draw(drawPortal(portal, viewStuff, time));
+                _renderWindow->draw(drawPortal(portal, floorView, time));
             }
         }
 

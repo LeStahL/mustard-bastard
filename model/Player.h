@@ -9,7 +9,8 @@
 enum PlayerState {
     Standing,
     Walking,
-    Attacking
+    Attacking,
+    Warping
 };
 
 class Player : public Entity {
@@ -20,11 +21,11 @@ class Player : public Entity {
     float power = 1;
     float health = .5;
     long points = 0;
-    std::string name = "Eumel";
+    std::string name;
 
-    Player(int graphicId, WorldPosition position, WorldOrientation orientation);
+    Player(std::string name, int graphicId, WorldPosition position, WorldOrientation orientation);
 
-    Player(int graphicId, WorldPosition position) : Player(graphicId, position, WorldOrientation())
+    Player(std::string name, int graphicId, WorldPosition position) : Player(name, graphicId, position, WorldOrientation())
     {}
 
 };

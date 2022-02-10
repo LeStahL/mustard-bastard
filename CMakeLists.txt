@@ -16,7 +16,7 @@ add_executable(mustard-bastard Main.cpp
     model/MenuState.cpp
     model/HighscoreList.cpp
 
-    view/ViewStuff.cpp
+    view/FloorView.cpp
     view/GameView.cpp
     view/MainMenuView.cpp
     view/HighscoreMenuView.cpp

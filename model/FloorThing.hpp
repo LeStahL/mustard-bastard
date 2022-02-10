@@ -2,7 +2,7 @@
 
 #include <map>
 #include <Entity.h>
-#include <gamelogic_const.h>
+#include <GameLogicConst.h>
 
 class FloorThing : public Entity {
     public:
@@ -18,4 +18,6 @@ class Portal : public FloorThing {
 
     Portal(WorldPosition position) : FloorThing(position) {
     };
+
+    float getHalfWidth() { return size * PORTAL_MAX_HALFWIDTH; }
 };
