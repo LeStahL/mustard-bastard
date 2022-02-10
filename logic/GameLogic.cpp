@@ -67,7 +67,7 @@ void GameLogic::updateEnemies(float timeElapsed) {
 
     maybeSpawnEnemy(EnemyType::ZombieAndCat);
     maybeSpawnEnemy(EnemyType::IcebergAndFairy);
-    maybeSpawnFloorThing(FloorThingType::Portal);
+    maybeSpawnPortal();
 
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
         auto enemy = (*it);
@@ -115,7 +115,7 @@ int GameLogic::nPlayers() {
     return model->getNumberOfPlayers();
 }
 
-void GameLogic::maybeSpawnFloorThing(FloorThingType type)
+void GameLogic::maybeSpawnPortal()
 {
     // for now, there's only type FloorThingType::Portal
 
@@ -129,32 +129,30 @@ void GameLogic::maybeSpawnFloorThing(FloorThingType type)
 
     // std::cout << "FloorThing spawned on " << random_x << "  " << random_z << std::endl;
 
-    FloorThing* floory = new FloorThing(type, WorldPosition(random_x, random_z, true));
-    floory->size = PORTAL_EPSILON_SIZE;
-    model->getFloorThings().push_back(floory);
+    Portal* portal = new Portal(WorldPosition(random_x, random_z, true));
+    model->getFloorThings().push_back(portal);
 
     // workaround: just add another one in the other world
-    floory = new FloorThing(type, WorldPosition(random_x, random_z, false));
-    floory->size = PORTAL_EPSILON_SIZE;
-    model->getFloorThings().push_back(floory);
+    portal = new Portal(WorldPosition(random_x, random_z, false));
+    model->getFloorThings().push_back(portal);
 }
 
-auto updatePortal = [](FloorThing* floory, float elapsedTime) {
-    if (floory->spawning) {
-        if (floory->size < 1) {
-            floory->size *= PORTAL_GROW_FACTOR;
+auto updatePortal = [](Portal* portal, float elapsedTime) {
+    if (portal->spawning) {
+        if (portal->size < 1) {
+            portal->size *= PORTAL_GROW_FACTOR;
         } else {
-            floory->size = 1.;
-            floory->spawning = false;
-            floory->lifetime = PORTAL_ACTIVE_SECONDS;
+            portal->size = 1.;
+            portal->spawning = false;
+            portal->lifetime = PORTAL_ACTIVE_SECONDS;
         }
     } else {
-        if (floory->lifetime > 0) {
-            floory->lifetime = std::max(floory->lifetime - elapsedTime, 0.f);
-        } else if (floory->size >= PORTAL_EPSILON_SIZE) {
-            floory->size *= PORTAL_WANE_FACTOR;
+        if (portal->lifetime > 0) {
+            portal->lifetime = std::max(portal->lifetime - elapsedTime, 0.f);
+        } else if (portal->size >= PORTAL_EPSILON_SIZE) {
+            portal->size *= PORTAL_WANE_FACTOR;
         } else {
-            floory->size = 0;
+            portal->size = 0;
             return false;
         }
     }
@@ -163,21 +161,18 @@ auto updatePortal = [](FloorThing* floory, float elapsedTime) {
 
 void GameLogic::updateFloorThings(float elapsedTime)
 {
-    maybeSpawnFloorThing(FloorThingType::Portal);
+    maybeSpawnPortal();
 
     for (FloorThing* floory : model->getFloorThings()) {
-        switch (floory->type) {
-            case FloorThingType::Portal:
-                if (!updatePortal(floory, elapsedTime)) {
-                    killFloorThing(floory);
-                };
-                break;
-            // again: there are no other types yet.
+        if (typeid(floory) == typeid(Portal*)) {
+            if (!updatePortal((Portal*)floory, elapsedTime)) {
+                killPortal(floory);
+            };
         }
     }
 }
 
-void GameLogic::killFloorThing(FloorThing* floorThing)
+void GameLogic::killPortal(FloorThing* floorThing)
 {
     int id = floorThing->id;
 

@@ -16,6 +16,7 @@
 #include "MainMenuInputController.hpp"
 #include "GameInputController.hpp"
 #include <const.h>
+#include <gamelogic_const.h>
 #include <GameView.hpp>
 #include "HighscoreList.hpp"
 #include "MusicPlayer.hpp"
@@ -43,16 +44,16 @@ int main()
     GameView gameView(&window, model);
     std::cout << "Survived initialization." << std::endl;
 
-    MusicPlayer musicPlayer;
+    MusicPlayer musicPlayer(QM_QUICKDEVEL);
 
     MenuState menuState;
-    
+
     MainMenuState mainMenuState;
     MainMenuView mainMenuView(&window, &menuState, &mainMenuState);
-    
+
     HighscoreList highscoreList;
     HighscoreMenuView highscoreMenuView(&window, &menuState, &highscoreList);
-    
+
     Player *player1 = nullptr;
     Player *player2 = nullptr;
     if(model.getNumberOfPlayers() >= 1)
@@ -63,10 +64,10 @@ int main()
     HeadsUpDisplayView headsUpDisplayView(&window, &menuState, player1, player2);
 
     MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView, &musicPlayer, &headsUpDisplayView);
-    
+
     MainMenuInputController mainMenuInputController(&mainMenuState, &menuController);
     HighscoreMenuInputController highscoreMenuInputController(&mainMenuState, &menuController);
-    
+
     menuController.setGameInputController(&gameInputController);
     menuController.setMainMenuInputController(&mainMenuInputController);
     menuController.setHighscoreMenuInputController(&highscoreMenuInputController);

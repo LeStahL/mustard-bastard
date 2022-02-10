@@ -4,6 +4,7 @@
 #include <Entity.h>
 #include <algorithm>
 #include <GameLogic.h>
+#include <gamelogic_const.h>
 
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing , Model::GraphicsId::player_standing },
@@ -48,18 +49,18 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool upworld)
     }
 }
 
-auto drawPortal = [](FloorThing* floory, ViewStuff viewStuff, double time) {
-    auto halfwidth = floory->size * PORTAL_MAX_HALFWIDTH;
+auto drawPortal = [](Portal* portal, ViewStuff viewStuff, double time) {
+    auto halfwidth = portal->size * PORTAL_MAX_HALFWIDTH;
     auto result = sf::CircleShape(halfwidth);
-    auto floory_y = viewStuff.getBackgroundBaseLine(floory->position);
+    auto floory_y = viewStuff.getBackgroundBaseLine(portal->position);
     result.setPosition(sf::Vector2f(
-        floory->position.x - halfwidth,
+        portal->position.x - halfwidth,
         floory_y - halfwidth * PORTAL_HEIGHT_RATIO + 2
     ));
     result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
     auto color = sf::Color(255, 0, 0);
-    if (floory->lifetime > 0) {
-        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - floory->lifetime) * 2. * 3.14159;
+    if (portal->lifetime > 0) {
+        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
         color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
     }
     result.setFillColor(color);
@@ -72,10 +73,11 @@ bool GameView::draw(double time) {
     for(int layer = 2; layer >= 0; layer--) {
 
         for(FloorThing* floorThing: model.getFloorThings()) {
-            if (floorThing->type != FloorThingType::Portal) {
+            Portal* portal = dynamic_cast<Portal*>(floorThing);
+            if (portal == NULL)
                 continue;
-            }
-            _renderWindow->draw(drawPortal(floorThing, viewStuff, time));
+
+            _renderWindow->draw(drawPortal(portal, viewStuff, time));
         }
 
         // draw FloorThings by z == layer, call customDraw
