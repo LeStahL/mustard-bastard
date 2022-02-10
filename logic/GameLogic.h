@@ -47,8 +47,8 @@ class GameLogic {
     void updatePlayer(Player* player, float elapsedTime);
     void updateEnemies(float elapsedTime);
     void maybeSpawnEnemy(EnemyType type);
-    bool isEnemyToFarAway(Enemy &enemy);
-    void killEnemy(Enemy &enemy);
+    bool isEnemyTooFarAway(Enemy* enemy);
+    void killEnemy(Enemy *enemy);
     void maybeSpawnFloorThing(FloorThingType type);
     void updateFloorThings(float elapsedTime);
     void killFloorThing(FloorThing* floorThing);

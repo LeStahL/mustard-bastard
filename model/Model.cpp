@@ -10,7 +10,8 @@ Model::Model()
 {
     // ignore background for now
     // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldPosition(0, 0, true));
-    players.push_back(Player(GraphicsId::player_standing, START_PLAYER1));
+    Player* eumel = new Player(GraphicsId::player_standing, START_PLAYER1);
+    players.push_back(eumel);
     //players.push_back(new Player(GraphicsId::player_standing, START_PLAYER2));
     //players.at(1)->name = "Bert";
 

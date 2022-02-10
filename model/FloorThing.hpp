@@ -1,8 +1,7 @@
 #pragma once
 
 #include <map>
-#include <IsDrawable.hpp>
-#include <SFML/System.hpp>
+#include <Entity.h>
 
 enum FloorThingType {
     Portal,
@@ -10,7 +9,7 @@ enum FloorThingType {
     // etc.
 };
 
-class FloorThing : public IsDrawable {
+class FloorThing : public Entity {
     // hack: just make everything public so we can pfriemel around in it
     public:
     FloorThingType type;
@@ -20,6 +19,9 @@ class FloorThing : public IsDrawable {
 
     FloorThing(FloorThingType type, WorldPosition position);
     void endLife();
-
-    void customDraw(sf::RenderWindow *window, double time) override;
 };
+
+FloorThing::FloorThing(FloorThingType type, WorldPosition position) :
+        Entity(position), type(type) {
+    // could switch type here, i.e. Portals should be a primitive, but Medikit have a sprite.
+}

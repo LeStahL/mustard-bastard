@@ -12,7 +12,6 @@ add_executable(mustard-bastard Main.cpp
     model/WorldOrientation.cpp
     model/Player.cpp
     model/Enemy.cpp
-    model/FloorThing.cpp
     model/MainMenuState.cpp
     model/MenuState.cpp
     model/HighscoreList.cpp

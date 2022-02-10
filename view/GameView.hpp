@@ -22,7 +22,7 @@ class GameView : public View {
     Model& model;
     ViewStuff viewStuff;
 
-    void adjustSprite(int spriteId, Entity& entity, bool upworld);
+    void adjustSprite(int spriteId, Entity* entity, bool upworld);
 
     public:
     GameView(sf::RenderWindow *renderWindow, Model& model);

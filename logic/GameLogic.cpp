@@ -70,10 +70,13 @@ void GameLogic::updateEnemies(float timeElapsed) {
     maybeSpawnFloorThing(FloorThingType::Portal);
 
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
-        it->position.x -= it->speed * timeElapsed;
+        auto enemy = (*it);
+        enemy->position.x -= enemy->speed * timeElapsed;
 
-        if(isEnemyToFarAway(*it))
-            killEnemy(*it);
+        if (isEnemyTooFarAway(enemy))
+        {
+            killEnemy(enemy);
+        }
     }
 }
 
@@ -81,22 +84,21 @@ void GameLogic::maybeSpawnEnemy(EnemyType type) {
     if(!(rand() % 1000 < 1))
         return;
 
-    Enemy enemy(type, WorldPosition(1000.0f, rand() % 3, true));
+    Enemy* enemy = new Enemy(type, WorldPosition(1000.0f, rand() % 3, true));
     model->getEnemies().push_back(enemy);
 }
 
-bool GameLogic::isEnemyToFarAway(Enemy* enemy) {
+bool GameLogic::isEnemyTooFarAway(Enemy* enemy) {
     return abs(enemy->position.x) > 2 * WIDTH;
 }
 
-void GameLogic::killEnemy(Enemy &enemy) {
+void GameLogic::killEnemy(Enemy* enemy) {
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
-        if(it->id == enemy.id) {
+        if((*it)->id == enemy->id) {
             model->getEnemies().erase(it);
             break;
         }
     }
-    gameViewModel->removeById(id);
 }
 
 void GameLogic::updatePlayer(Player* player, float timeElapsed) {
@@ -130,13 +132,11 @@ void GameLogic::maybeSpawnFloorThing(FloorThingType type)
     FloorThing* floory = new FloorThing(type, WorldPosition(random_x, random_z, true));
     floory->size = PORTAL_EPSILON_SIZE;
     model->getFloorThings().push_back(floory);
-    gameViewModel->getLayer(random_z)->push_back(floory);
 
     // workaround: just add another one in the other world
     floory = new FloorThing(type, WorldPosition(random_x, random_z, false));
     floory->size = PORTAL_EPSILON_SIZE;
     model->getFloorThings().push_back(floory);
-    gameViewModel->getLayer(random_z)->push_back(floory);
 }
 
 auto updatePortal = [](FloorThing* floory, float elapsedTime) {
@@ -188,6 +188,4 @@ void GameLogic::killFloorThing(FloorThing* floorThing)
             break;
         }
     }
-
-    gameViewModel->removeById(id);
 }

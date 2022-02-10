@@ -2,6 +2,8 @@
 #include <iostream>
 #include "ViewConst.h"
 #include <Entity.h>
+#include <algorithm>
+#include <GameLogic.h>
 
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing , Model::GraphicsId::player_standing },
@@ -24,10 +26,10 @@ sf::Vector2f GameView::convertWorldPosition(WorldPosition position) {
     return pixelPos;
 }
 
-void GameView::adjustSprite(int spriteId, Entity &entity, bool upworld)
+void GameView::adjustSprite(int spriteId, Entity* entity, bool upworld)
 {
     // small hack, not pretty
-    WorldPosition pos = entity.position;
+    WorldPosition pos = entity->position;
     pos.upWorld = upworld;
 
     sf::Vector2f position = convertWorldPosition(pos);
@@ -35,44 +37,64 @@ void GameView::adjustSprite(int spriteId, Entity &entity, bool upworld)
 
     // TODO : replace by pretty math
     if(upworld) {
-        float x_sign = entity.orientation.facing_left ? -1 : 1;
+        float x_sign = entity->orientation.facing_left ? -1 : 1;
         _sprites.at(spriteId).setPosition(position - sf::Vector2f(x_sign * shift.x, shift.y));
         _sprites.at(spriteId).setScale(sf::Vector2f(x_sign, 1));
     } else {
         _sprites.at(spriteId).setRotation(180.0f*(int(upworld)-1));
-        float x_sign = entity.orientation.facing_left ? 1 : -1;
+        float x_sign = entity->orientation.facing_left ? 1 : -1;
         _sprites.at(spriteId).setPosition(position + sf::Vector2f(x_sign * shift.x, shift.y));
         _sprites.at(spriteId).setScale(sf::Vector2f(x_sign, 1));
     }
 }
 
+auto drawPortal = [](FloorThing* floory, ViewStuff viewStuff, double time) {
+    auto halfwidth = floory->size * PORTAL_MAX_HALFWIDTH;
+    auto result = sf::CircleShape(halfwidth);
+    auto floory_y = viewStuff.getBackgroundBaseLine(floory->position);
+    result.setPosition(sf::Vector2f(
+        floory->position.x - halfwidth,
+        floory_y - halfwidth * PORTAL_HEIGHT_RATIO + 2
+    ));
+    result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
+    auto color = sf::Color(255, 0, 0);
+    if (floory->lifetime > 0) {
+        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - floory->lifetime) * 2. * 3.14159;
+        color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
+    }
+    result.setFillColor(color);
+    return result;
+};
+
 bool GameView::draw(double time) {
     viewStuff.DrawBackground();
 
-    // hack: this is for the Entity <-> IsDrawable sync for Player coordinates etc.
-    model.syncDrawableEntities(); // might be redundant now.
-
-/* merge relic
-                case IsDrawable::DrawType::primitive:
-                    (*it)->customDraw(_renderWindow, time);
-                    break;
-
-*/
-    
     for(int layer = 2; layer >= 0; layer--) {
-        for(Enemy enemy : model.getEnemies()) {
-            if(enemy.position.z == layer) {
-                int id1, id2 = 0;
 
-                switch (enemy.type) {
-                case EnemyType::ZombieAndCat:
-                    id1 = Model::GraphicsId::zombie;
-                    id2 = Model::GraphicsId::cat;
-                    break;
-                case EnemyType::IcebergAndFairy:
-                    id1 = Model::GraphicsId::iceberg;
-                    id2 = Model::GraphicsId::fairy;
-                    break;
+        for(FloorThing* floorThing: model.getFloorThings()) {
+            if (floorThing->type != FloorThingType::Portal) {
+                continue;
+            }
+            _renderWindow->draw(drawPortal(floorThing, viewStuff, time));
+        }
+
+        // draw FloorThings by z == layer, call customDraw
+
+        for(Enemy* enemy : model.getEnemies()) {
+
+            if(enemy->position.z == layer) {
+                int id1, id2 = 0;
+                switch (enemy->type) {
+                    case EnemyType::ZombieAndCat:
+                        id1 = Model::GraphicsId::zombie;
+                        id2 = Model::GraphicsId::cat;
+                        break;
+                    case EnemyType::IcebergAndFairy:
+                        id1 = Model::GraphicsId::iceberg;
+                        id2 = Model::GraphicsId::fairy;
+                        break;
+                    default:
+                        continue;
                 }
 
                _animations.at(id1).update(time);
@@ -89,10 +111,10 @@ bool GameView::draw(double time) {
             if(model.getPlayer(p)->position.z == layer) {
                 int id = playerStateToSprite[model.getPlayer(p)->state];
                 _animations.at(id).update(time);
-                adjustSprite(id, *model.getPlayer(p), true); // TODO: get right
+                adjustSprite(id, model.getPlayer(p), true); // TODO: get right
                 _renderWindow->draw(_sprites.at(id));
             }
-        }   
+        }
     }
 
     return true;
@@ -116,7 +138,7 @@ bool GameView::setUp() {
     loadAnimation("assets/katze_01.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
     loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
     loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_WIDTH, FAIRY_FRAME_COUNT);
-    
+
     return true;
 }
 
