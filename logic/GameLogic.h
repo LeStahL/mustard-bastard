@@ -45,11 +45,10 @@ class GameLogic {
 
     private:
     void updatePlayer(Player* player, float elapsedTime);
-    //void updatePlayerSprite(Player* player);
     void updateEnemies(float elapsedTime);
     void maybeSpawnEnemy(EnemyType type);
-    bool isEnemyToFarAway(Enemy* enemy);
-    //void killEnemy(Enemy* enemy);
+    bool isEnemyToFarAway(Enemy &enemy);
+    void killEnemy(Enemy &enemy);
     void maybeSpawnFloorThing(FloorThingType type);
     void updateFloorThings(float elapsedTime);
     void killFloorThing(FloorThing* floorThing);
