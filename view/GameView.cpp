@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <GameLogic.h>
 #include <gamelogic_const.h>
+#include <const.h>
 #include <cmath>
 
 std::map<int, int> playerStateToSprite = {
@@ -71,15 +72,15 @@ auto drawPortal = [](Portal* portal, ViewStuff viewStuff, double time) {
 bool GameView::draw(double time) {
     viewStuff.DrawBackground();
 
-    for(int layer = 2; layer >= 0; layer--) {
+    for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
 
         for(FloorThing* floorThing: model.getFloorThings()) {
             Portal* portal = dynamic_cast<Portal*>(floorThing);
             if (portal == NULL)
                 continue;
 
-            if(floorThing->position.z == layer) {
-                _renderWindow->draw(drawPortal(floorThing, viewStuff, time));
+            if(portal->position.z == layer) {
+                _renderWindow->draw(drawPortal(portal, viewStuff, time));
             }
         }
 

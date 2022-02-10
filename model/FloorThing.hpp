@@ -7,8 +7,6 @@
 class FloorThing : public Entity {
     public:
     FloorThing(WorldPosition position) : Entity(position) {};
-
-    void endLife();
 };
 
 class Portal : public FloorThing {
@@ -18,5 +16,6 @@ class Portal : public FloorThing {
     bool spawning = true;
     float lifetime = 0;
 
-    Portal(WorldPosition position) : FloorThing(position) { };
+    Portal(WorldPosition position) : FloorThing(position) {
+    };
 };

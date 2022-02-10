@@ -127,13 +127,15 @@ void GameLogic::maybeSpawnPortal()
         + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
     int random_z = rand() % Z_PLANES;
 
-    // std::cout << "FloorThing spawned on " << random_x << "  " << random_z << std::endl;
+    std::cout << "FloorThing spawned on " << random_x << "  " << random_z << std::endl;
 
     Portal* portal = new Portal(WorldPosition(random_x, random_z, true));
+    portal->size = PORTAL_EPSILON_SIZE;
     model->getFloorThings().push_back(portal);
 
     // workaround: just add another one in the other world
     portal = new Portal(WorldPosition(random_x, random_z, false));
+    portal->size = PORTAL_EPSILON_SIZE;
     model->getFloorThings().push_back(portal);
 }
 
