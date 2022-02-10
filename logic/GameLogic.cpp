@@ -19,6 +19,7 @@ void GameLogic::update(float timeElapsed) {
     {
         updatePlayer(model->getPlayer(p), timeElapsed);
     }
+
 }
 
 void GameLogic::move_x(int player_number, int sign, bool retreat) {

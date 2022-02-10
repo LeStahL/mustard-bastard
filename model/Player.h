@@ -28,6 +28,7 @@ class Player : public Entity {
     Player(std::string name, int graphicId, WorldPosition position) : Player(name, graphicId, position, WorldOrientation())
     {}
 
+//    bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) override;
 };
 
 #endif /* PLAYER_H */

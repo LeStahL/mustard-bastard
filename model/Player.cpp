@@ -7,3 +7,9 @@ Player::Player(std::string name, int graphicId, WorldPosition position, WorldOri
     state = PlayerState::Standing;
     attack_state = AttackState();
 }
+
+/*
+bool Player::onCollisionWith(Entity* other, void (*callback)(Entity* other)) {
+    return false;
+}
+*/
