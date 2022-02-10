@@ -1,6 +1,10 @@
+#include "Entity.h"
 #include <Enemy.hpp>
 
-Enemy::Enemy(EnemyType type, WorldPosition position) :
-        Entity(position),
-        type(type) {
+Enemy* Enemy::getZombie(WorldPosition position) {
+    return new Enemy(EntityType::ZombieAndCat, position);
+}
+
+Enemy* Enemy::getIceberg(WorldPosition position) {
+    return new Enemy(EntityType::IcebergAndFairy, position);
 }

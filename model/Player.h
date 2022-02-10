@@ -23,9 +23,9 @@ class Player : public Entity {
     long points = 0;
     std::string name;
 
-    Player(std::string name, int graphicId, WorldPosition position, WorldOrientation orientation);
+    Player(WorldPosition position, WorldOrientation orientation);
 
-    Player(std::string name, int graphicId, WorldPosition position) : Player(name, graphicId, position, WorldOrientation())
+    Player(WorldPosition position) : Player(position, WorldOrientation())
     {}
 
 //    bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) override;

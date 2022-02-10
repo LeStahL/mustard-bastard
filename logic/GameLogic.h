@@ -1,6 +1,7 @@
 #ifndef GAMELOGIC_H
 #define GAMELOGIC_H
 
+#include "Entity.h"
 #include <map>
 #include <Model.h>
 #include <AttackState.hpp>
@@ -26,12 +27,14 @@ class GameLogic {
 
     private:
     void updatePlayer(Player* player, float elapsedTime);
+
     void updateEnemies(float elapsedTime);
-    void maybeSpawnEnemy(EnemyType type);
+    void maybeSpawnEnemy(EntityType type);
     bool isEnemyTooFarAway(Enemy* enemy);
-    void maybeSpawnPortal();
-    void updateFloorThings(float elapsedTime);
     void killEnemy(Enemy* enemy);
+
+    void updateFloorThings(float elapsedTime);
+    void maybeSpawnPortal();
     void killPortal(FloorThing* portal);
 };
 

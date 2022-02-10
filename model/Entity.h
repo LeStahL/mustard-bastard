@@ -1,12 +1,21 @@
-#ifndef ENTITY_H
-#define ENTITY_H
+#pragma once
 
 #include <WorldPosition.h>
 #include <WorldOrientation.h>
 
+enum class EntityType {
+    Player,
+    ZombieAndCat,
+    IcebergAndFairy,
+    Portal
+};
+
 class Entity {
     private:
         static int id_counter;
+    protected:
+        EntityType type;
+
     public:
         int id;
         WorldPosition position;
@@ -14,18 +23,18 @@ class Entity {
         float x_speed = 0;
 
     public:
-        Entity(WorldPosition position, WorldOrientation orientation) :
+        Entity(EntityType type, WorldPosition position, WorldOrientation orientation) :
+        type(type),
         id(id_counter++),
         position(position),
         orientation(orientation)
         { }
 
-        Entity(WorldPosition position) : Entity(position, WorldOrientation())
+        Entity(EntityType type, WorldPosition position) : Entity(type, position, WorldOrientation())
         { }
 
         virtual ~Entity() {}
 
-//        virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
+        //virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
+        EntityType getType();
 };
-
-#endif /* ENTITY_H */

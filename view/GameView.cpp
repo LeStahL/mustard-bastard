@@ -79,6 +79,10 @@ bool GameView::draw(double time) {
             if (portal == NULL)
                 continue;
 
+            if (floorThing->getType() != EntityType::Portal) {
+                continue;
+            }
+
             if(portal->position.z == layer) {
                 _renderWindow->draw(drawPortal(portal, floorView, time));
             }
@@ -88,12 +92,13 @@ bool GameView::draw(double time) {
 
             if(enemy->position.z == layer) {
                 int id1, id2 = 0;
-                switch (enemy->type) {
-                    case EnemyType::ZombieAndCat:
+
+                switch (enemy->getType()) {
+                    case EntityType::ZombieAndCat:
                         id1 = Model::GraphicsId::zombie;
                         id2 = Model::GraphicsId::cat;
                         break;
-                    case EnemyType::IcebergAndFairy:
+                    case EntityType::IcebergAndFairy:
                         id1 = Model::GraphicsId::iceberg;
                         id2 = Model::GraphicsId::fairy;
                         break;

@@ -1,3 +1,6 @@
+#include "Enemy.hpp"
+#include "Entity.h"
+#include "FloorThing.hpp"
 #include <GameLogic.h>
 
 #include <random>
@@ -67,8 +70,8 @@ void GameLogic::attack(int player_number) {
 void GameLogic::updateEnemies(float timeElapsed) {
     // spwan new enemies with probabilty of 5% for 100 calls
 
-    maybeSpawnEnemy(EnemyType::ZombieAndCat);
-    maybeSpawnEnemy(EnemyType::IcebergAndFairy);
+    maybeSpawnEnemy(EntityType::ZombieAndCat);
+    maybeSpawnEnemy(EntityType::IcebergAndFairy);
     maybeSpawnPortal();
 
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
@@ -82,11 +85,24 @@ void GameLogic::updateEnemies(float timeElapsed) {
     }
 }
 
-void GameLogic::maybeSpawnEnemy(EnemyType type) {
+void GameLogic::maybeSpawnEnemy(EntityType type) {
     if(!(rand() % 1000 < 1))
         return;
 
-    Enemy* enemy = new Enemy(type, WorldPosition(1000.0f, rand() % 3, true));
+    Enemy *enemy;
+    WorldPosition position(1000.0f, rand() % 3, true);
+
+    switch (type) {
+    case EntityType::ZombieAndCat:
+        enemy = Enemy::getZombie(position);
+        break;
+    case EntityType::IcebergAndFairy:
+        enemy = Enemy::getIceberg(position);
+        break;
+    default:
+        break;
+    }
+
     model->getEnemies().push_back(enemy);
 }
 

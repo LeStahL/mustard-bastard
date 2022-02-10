@@ -2,8 +2,8 @@
 #include <WorldPosition.h>
 #include <WorldOrientation.h>
 
-Player::Player(std::string name, int graphicId, WorldPosition position, WorldOrientation orientation) :
-        Entity(position), name(name) {
+Player::Player(WorldPosition position, WorldOrientation orientation) :
+        Entity(EntityType::Player, position) {
     state = PlayerState::Standing;
     attack_state = AttackState();
 }

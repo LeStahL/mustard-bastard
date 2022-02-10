@@ -1,3 +1,4 @@
+#include "Enemy.hpp"
 #include <Model.h>
 
 #include <WorldPosition.h>
@@ -10,12 +11,10 @@ Model::Model()
 {
     // ignore background for now
     // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldPosition(0, 0, true));
-    Player* eumel = new Player("Eumel", GraphicsId::player_standing, START_PLAYER1);
+    Player* eumel = new Player(START_PLAYER1);
     players.push_back(eumel);
     //players.push_back(new Player(GraphicsId::player_standing, START_PLAYER2));
     //players.at(1)->name = "Bert";
-
-    enemies.push_back(new Enemy(EnemyType::IcebergAndFairy, WorldPosition(500.0f, 1, true)));
 }
 
 Player* Model::getPlayer(int player_number) {
