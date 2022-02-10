@@ -1,5 +1,4 @@
-#ifndef ATTACKSTATE_H
-#define ATTACKSTATE_H
+# pragma once
 
 enum Weapon {
     Hand,
@@ -25,5 +24,3 @@ class AttackState {
     }
 
 };
-
-#endif ATTACKSTATE_H

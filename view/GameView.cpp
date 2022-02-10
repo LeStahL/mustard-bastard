@@ -4,6 +4,7 @@
 #include <Entity.h>
 #include <algorithm>
 #include <GameLogic.h>
+#include <cmath>
 
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing , Model::GraphicsId::player_standing },
