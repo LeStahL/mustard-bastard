@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <GameLogic.h>
 #include <gamelogic_const.h>
+#include <cmath>
 
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing , Model::GraphicsId::player_standing },
@@ -77,10 +78,10 @@ bool GameView::draw(double time) {
             if (portal == NULL)
                 continue;
 
-            _renderWindow->draw(drawPortal(portal, viewStuff, time));
+            if(floorThing->position.z == layer) {
+                _renderWindow->draw(drawPortal(floorThing, viewStuff, time));
+            }
         }
-
-        // draw FloorThings by z == layer, call customDraw
 
         for(Enemy* enemy : model.getEnemies()) {
 

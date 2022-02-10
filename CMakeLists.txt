@@ -43,10 +43,10 @@ target_include_directories(mustard-bastard PUBLIC
 )
 target_link_directories(mustard-bastard PUBLIC ${SFML_BUILD_DIRECTORY})
 set(SFML_LIBRARIES
-    SFML-window
-    SFML-system
-    SFML-graphics
-    SFML-audio
+    sfml-window
+    sfml-system
+    sfml-graphics
+    sfml-audio
 )
 target_link_libraries(mustard-bastard ${SFML_LIBRARIES})
 set_property(TARGET mustard-bastard PROPERTY CXX_STANDARD 17)
@@ -54,7 +54,7 @@ set_property(TARGET mustard-bastard PROPERTY CXX_STANDARD 17)
 # Put SFML libraries into place
 foreach(SFML_LIB ${SFML_LIBRARIES})
     add_custom_command(TARGET mustard-bastard POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy "${SFML_BUILD_DIRECTORY}/${SFML_LIB}-3.dll" $<TARGET_FILE_DIR:mustard-bastard>
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${SFML_LIB}> $<TARGET_FILE_DIR:mustard-bastard>
     )
 endforeach()
 add_custom_command(TARGET mustard-bastard POST_BUILD

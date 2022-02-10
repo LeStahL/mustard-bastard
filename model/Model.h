@@ -29,8 +29,8 @@ class Model {
 
     Player* getPlayer(int player_number);
     int getNumberOfPlayers();
-    std::vector<Enemy*> getEnemies();
-    std::vector<FloorThing*> getFloorThings();
+    std::vector<Enemy*>& getEnemies();
+    std::vector<FloorThing*>& getFloorThings();
 };
 
 #endif /* MODEL_H */

@@ -89,7 +89,7 @@ void GameLogic::maybeSpawnEnemy(EnemyType type) {
 }
 
 bool GameLogic::isEnemyTooFarAway(Enemy* enemy) {
-    return abs(enemy->position.x) > 2 * WIDTH;
+    return fabs(enemy->position.x) > 2 * WIDTH;
 }
 
 void GameLogic::killEnemy(Enemy* enemy) {
