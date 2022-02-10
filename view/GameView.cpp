@@ -76,10 +76,11 @@ bool GameView::draw(double time) {
             if (floorThing->type != FloorThingType::Portal) {
                 continue;
             }
-            _renderWindow->draw(drawPortal(floorThing, viewStuff, time));
-        }
 
-        // draw FloorThings by z == layer, call customDraw
+            if(floorThing->position.z == layer) {
+                _renderWindow->draw(drawPortal(floorThing, viewStuff, time));
+            }
+        }
 
         for(Enemy* enemy : model.getEnemies()) {
 
