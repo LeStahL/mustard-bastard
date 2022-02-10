@@ -166,8 +166,9 @@ void GameLogic::updateFloorThings(float elapsedTime)
     maybeSpawnPortal();
 
     for (FloorThing* floory : model->getFloorThings()) {
-        if (typeid(floory) == typeid(Portal*)) {
-            if (!updatePortal((Portal*)floory, elapsedTime)) {
+        auto portal = dynamic_cast<Portal*>(floory);
+        if (portal != NULL) {
+            if (!updatePortal(portal, elapsedTime)) {
                 killPortal(floory);
             };
         }
