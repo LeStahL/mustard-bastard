@@ -7,11 +7,11 @@ constexpr unsigned int MAX_PLAYERS = 2;
 
 constexpr unsigned int Z_PLANES = 3;
 
-constexpr float FLOOR_LINE_THICKNESS = 1.5;
+constexpr float FLOOR_LINE_THICKNESS = 3;
 constexpr float LINE_DISTANCE = 32.;
 constexpr int LINES = Z_PLANES + 1;
 constexpr float MIDDLE_MARGIN = 3;
-constexpr float HUD_MARGIN = 0.16 * HEIGHT;
+constexpr float HUD_MARGIN = 100;
 constexpr float GAME_HEIGHT = HEIGHT - HUD_MARGIN;
 
 constexpr sf::Color TOP_COLOR(170, 170, 0);

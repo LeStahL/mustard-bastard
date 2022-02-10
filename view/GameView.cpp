@@ -49,6 +49,16 @@ void GameView::adjustSprite(int spriteId, Entity &entity, bool upworld)
 bool GameView::draw(double time) {
     viewStuff.DrawBackground();
 
+    // hack: this is for the Entity <-> IsDrawable sync for Player coordinates etc.
+    model.syncDrawableEntities(); // might be redundant now.
+
+/* merge relic
+                case IsDrawable::DrawType::primitive:
+                    (*it)->customDraw(_renderWindow, time);
+                    break;
+
+*/
+    
     for(int layer = 2; layer >= 0; layer--) {
         for(Enemy enemy : model.getEnemies()) {
             if(enemy.position.z == layer) {
@@ -87,6 +97,8 @@ bool GameView::draw(double time) {
 
     return true;
 }
+
+#pragma warning( disable : 4834 )
 
 bool GameView::setUp() {
     // reserving space is needed, becaus references on vector elements

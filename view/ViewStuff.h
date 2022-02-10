@@ -13,6 +13,7 @@ class ViewStuff
     public:
         ViewStuff(sf::RenderWindow *window);
         void DrawBackground();
+        void customDraw(sf::RenderWindow *window, double time) override;
         int getBackgroundBaseLine(WorldPosition position);
 };
 

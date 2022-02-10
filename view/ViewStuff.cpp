@@ -33,7 +33,9 @@ auto drawLinesForWorld = [](bool upWorld, sf::Color color, sf::RenderWindow *win
 
 auto drawMiddleMargin = [](sf::RenderWindow *window)
 {
-    window->draw(createHorizontalLine(0.5 * GAME_HEIGHT, WIDTH, MIDDLE_MARGIN, MARGIN_COLOR));
+    window->draw(
+        createHorizontalLine(0.5 * (GAME_HEIGHT + MIDDLE_MARGIN), WIDTH, MIDDLE_MARGIN, MARGIN_COLOR)
+    );
 };
 
 auto drawBackground = [](bool upWorld, sf::Color color, sf::RenderWindow *window)
@@ -52,6 +54,10 @@ void ViewStuff::DrawBackground()
     drawBackground(false, BOTTOM_COLOR, window);
     drawLinesForWorld(false, BOTTOM_COLOR, window);
     drawMiddleMargin(window);
+}
+
+void ViewStuff::customDraw(sf::RenderWindow *window, double time) {
+    DrawBackground();
 }
 
 int ViewStuff::getBackgroundBaseLine(WorldPosition position) {
