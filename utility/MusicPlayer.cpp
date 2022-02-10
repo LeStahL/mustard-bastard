@@ -1,6 +1,6 @@
 #include "MusicPlayer.hpp"
 
-MusicPlayer::MusicPlayer()
+MusicPlayer::MusicPlayer(bool muted) : _muted(muted)
 {
     _gameSoundBuffer.loadFromFile("assets/senfschleife.mp3");
     _gameSound.setBuffer(_gameSoundBuffer);
@@ -8,6 +8,9 @@ MusicPlayer::MusicPlayer()
 
 void MusicPlayer::playSound(MusicPlayer::SoundType soundType)
 {
+    if (_muted)
+        return;
+
     switch(soundType)
     {
         case MusicPlayer::SoundType::GameSound:
@@ -35,7 +38,7 @@ void MusicPlayer::pause()
 
 void MusicPlayer::stop()
 {
-    if(_currentlyPlaying != nullptr)
+    if (_currentlyPlaying != nullptr)
     {
         _currentlyPlaying->stop();
         _currentlyPlaying = nullptr;

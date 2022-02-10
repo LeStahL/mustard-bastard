@@ -10,7 +10,7 @@ HeadsUpDisplayView::HeadsUpDisplayView(sf::RenderWindow *renderWindow, MenuState
     , _player1(player1)
     , _player2(player2)
 {
-    _font.loadFromFile("assets/FiraCode-Regular.ttf");
+    auto _ = _font.loadFromFile("assets/FiraCode-Regular.ttf");
 }
 
 void HeadsUpDisplayView::drawPlayerHUD(Player *player, HUDSide where)

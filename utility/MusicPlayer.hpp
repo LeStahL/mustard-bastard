@@ -13,9 +13,11 @@ class MusicPlayer
     sf::Sound _menuSound;
     sf::Sound _highScoreSound;
     sf::Sound *_currentlyPlaying;
+    bool _muted;
 
     public:
-    MusicPlayer();
+    MusicPlayer(bool muted);
+    MusicPlayer() : MusicPlayer(false) {}
 
     enum SoundType
     {

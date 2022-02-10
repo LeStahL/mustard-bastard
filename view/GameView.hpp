@@ -3,7 +3,7 @@
 #include <vector>
 #include <Model.h>
 #include <Animation.hpp>
-#include <ViewStuff.h>
+#include <FloorView.h>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -20,7 +20,7 @@ class GameView : public View {
 
     sf::RenderWindow *_renderWindow;
     Model& model;
-    ViewStuff viewStuff;
+    FloorView floorView;
 
     void adjustSprite(int spriteId, Entity* entity, bool upworld);
 

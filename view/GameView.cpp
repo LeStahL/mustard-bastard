@@ -4,6 +4,8 @@
 #include <Entity.h>
 #include <algorithm>
 #include <GameLogic.h>
+#include <GameLogicConst.h>
+#include <const.h>
 #include <cmath>
 
 std::map<int, int> playerStateToSprite = {
@@ -15,14 +17,14 @@ std::map<int, int> playerStateToSprite = {
 GameView::GameView(sf::RenderWindow *renderWindow, Model& model) :
     _renderWindow(renderWindow),
     model(model),
-    viewStuff(ViewStuff(_renderWindow)) {
+    floorView(FloorView(_renderWindow)) {
 }
 
 sf::Vector2f GameView::convertWorldPosition(WorldPosition position) {
     sf::Vector2f pixelPos;
 
     pixelPos.x = position.x;
-    pixelPos.y = viewStuff.getBackgroundBaseLine(position);
+    pixelPos.y = floorView.getBackgroundBaseLine(position);
 
     return pixelPos;
 }
@@ -49,18 +51,18 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool upworld)
     }
 }
 
-auto drawPortal = [](FloorThing* floory, ViewStuff viewStuff, double time) {
-    auto halfwidth = floory->size * PORTAL_MAX_HALFWIDTH;
+auto drawPortal = [](Portal* portal, FloorView floorView, double time) {
+    auto halfwidth = portal->getHalfWidth();
     auto result = sf::CircleShape(halfwidth);
-    auto floory_y = viewStuff.getBackgroundBaseLine(floory->position);
+    auto floory_y = floorView.getBackgroundBaseLine(portal->position);
     result.setPosition(sf::Vector2f(
-        floory->position.x - halfwidth,
+        portal->position.x - halfwidth,
         floory_y - halfwidth * PORTAL_HEIGHT_RATIO + 2
     ));
     result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
     auto color = sf::Color(255, 0, 0);
-    if (floory->lifetime > 0) {
-        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - floory->lifetime) * 2. * 3.14159;
+    if (portal->lifetime > 0) {
+        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
         color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
     }
     result.setFillColor(color);
@@ -68,17 +70,17 @@ auto drawPortal = [](FloorThing* floory, ViewStuff viewStuff, double time) {
 };
 
 bool GameView::draw(double time) {
-    viewStuff.DrawBackground();
+    floorView.DrawBackground();
 
-    for(int layer = 2; layer >= 0; layer--) {
+    for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
 
         for(FloorThing* floorThing: model.getFloorThings()) {
-            if (floorThing->type != FloorThingType::Portal) {
+            Portal* portal = dynamic_cast<Portal*>(floorThing);
+            if (portal == NULL)
                 continue;
-            }
 
-            if(floorThing->position.z == layer) {
-                _renderWindow->draw(drawPortal(floorThing, viewStuff, time));
+            if(portal->position.z == layer) {
+                _renderWindow->draw(drawPortal(portal, floorView, time));
             }
         }
 
