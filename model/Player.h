@@ -18,7 +18,7 @@ class Player : public Entity {
     float move_z_cooldown;
     AttackState attack_state;
     float power = 1;
-    float health = 100;
+    float health = .5;
     long points = 0;
     std::string name = "Eumel";
 

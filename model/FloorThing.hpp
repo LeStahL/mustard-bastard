@@ -17,11 +17,8 @@ class FloorThing : public Entity {
     bool spawning = true;
     float lifetime = 0;
 
-    FloorThing(FloorThingType type, WorldPosition position);
+    FloorThing(FloorThingType type, WorldPosition position) : Entity(position), type(type)
+    {}
+
     void endLife();
 };
-
-FloorThing::FloorThing(FloorThingType type, WorldPosition position) :
-        Entity(position), type(type) {
-    // could switch type here, i.e. Portals should be a primitive, but Medikit have a sprite.
-}
