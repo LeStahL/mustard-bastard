@@ -7,11 +7,13 @@
 #include <GameLogicConst.h>
 #include <const.h>
 #include <cmath>
+#include <Portal.hpp>
 
 std::map<int, int> playerStateToSprite = {
-    { PlayerState::Standing , Model::GraphicsId::player_standing },
-    { PlayerState::Walking  , Model::GraphicsId::player_walking },
-    { PlayerState::Attacking, Model::GraphicsId::player_attack }
+    { PlayerState::Standing, Model::GraphicsId::player_standing },
+    { PlayerState::Walking, Model::GraphicsId::player_walking },
+    { PlayerState::Attacking, Model::GraphicsId::player_attack },
+    { PlayerState::Warping, Model::GraphicsId::player_standing }
 };
 
 GameView::GameView(sf::RenderWindow *renderWindow, Model& model) :

@@ -14,8 +14,6 @@ Model::Model()
     players.push_back(eumel);
     //players.push_back(new Player(GraphicsId::player_standing, START_PLAYER2));
     //players.at(1)->name = "Bert";
-
-    enemies.push_back(new Enemy(EnemyType::IcebergAndFairy, WorldPosition(500.0f, 1, true)));
 }
 
 Player* Model::getPlayer(int player_number) {

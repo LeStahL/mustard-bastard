@@ -5,10 +5,13 @@
 #include <Model.h>
 #include <AttackState.hpp>
 #include <FloorThing.hpp>
+#include <GameLogicConst.h>
+#include <Portal.hpp>
 
 class GameLogic {
     private:
     Model* model;
+    std::map<EnemyType, float> enemySpawnCooldown;
 
     const std::map<Weapon, double> ATTACK_COOLDOWN = {
         {Weapon::Hand, 500.},
@@ -27,12 +30,15 @@ class GameLogic {
     private:
     void updatePlayer(Player* player, float elapsedTime);
     void updateEnemies(float elapsedTime);
-    void maybeSpawnEnemy(EnemyType type);
+    void spawnEnemy(EnemyType type, float elapsedTime);
     bool isEnemyTooFarAway(Enemy* enemy);
     void maybeSpawnPortal();
     void updateFloorThings(float elapsedTime);
     void killEnemy(Enemy* enemy);
     void killPortal(FloorThing* portal);
+
+    // before abstraction, just implement in place once
+    void handlePlayerCollisions(Player* player, float elapsedTime);
 };
 
 #endif /* GAMELOGIC_H */

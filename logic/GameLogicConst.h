@@ -1,5 +1,8 @@
 #pragma once
 
+#include <map>
+#include <Interval.hpp>
+
 constexpr float PLAYER_MOVE_X_SPEED = 160.0;
 constexpr float PLAYER_MOVE_Z_COOLDONW = 0.3;
 constexpr float PLAYER_X_BORDER_MARGIN = 30.;
@@ -18,3 +21,8 @@ constexpr float PORTAL_WANE_FACTOR = 0.996;
 constexpr float PORTAL_ACTIVE_SECONDS = 4;
 constexpr float PORTAL_MAX_HALFWIDTH = 42;
 constexpr float PORTAL_HEIGHT_RATIO = 0.3;
+
+const std::map<EnemyType, Interval> INIT_COOLDOWN = {
+    { EnemyType::ZombieAndCat, Interval(2, 10)},
+    { EnemyType::IcebergAndFairy, Interval(120, 210)}
+};

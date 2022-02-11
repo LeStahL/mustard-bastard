@@ -1,6 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <utility>
 #include <WorldPosition.h>
 #include <WorldOrientation.h>
 
@@ -24,6 +25,9 @@ class Entity {
         { }
 
         virtual ~Entity() {}
+
+        virtual std::pair<float, float> getCollisionXInterval();
+        virtual bool isCollisionActive();
 
 //        virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
 };

@@ -23,11 +23,24 @@ class Player : public Entity {
     long points = 0;
     std::string name;
 
+    const float HALFWIDTH = 50;
+    const float WARP_TIME = 4;
+
+    private:
+    float warp_timer;
+
+    public:
     Player(std::string name, int graphicId, WorldPosition position, WorldOrientation orientation);
 
     Player(std::string name, int graphicId, WorldPosition position) : Player(name, graphicId, position, WorldOrientation())
     {}
 
+    std::pair<float, float> getCollisionXInterval() override;
+    bool isCollisionActive() override;
+
+    void update(float elapsed);
+    void beginWarp();
+    void endWarp();
 //    bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) override;
 };
 

@@ -6,9 +6,16 @@
 #include <const.h>
 #include <time.h>
 
+static const EnemyType AllEnemyTypes[] = {EnemyType::ZombieAndCat, EnemyType::IcebergAndFairy};
+
 GameLogic::GameLogic(Model* model) :
         model(model) {
     srand(time(NULL));
+
+    for (auto enemyType : AllEnemyTypes) {
+        enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
+        std::cout << "SPAWN " << enemyType << " in "  << enemySpawnCooldown[enemyType] << std::endl;
+    }
 }
 
 void GameLogic::update(float timeElapsed) {
@@ -17,9 +24,10 @@ void GameLogic::update(float timeElapsed) {
 
     for (int p = 0; p < nPlayers(); p++)
     {
-        updatePlayer(model->getPlayer(p), timeElapsed);
+        auto player = model->getPlayer(p);
+        player->update(timeElapsed);
+        handlePlayerCollisions(player, timeElapsed);
     }
-
 }
 
 void GameLogic::move_x(int player_number, int sign, bool retreat) {
@@ -65,14 +73,20 @@ void GameLogic::attack(int player_number) {
 }
 
 void GameLogic::updateEnemies(float timeElapsed) {
-    // spwan new enemies with probabilty of 5% for 100 calls
 
-    maybeSpawnEnemy(EnemyType::ZombieAndCat);
-    maybeSpawnEnemy(EnemyType::IcebergAndFairy);
     maybeSpawnPortal();
 
-    for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
-        auto enemy = (*it);
+    for (const auto enemyType : AllEnemyTypes) {
+        if (enemySpawnCooldown[enemyType] > 0) { // TODO -> Cooldownable
+            enemySpawnCooldown[enemyType] -= timeElapsed;
+        } else {
+            spawnEnemy(enemyType, timeElapsed);
+            enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
+            std::cout << "SPAWN " << enemyType << " in "  << enemySpawnCooldown[enemyType] << std::endl;
+        }
+    }
+
+    for (auto enemy : model->getEnemies()) {
         enemy->position.x -= enemy->speed * timeElapsed;
 
         if (isEnemyTooFarAway(enemy))
@@ -82,11 +96,9 @@ void GameLogic::updateEnemies(float timeElapsed) {
     }
 }
 
-void GameLogic::maybeSpawnEnemy(EnemyType type) {
-    if(!(rand() % 1000 < 1))
-        return;
-
-    Enemy* enemy = new Enemy(type, WorldPosition(1000.0f, rand() % 3, true));
+void GameLogic::spawnEnemy(EnemyType type, float elapsed) {
+    bool upWorld = rand() % 2 == 0;
+    Enemy* enemy = new Enemy(type, WorldPosition(1000.0f, rand() % 3, upWorld));
     model->getEnemies().push_back(enemy);
 }
 
@@ -101,16 +113,6 @@ void GameLogic::killEnemy(Enemy* enemy) {
             break;
         }
     }
-}
-
-void GameLogic::updatePlayer(Player* player, float timeElapsed) {
-    player->position.x = std::clamp(
-        player->position.x + player->x_speed * timeElapsed,
-        PLAYER_X_BORDER_MARGIN,
-        WIDTH - PLAYER_X_BORDER_MARGIN
-    );
-    player->move_z_cooldown = std::max(player->move_z_cooldown - timeElapsed, 0.f);
-    player->attack_state.coolDown(timeElapsed);
 }
 
 int GameLogic::nPlayers() {
@@ -167,7 +169,7 @@ void GameLogic::updateFloorThings(float elapsedTime)
 
     for (FloorThing* floory : model->getFloorThings()) {
         auto portal = dynamic_cast<Portal*>(floory);
-        if (portal != NULL) {
+        if (portal != nullptr) {
             if (!updatePortal(portal, elapsedTime)) {
                 killPortal(floory);
             };
@@ -184,6 +186,27 @@ void GameLogic::killPortal(FloorThing* floorThing)
         if((*it)->id == id) {
             modelList.erase(it);
             break;
+        }
+    }
+}
+
+void GameLogic::handlePlayerCollisions(Player* player, float elapsedTime)
+{
+    for (Entity* entity : model->getFloorThings()) {
+        if (!entity->isCollisionActive()) {
+            continue;
+        }
+        if (player->position.z != entity->position.z) {
+            continue;
+        }
+        auto portal = dynamic_cast<Portal*>(entity);
+        if (portal != nullptr) {
+            auto playerX = player->position.x;
+            auto [portalL, portalR] = portal->getCollisionXInterval();
+
+            if ((playerX >= portalL) && (playerX <= portalR)) {
+                player->beginWarp();
+            }
         }
     }
 }
