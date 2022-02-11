@@ -11,14 +11,14 @@ class Portal : public FloorThing {
     float lifetime = 0;
     bool used = false;
 
-    Portal(WorldPosition position) : FloorThing(position) {
+    Portal(WorldCoordinates position) : FloorThing(position) {
     };
 
     float getHalfWidth() { return size * PORTAL_MAX_HALFWIDTH; }
 
     std::pair<float, float> getCollisionXInterval() override {
         float halfWidth = getHalfWidth();
-        return std::pair(position.x - halfWidth, position.x + halfWidth);
+        return std::pair(coords.x - halfWidth, coords.x + halfWidth);
     }
 
     bool canCollide() override {

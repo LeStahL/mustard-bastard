@@ -1,16 +1,16 @@
 #include "Enemy.hpp"
 #include <Model.h>
 
-#include <WorldPosition.h>
+#include <WorldCoordinates.h>
 #include <iostream>
 
-const WorldPosition START_PLAYER1 = WorldPosition(40., 1, true);
-const WorldPosition START_PLAYER2 = WorldPosition(440., 410, true);
+const WorldCoordinates START_PLAYER1 = WorldCoordinates(40., 1, true);
+const WorldCoordinates START_PLAYER2 = WorldCoordinates(440., 410, true);
 
 Model::Model()
 {
     // ignore background for now
-    // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldPosition(0, 0, true));
+    // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldCoordinates(0, 0, true));
     Player* eumel = new Player("Eumel", START_PLAYER1);
     players.push_back(eumel);
     //players.push_back(new Player(GraphicsId::player_standing, START_PLAYER2));

@@ -3,7 +3,7 @@
 
 #include <utility>
 #include <SFML/Graphics.hpp>
-#include <WorldPosition.h>
+#include <WorldCoordinates.h>
 
 class FloorView
 {
@@ -14,8 +14,8 @@ class FloorView
         FloorView(sf::RenderWindow *window);
         void DrawBackground();
         void customDraw(sf::RenderWindow *window, double time);
-        int getBackgroundBaseLine(WorldPosition position);
-        std::pair<int, int> getBothBaseLines(WorldPosition position);
+        int getBackgroundBaseLine(WorldCoordinates coords);
+        std::pair<int, int> getBothBaseLines(WorldCoordinates coords);
 };
 
 #endif

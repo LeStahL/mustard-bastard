@@ -61,7 +61,7 @@ void GameLogic::updateEnemies(float timeElapsed) {
     }
 
     for (auto enemy : model->getEnemies()) {
-        enemy->position.x -= enemy->speed * timeElapsed;
+        enemy->doPhysicalUpdates(timeElapsed);
 
         if (isEnemyTooFarAway(enemy))
         {
@@ -72,7 +72,7 @@ void GameLogic::updateEnemies(float timeElapsed) {
 
 void GameLogic::spawnEnemy(EntityType type, float elapsed) {
     bool upWorld = rand() % 2 == 0;
-    auto position = WorldPosition(1000.0f, rand() % 3, upWorld);
+    auto position = WorldCoordinates(1000.0f, rand() % 3, upWorld);
     Enemy* enemy;
     switch (type) {
         case EntityType::ZombieAndCat:
@@ -88,7 +88,7 @@ void GameLogic::spawnEnemy(EntityType type, float elapsed) {
 }
 
 bool GameLogic::isEnemyTooFarAway(Enemy* enemy) {
-    return fabs(enemy->position.x) > 2 * WIDTH;
+    return fabs(enemy->coords.x - 0.5 * WIDTH) > WIDTH;
 }
 
 void GameLogic::killEnemy(Enemy* enemy) {
@@ -116,7 +116,7 @@ void GameLogic::maybeSpawnPortal()
         + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
     int random_z = rand() % Z_PLANES;
 
-    Portal* portal = new Portal(WorldPosition(random_x, random_z, true));
+    Portal* portal = new Portal(WorldCoordinates(random_x, random_z, true));
     model->getFloorThings().push_back(portal);
 }
 

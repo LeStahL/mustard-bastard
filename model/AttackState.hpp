@@ -1,10 +1,6 @@
 # pragma once
 
-enum Weapon {
-    Hand,
-    Axe,
-    Mustard
-};
+#include <SimpleEnumsAndStructs.h>
 
 class AttackState {
     public:

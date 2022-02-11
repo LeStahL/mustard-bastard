@@ -1,8 +1,7 @@
 #pragma once
 
 #include <utility>
-#include <WorldPosition.h>
-#include <WorldOrientation.h>
+#include <WorldCoordinates.h>
 
 enum class EntityType {
     Player,
@@ -19,19 +18,14 @@ class Entity {
         bool is_locked = false;
     public:
         int id;
-        WorldPosition position;
-        WorldOrientation orientation;
+        WorldCoordinates coords;
         float x_speed = 0;
 
     public:
-        Entity(EntityType type, WorldPosition position, WorldOrientation orientation) :
+        Entity(EntityType type, WorldCoordinates coords) :
         type(type),
         id(id_counter++),
-        position(position),
-        orientation(orientation)
-        { }
-
-        Entity(EntityType type, WorldPosition position) : Entity(type, position, WorldOrientation())
+        coords(coords)
         { }
 
         virtual ~Entity() {}
@@ -41,5 +35,5 @@ class Entity {
         virtual std::pair<float, float> getCollisionXInterval();
         virtual bool canCollide();
 
-//        virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
+        void doPhysicalUpdates(float deltaT);
 };

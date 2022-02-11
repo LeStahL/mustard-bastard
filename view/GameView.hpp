@@ -31,6 +31,6 @@ class GameView : public View {
     bool tearDown() override;
 
     private:
-    sf::Vector2f convertWorldPosition(WorldPosition position);
+    sf::Vector2f convertWorldCoordinates(WorldCoordinates coords);
     bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
 };

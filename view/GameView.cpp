@@ -22,7 +22,7 @@ GameView::GameView(sf::RenderWindow *renderWindow, Model& model) :
     floorView(FloorView(_renderWindow)) {
 }
 
-sf::Vector2f GameView::convertWorldPosition(WorldPosition position) {
+sf::Vector2f GameView::convertWorldCoordinates(WorldCoordinates position) {
     sf::Vector2f pixelPos;
 
     pixelPos.x = position.x;
@@ -34,19 +34,19 @@ sf::Vector2f GameView::convertWorldPosition(WorldPosition position) {
 void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
 {
     // small hack, not pretty - qm: don't get why this was done. I changed it.
-    WorldPosition pos = entity->position;
+    WorldCoordinates pos = entity->coords;
     pos.upWorld ^= invertWorld;
 
     auto sprite = &(_sprites.at(spriteId));
-    sprite->setPosition(convertWorldPosition(pos));
+    sprite->setPosition(convertWorldCoordinates(pos));
 
     int x_sign = 1;
     if(pos.upWorld) {
         sprite->setRotation(0.0f);
-        x_sign = entity->orientation.facing_left ? -1 : 1;
+        x_sign = entity->coords.facing_left ? -1 : 1;
     } else {
         sprite->setRotation(180.0f);
-        x_sign = entity->orientation.facing_left ? 1 : -1;
+        x_sign = entity->coords.facing_left ? 1 : -1;
     }
     sprite->setScale(sf::Vector2f(x_sign, 1));
 
@@ -65,7 +65,7 @@ auto drawPortal = [](Portal* portal, double y, double time) {
     auto halfwidth = portal->getHalfWidth();
     auto result = sf::CircleShape(halfwidth);
     result.setPosition(sf::Vector2f(
-        portal->position.x - halfwidth,
+        portal->coords.x - halfwidth,
         y - halfwidth * PORTAL_HEIGHT_RATIO + 2
     ));
     result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
@@ -92,8 +92,8 @@ bool GameView::draw(double time) {
                 continue;
             }
 
-            if(portal->position.z == layer) {
-                auto [yUp, yDown] = floorView.getBothBaseLines(portal->position);
+            if(portal->coords.z == layer) {
+                auto [yUp, yDown] = floorView.getBothBaseLines(portal->coords);
                 _renderWindow->draw(drawPortal(portal, yUp, time));
                 _renderWindow->draw(drawPortal(portal, yDown, time));
             }
@@ -101,7 +101,7 @@ bool GameView::draw(double time) {
 
         for(Enemy* enemy : model.getEnemies()) {
 
-            if(enemy->position.z == layer) {
+            if(enemy->coords.z == layer) {
                 int id1, id2 = 0;
 
                 switch (enemy->getType()) {
@@ -129,7 +129,7 @@ bool GameView::draw(double time) {
 
         for(int p = 0; p < model.getNumberOfPlayers(); p++) {
             auto player = model.getPlayer(p);
-            if(player->position.z == layer) {
+            if(player->coords.z == layer) {
                 int id = playerStateToSprite[player->state];
                 _animations.at(id).update(time);
                 adjustSprite(id, player, false); // TODO: get right

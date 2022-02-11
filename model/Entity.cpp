@@ -7,9 +7,18 @@ EntityType Entity::getType() {
 }
 
 std::pair<float, float> Entity::getCollisionXInterval() {
-    return std::pair(position.x - 1, position.x + 1);
+    return std::pair(coords.x - 1, coords.x + 1);
 }
 
 bool Entity::canCollide() {
     return true;
+}
+
+void Entity::doPhysicalUpdates(float deltaT) {
+    if (fabs(coords.x_speed) < 1e-3) {
+        coords.x_speed = 0;
+    } else {
+        coords.facing_left = coords.x_speed > 0;
+    }
+    coords.doPhysicalUpdates(deltaT);
 }
