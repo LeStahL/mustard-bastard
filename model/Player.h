@@ -3,7 +3,7 @@
 
 #include <Entity.h>
 #include <AttackState.hpp>
-
+#include <GameLogicConst.h>
 #include <string>
 
 enum PlayerState {
@@ -24,10 +24,8 @@ class Player : public Entity {
     std::string name;
 
     const float HALFWIDTH = 50;
-    const float WARP_TIME = 4;
 
-    private:
-    float warp_timer;
+    float warp_timer; // --> gonna be a Cooldownable / Timerthingy / whatever
 
     public:
     Player(std::string name, int graphicId, WorldPosition position, WorldOrientation orientation);
@@ -36,12 +34,13 @@ class Player : public Entity {
     {}
 
     std::pair<float, float> getCollisionXInterval() override;
-    bool isCollisionActive() override;
+    bool canCollide() override;
+    bool isLocked();
 
-    void update(float elapsed);
-    void beginWarp();
-    void endWarp();
-//    bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) override;
+    float getWarpProgress() { return warp_timer / PLAYER_WARP_TIME; }
+
+    void lock() { is_locked = true; }
+    void unlock() { is_locked = false; }
 };
 
 #endif /* PLAYER_H */

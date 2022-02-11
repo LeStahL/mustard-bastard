@@ -6,6 +6,6 @@ std::pair<float, float> Entity::getCollisionXInterval() {
     return std::pair(position.x - 1, position.x + 1);
 }
 
-bool Entity::isCollisionActive() {
+bool Entity::canCollide() {
     return true;
 }

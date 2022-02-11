@@ -52,8 +52,6 @@ void GameInputController::pullEvents() {
         int x_sign = (right && !left) ? 1 : (left && !right) ? -1 : 0;
         int z_sign = (up && !down) ? 1 : (down && !up) ? -1 : 0;
 
-        gameLogic.move_x(p, x_sign, retreat);
-        gameLogic.move_z(p, z_sign);
-        gameLogic.attack(p);
+        gameLogic.move_player(p, x_sign, retreat, z_sign, attack);
     }
 }

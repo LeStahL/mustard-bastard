@@ -12,6 +12,10 @@ GameLogic::GameLogic(Model* model) :
         model(model) {
     srand(time(NULL));
 
+    for (int p = 0; p < model->getNumberOfPlayers(); p++) {
+        playerLogic.push_back(new PlayerLogic(model->getPlayer(p)));
+    }
+
     for (auto enemyType : AllEnemyTypes) {
         enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
         std::cout << "SPAWN " << enemyType << " in "  << enemySpawnCooldown[enemyType] << std::endl;
@@ -24,51 +28,20 @@ void GameLogic::update(float timeElapsed) {
 
     for (int p = 0; p < nPlayers(); p++)
     {
-        auto player = model->getPlayer(p);
-        player->update(timeElapsed);
-        handlePlayerCollisions(player, timeElapsed);
+        playerLogic[p]->update(timeElapsed);
+        handlePlayerCollisions(playerLogic[p], timeElapsed);
     }
 }
 
-void GameLogic::move_x(int player_number, int sign, bool retreat) {
-    auto player = model->getPlayer(player_number);
-    bool would_switch_direction = player->orientation.facing_left && (sign > 0)
-        || !player->orientation.facing_left && (sign < 0);
-
-    if (would_switch_direction && !retreat) {
-        player->x_speed = 0;
-        player->orientation.facing_left = !player->orientation.facing_left;
-    } else if (retreat) {
-        player->x_speed = -sign * PLAYER_MOVE_X_SPEED;
-    } else {
-        player->x_speed = sign * PLAYER_MOVE_X_SPEED;
-    }
-
-    player->state = player->x_speed == 0 ? PlayerState::Standing : PlayerState::Walking;
-}
-
-void GameLogic::move_z(int player_number, int sign) {
-    if (sign == 0)
+void GameLogic::move_player(int player_number, int x_sign, bool retreat, int z_sign, bool attack) {
+    auto pl = playerLogic[player_number];
+    if (pl->isLocked()) {
         return;
-
-    auto player = model->getPlayer(player_number);
-
-    if (player->move_z_cooldown <= 0) {
-        player->position.z = std::clamp(player->position.z + sign, 0, (int)Z_PLANES - 1);
-        player->move_z_cooldown = PLAYER_MOVE_Z_COOLDONW;
     }
-}
-
-void GameLogic::attack(int player_number) {
-    auto player = model->getPlayer(player_number);
-    bool canAttack = player->attack_state.cooldown <= 0
-        && player->attack_state.mustardedness <= PLAYER_MAX_ACCEPTABLE_MUSTARDNESS
-        && player->power >= PLAYER_MIN_REQUIRED_POWER;
-
-    if (canAttack) {
-        player->state = PlayerState::Attacking;
-        player->attack_state.setCoolDown(ATTACK_COOLDOWN.at(player->attack_state.weapon));
-        player->power *= PLAYER_ATTACK_POWER_REDUCTION_FACTOR;
+    pl->move_x(x_sign, retreat);
+    pl->move_z(z_sign);
+    if (attack) {
+        pl->attack();
     }
 }
 
@@ -190,23 +163,15 @@ void GameLogic::killPortal(FloorThing* floorThing)
     }
 }
 
-void GameLogic::handlePlayerCollisions(Player* player, float elapsedTime)
+void GameLogic::handlePlayerCollisions(PlayerLogic *playerLogic, float elapsed)
 {
     for (Entity* entity : model->getFloorThings()) {
-        if (!entity->isCollisionActive()) {
+        if (!playerLogic->canCollide()) {
+            return;
+        }
+        if (!entity->canCollide()) {
             continue;
         }
-        if (player->position.z != entity->position.z) {
-            continue;
-        }
-        auto portal = dynamic_cast<Portal*>(entity);
-        if (portal != nullptr) {
-            auto playerX = player->position.x;
-            auto [portalL, portalR] = portal->getCollisionXInterval();
-
-            if ((playerX >= portalL) && (playerX <= portalR)) {
-                player->beginWarp();
-            }
-        }
+        playerLogic->handleCollisions(entity, elapsed);
     }
 }

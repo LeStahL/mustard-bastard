@@ -31,25 +31,33 @@ sf::Vector2f GameView::convertWorldPosition(WorldPosition position) {
     return pixelPos;
 }
 
-void GameView::adjustSprite(int spriteId, Entity* entity, bool upworld)
+void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
 {
-    // small hack, not pretty
+    // small hack, not pretty - qm: don't get why this was done. I changed it.
     WorldPosition pos = entity->position;
-    pos.upWorld = upworld;
+    pos.upWorld ^= invertWorld;
 
     sf::Vector2f position = convertWorldPosition(pos);
     sf::Vector2f shift = _spriteCenters.at(spriteId);
 
+    auto sprite = &(_sprites.at(spriteId));
     // TODO : replace by pretty math
-    if(upworld) {
+    if(pos.upWorld) {
         float x_sign = entity->orientation.facing_left ? -1 : 1;
-        _sprites.at(spriteId).setPosition(position - sf::Vector2f(x_sign * shift.x, shift.y));
-        _sprites.at(spriteId).setScale(sf::Vector2f(x_sign, 1));
+        sprite->setPosition(position - sf::Vector2f(x_sign * shift.x, shift.y));
+        sprite->setScale(sf::Vector2f(x_sign, 1));
     } else {
-        _sprites.at(spriteId).setRotation(180.0f*(int(upworld)-1));
+        sprite->setRotation(180.0f);
         float x_sign = entity->orientation.facing_left ? 1 : -1;
-        _sprites.at(spriteId).setPosition(position + sf::Vector2f(x_sign * shift.x, shift.y));
-        _sprites.at(spriteId).setScale(sf::Vector2f(x_sign, 1));
+        sprite->setPosition(position + sf::Vector2f(x_sign * shift.x, shift.y));
+        sprite->setScale(sf::Vector2f(x_sign, 1));
+    }
+
+    // special transformation in case of warping player
+    auto player = dynamic_cast<Player*>(entity);
+    if (player != nullptr && player->state == PlayerState::Warping) {
+        float progress = player->getWarpProgress();
+        _sprites.at(spriteId).scale(sf::Vector2f(3., 1. + progress));
     }
 }
 
@@ -104,20 +112,21 @@ bool GameView::draw(double time) {
                 }
 
                _animations.at(id1).update(time);
-                adjustSprite(id1, enemy, true);
+                adjustSprite(id1, enemy, false);
                 _renderWindow->draw(_sprites.at(id1));
 
                 _animations.at(id2).update(time);
-                adjustSprite(id2, enemy, false);
+                adjustSprite(id2, enemy, true);
                 _renderWindow->draw(_sprites.at(id2));
             }
         }
 
         for(int p = 0; p < model.getNumberOfPlayers(); p++) {
-            if(model.getPlayer(p)->position.z == layer) {
-                int id = playerStateToSprite[model.getPlayer(p)->state];
+            auto player = model.getPlayer(p);
+            if(player->position.z == layer) {
+                int id = playerStateToSprite[player->state];
                 _animations.at(id).update(time);
-                adjustSprite(id, model.getPlayer(p), true); // TODO: get right
+                adjustSprite(id, player, false); // TODO: get right
                 _renderWindow->draw(_sprites.at(id));
             }
         }

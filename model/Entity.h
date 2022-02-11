@@ -8,6 +8,8 @@
 class Entity {
     private:
         static int id_counter;
+    protected:
+        bool is_locked = false;
     public:
         int id;
         WorldPosition position;
@@ -27,7 +29,7 @@ class Entity {
         virtual ~Entity() {}
 
         virtual std::pair<float, float> getCollisionXInterval();
-        virtual bool isCollisionActive();
+        virtual bool canCollide();
 
 //        virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
 };

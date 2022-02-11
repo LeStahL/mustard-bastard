@@ -20,7 +20,7 @@ class Portal : public FloorThing {
         return std::pair(position.x - halfWidth, position.x + halfWidth);
     }
 
-    bool isCollisionActive() override {
+    bool canCollide() override {
         return !spawning && lifetime > 0;
     }
 };
