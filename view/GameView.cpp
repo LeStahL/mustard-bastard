@@ -37,40 +37,39 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
     WorldPosition pos = entity->position;
     pos.upWorld ^= invertWorld;
 
-    sf::Vector2f position = convertWorldPosition(pos);
-    sf::Vector2f shift = _spriteCenters.at(spriteId);
-
     auto sprite = &(_sprites.at(spriteId));
-    // TODO : replace by pretty math
+    sprite->setPosition(convertWorldPosition(pos));
+
+    int x_sign = 1;
     if(pos.upWorld) {
-        float x_sign = entity->orientation.facing_left ? -1 : 1;
-        sprite->setPosition(position - sf::Vector2f(x_sign * shift.x, shift.y));
-        sprite->setScale(sf::Vector2f(x_sign, 1));
+        sprite->setRotation(0.0f);
+        x_sign = entity->orientation.facing_left ? -1 : 1;
     } else {
         sprite->setRotation(180.0f);
-        float x_sign = entity->orientation.facing_left ? 1 : -1;
-        sprite->setPosition(position + sf::Vector2f(x_sign * shift.x, shift.y));
-        sprite->setScale(sf::Vector2f(x_sign, 1));
+        x_sign = entity->orientation.facing_left ? 1 : -1;
     }
+    sprite->setScale(sf::Vector2f(x_sign, 1));
 
     // special transformation in case of warping player
     auto player = dynamic_cast<Player*>(entity);
     if (player != nullptr && player->state == PlayerState::Warping) {
         float progress = player->getWarpProgress();
-        _sprites.at(spriteId).scale(sf::Vector2f(3., 1. + progress));
+        float x_scale = progress < 0.5
+            ? 1. - 2. * progress
+            : -.5 + 2. * progress;
+        sprite->scale(sf::Vector2f(x_scale, 1./(x_scale + .1)));
     }
 }
 
-auto drawPortal = [](Portal* portal, FloorView floorView, double time) {
+auto drawPortal = [](Portal* portal, double y, double time) {
     auto halfwidth = portal->getHalfWidth();
     auto result = sf::CircleShape(halfwidth);
-    auto floory_y = floorView.getBackgroundBaseLine(portal->position);
     result.setPosition(sf::Vector2f(
         portal->position.x - halfwidth,
-        floory_y - halfwidth * PORTAL_HEIGHT_RATIO + 2
+        y - halfwidth * PORTAL_HEIGHT_RATIO + 2
     ));
     result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
-    auto color = sf::Color(255, 0, 0);
+    auto color = portal->used ? sf::Color(100, 0, 255) : sf::Color(255, 0, 0);
     if (portal->lifetime > 0) {
         auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
         color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
@@ -90,7 +89,9 @@ bool GameView::draw(double time) {
                 continue;
 
             if(portal->position.z == layer) {
-                _renderWindow->draw(drawPortal(portal, floorView, time));
+                auto [yUp, yDown] = floorView.getBothBaseLines(portal->position);
+                _renderWindow->draw(drawPortal(portal, yUp, time));
+                _renderWindow->draw(drawPortal(portal, yDown, time));
             }
         }
 
@@ -144,7 +145,6 @@ bool GameView::setUp() {
     _textures.reserve(RESERVE_SPACE);
     _sprites.reserve(RESERVE_SPACE);
     _animations.reserve(RESERVE_SPACE);
-    _spriteCenters.reserve(RESERVE_SPACE);
 
     loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT);
     loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT);
@@ -168,13 +168,13 @@ bool GameView::loadAnimation(const std::string &filename, const unsigned int spr
         return false;
     }
 
-    _sprites.push_back(sf::Sprite(_textures.back()));
+    auto sprite = sf::Sprite(_textures.back());
+    sprite.setOrigin(sf::Vector2f(0.5 * spriteWidthPx, spriteHeightPx));
+    _sprites.push_back(sprite);
 
     _animations.push_back(Animation(&_sprites.back(), .1));
     for(int i=0; i<frameCount; ++i)
         _animations.back().addFrame(spriteWidthPx*i, 0, spriteWidthPx, spriteHeightPx);
-
-    _spriteCenters.push_back(sf::Vector2f(0.5 * spriteWidthPx, spriteHeightPx));
 
     return true;
 }

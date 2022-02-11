@@ -105,12 +105,6 @@ void GameLogic::maybeSpawnPortal()
     int random_z = rand() % Z_PLANES;
 
     Portal* portal = new Portal(WorldPosition(random_x, random_z, true));
-    portal->size = PORTAL_EPSILON_SIZE;
-    model->getFloorThings().push_back(portal);
-
-    // workaround: just add another one in the other world
-    portal = new Portal(WorldPosition(random_x, random_z, false));
-    portal->size = PORTAL_EPSILON_SIZE;
     model->getFloorThings().push_back(portal);
 }
 

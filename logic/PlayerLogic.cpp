@@ -9,6 +9,8 @@ void PlayerLogic::beginWarp() {
     player->state = PlayerState::Warping;
     player->lock();
     player->warp_timer = 0;
+    player->x_speed = 0;
+    warp_did_happen = false;
 }
 
 void PlayerLogic::update(float elapsed) {
@@ -22,6 +24,10 @@ void PlayerLogic::update(float elapsed) {
 
     if (player->state == PlayerState::Warping) {
         player->warp_timer += elapsed;
+        if (player->getWarpProgress() >= 0.5 && !warp_did_happen) {
+            player->position.upWorld ^= true;
+            warp_did_happen = true;
+        }
         if (player->getWarpProgress() >= 1) {
             endWarp();
         }
@@ -89,6 +95,7 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
 
         if ((playerX >= portalL) && (playerX <= portalR)) {
             beginWarp();
+            portal->shutDown();
         }
     }
 }

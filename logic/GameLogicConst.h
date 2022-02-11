@@ -14,7 +14,7 @@ constexpr float PLAYER_ATTACK_POWER_REDUCTION_FACTOR = 0.8;
 constexpr float PLAYER_ATTACK_POWER_RECREATION = 0.008;
 constexpr float PLAYER_ATTACK_POWER_FAIRY_RECREATION = 0.1;
 constexpr float PLAYER_MIN_REQUIRED_POWER = 0.3;
-constexpr float PLAYER_WARP_TIME = 4;
+constexpr float PLAYER_WARP_TIME = 1.5;
 
 constexpr int PORTAL_SPAWN_MODULO = 2000;
 constexpr float PORTAL_EPSILON_SIZE = 0.001;

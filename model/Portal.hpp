@@ -9,6 +9,7 @@ class Portal : public FloorThing {
     float size = PORTAL_EPSILON_SIZE;
     bool spawning = true;
     float lifetime = 0;
+    bool used = false;
 
     Portal(WorldPosition position) : FloorThing(position) {
     };
@@ -21,6 +22,10 @@ class Portal : public FloorThing {
     }
 
     bool canCollide() override {
-        return !spawning && lifetime > 0;
+        return !spawning && lifetime > 0 && !used;
+    }
+
+    void shutDown() {
+        used = true;
     }
 };

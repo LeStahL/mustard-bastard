@@ -6,6 +6,8 @@ class PlayerLogic {
     private:
         Player *player;
 
+        bool warp_did_happen;
+
     public:
         PlayerLogic(Player *player): player(player) {};
 
