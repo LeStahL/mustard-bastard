@@ -23,6 +23,7 @@ add_executable(mustard-bastard Main.cpp
     view/HeadsUpDisplayView.cpp
 
     logic/GameLogic.cpp
+    logic/PlayerLogic.cpp
 
     utility/Animation.cpp
     utility/MusicPlayer.cpp

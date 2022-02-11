@@ -9,9 +9,20 @@
 #include <const.h>
 #include <time.h>
 
+static const EnemyType AllEnemyTypes[] = {EnemyType::ZombieAndCat, EnemyType::IcebergAndFairy};
+
 GameLogic::GameLogic(Model* model) :
         model(model) {
     srand(time(NULL));
+
+    for (int p = 0; p < model->getNumberOfPlayers(); p++) {
+        playerLogic.push_back(new PlayerLogic(model->getPlayer(p)));
+    }
+
+    for (auto enemyType : AllEnemyTypes) {
+        enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
+        std::cout << "SPAWN " << enemyType << " in "  << enemySpawnCooldown[enemyType] << std::endl;
+    }
 }
 
 void GameLogic::update(float timeElapsed) {
@@ -20,62 +31,38 @@ void GameLogic::update(float timeElapsed) {
 
     for (int p = 0; p < nPlayers(); p++)
     {
-        updatePlayer(model->getPlayer(p), timeElapsed);
+        playerLogic[p]->update(timeElapsed);
+        handlePlayerCollisions(playerLogic[p], timeElapsed);
     }
-
 }
 
-void GameLogic::move_x(int player_number, int sign, bool retreat) {
-    auto player = model->getPlayer(player_number);
-    bool would_switch_direction = player->orientation.facing_left && (sign > 0)
-        || !player->orientation.facing_left && (sign < 0);
-
-    if (would_switch_direction && !retreat) {
-        player->x_speed = 0;
-        player->orientation.facing_left = !player->orientation.facing_left;
-    } else if (retreat) {
-        player->x_speed = -sign * PLAYER_MOVE_X_SPEED;
-    } else {
-        player->x_speed = sign * PLAYER_MOVE_X_SPEED;
-    }
-
-    player->state = player->x_speed == 0 ? PlayerState::Standing : PlayerState::Walking;
-}
-
-void GameLogic::move_z(int player_number, int sign) {
-    if (sign == 0)
+void GameLogic::move_player(int player_number, int x_sign, bool retreat, int z_sign, bool attack) {
+    auto pl = playerLogic[player_number];
+    if (pl->isLocked()) {
         return;
-
-    auto player = model->getPlayer(player_number);
-
-    if (player->move_z_cooldown <= 0) {
-        player->position.z = std::clamp(player->position.z + sign, 0, (int)Z_PLANES - 1);
-        player->move_z_cooldown = PLAYER_MOVE_Z_COOLDONW;
     }
-}
-
-void GameLogic::attack(int player_number) {
-    auto player = model->getPlayer(player_number);
-    bool canAttack = player->attack_state.cooldown <= 0
-        && player->attack_state.mustardedness <= PLAYER_MAX_ACCEPTABLE_MUSTARDNESS
-        && player->power >= PLAYER_MIN_REQUIRED_POWER;
-
-    if (canAttack) {
-        player->state = PlayerState::Attacking;
-        player->attack_state.setCoolDown(ATTACK_COOLDOWN.at(player->attack_state.weapon));
-        player->power *= PLAYER_ATTACK_POWER_REDUCTION_FACTOR;
+    pl->move_x(x_sign, retreat);
+    pl->move_z(z_sign);
+    if (attack) {
+        pl->attack();
     }
 }
 
 void GameLogic::updateEnemies(float timeElapsed) {
-    // spwan new enemies with probabilty of 5% for 100 calls
 
-    maybeSpawnEnemy(EntityType::ZombieAndCat);
-    maybeSpawnEnemy(EntityType::IcebergAndFairy);
     maybeSpawnPortal();
 
-    for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
-        auto enemy = (*it);
+    for (const auto enemyType : AllEnemyTypes) {
+        if (enemySpawnCooldown[enemyType] > 0) { // TODO -> Cooldownable
+            enemySpawnCooldown[enemyType] -= timeElapsed;
+        } else {
+            spawnEnemy(enemyType, timeElapsed);
+            enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
+            std::cout << "SPAWN " << enemyType << " in "  << enemySpawnCooldown[enemyType] << std::endl;
+        }
+    }
+
+    for (auto enemy : model->getEnemies()) {
         enemy->position.x -= enemy->speed * timeElapsed;
 
         if (isEnemyTooFarAway(enemy))
@@ -85,24 +72,9 @@ void GameLogic::updateEnemies(float timeElapsed) {
     }
 }
 
-void GameLogic::maybeSpawnEnemy(EntityType type) {
-    if(!(rand() % 1000 < 1))
-        return;
-
-    Enemy *enemy;
-    WorldPosition position(1000.0f, rand() % 3, true);
-
-    switch (type) {
-    case EntityType::ZombieAndCat:
-        enemy = Enemy::getZombie(position);
-        break;
-    case EntityType::IcebergAndFairy:
-        enemy = Enemy::getIceberg(position);
-        break;
-    default:
-        break;
-    }
-
+void GameLogic::spawnEnemy(EnemyType type, float elapsed) {
+    bool upWorld = rand() % 2 == 0;
+    Enemy* enemy = new Enemy(type, WorldPosition(1000.0f, rand() % 3, upWorld));
     model->getEnemies().push_back(enemy);
 }
 
@@ -117,16 +89,6 @@ void GameLogic::killEnemy(Enemy* enemy) {
             break;
         }
     }
-}
-
-void GameLogic::updatePlayer(Player* player, float timeElapsed) {
-    player->position.x = std::clamp(
-        player->position.x + player->x_speed * timeElapsed,
-        PLAYER_X_BORDER_MARGIN,
-        WIDTH - PLAYER_X_BORDER_MARGIN
-    );
-    player->move_z_cooldown = std::max(player->move_z_cooldown - timeElapsed, 0.f);
-    player->attack_state.coolDown(timeElapsed);
 }
 
 int GameLogic::nPlayers() {
@@ -146,12 +108,6 @@ void GameLogic::maybeSpawnPortal()
     int random_z = rand() % Z_PLANES;
 
     Portal* portal = new Portal(WorldPosition(random_x, random_z, true));
-    portal->size = PORTAL_EPSILON_SIZE;
-    model->getFloorThings().push_back(portal);
-
-    // workaround: just add another one in the other world
-    portal = new Portal(WorldPosition(random_x, random_z, false));
-    portal->size = PORTAL_EPSILON_SIZE;
     model->getFloorThings().push_back(portal);
 }
 
@@ -183,7 +139,7 @@ void GameLogic::updateFloorThings(float elapsedTime)
 
     for (FloorThing* floory : model->getFloorThings()) {
         auto portal = dynamic_cast<Portal*>(floory);
-        if (portal != NULL) {
+        if (portal != nullptr) {
             if (!updatePortal(portal, elapsedTime)) {
                 killPortal(floory);
             };
@@ -201,5 +157,18 @@ void GameLogic::killPortal(FloorThing* floorThing)
             modelList.erase(it);
             break;
         }
+    }
+}
+
+void GameLogic::handlePlayerCollisions(PlayerLogic *playerLogic, float elapsed)
+{
+    for (Entity* entity : model->getFloorThings()) {
+        if (!playerLogic->canCollide()) {
+            return;
+        }
+        if (!entity->canCollide()) {
+            continue;
+        }
+        playerLogic->handleCollisions(entity, elapsed);
     }
 }

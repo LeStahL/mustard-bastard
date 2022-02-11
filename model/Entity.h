@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <WorldPosition.h>
 #include <WorldOrientation.h>
 
@@ -15,7 +16,7 @@ class Entity {
         static int id_counter;
     protected:
         EntityType type;
-
+        bool is_locked = false;
     public:
         int id;
         WorldPosition position;
@@ -37,4 +38,10 @@ class Entity {
 
         //virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
         EntityType getType();
+        virtual std::pair<float, float> getCollisionXInterval();
+        virtual bool canCollide();
+
+//        virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
 };
+
+#endif /* ENTITY_H */

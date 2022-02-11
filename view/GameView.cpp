@@ -7,11 +7,13 @@
 #include <GameLogicConst.h>
 #include <const.h>
 #include <cmath>
+#include <Portal.hpp>
 
 std::map<int, int> playerStateToSprite = {
-    { PlayerState::Standing , Model::GraphicsId::player_standing },
-    { PlayerState::Walking  , Model::GraphicsId::player_walking },
-    { PlayerState::Attacking, Model::GraphicsId::player_attack }
+    { PlayerState::Standing, Model::GraphicsId::player_standing },
+    { PlayerState::Walking, Model::GraphicsId::player_walking },
+    { PlayerState::Attacking, Model::GraphicsId::player_attack },
+    { PlayerState::Warping, Model::GraphicsId::player_standing }
 };
 
 GameView::GameView(sf::RenderWindow *renderWindow, Model& model) :
@@ -29,38 +31,45 @@ sf::Vector2f GameView::convertWorldPosition(WorldPosition position) {
     return pixelPos;
 }
 
-void GameView::adjustSprite(int spriteId, Entity* entity, bool upworld)
+void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
 {
-    // small hack, not pretty
+    // small hack, not pretty - qm: don't get why this was done. I changed it.
     WorldPosition pos = entity->position;
-    pos.upWorld = upworld;
+    pos.upWorld ^= invertWorld;
 
-    sf::Vector2f position = convertWorldPosition(pos);
-    sf::Vector2f shift = _spriteCenters.at(spriteId);
+    auto sprite = &(_sprites.at(spriteId));
+    sprite->setPosition(convertWorldPosition(pos));
 
-    // TODO : replace by pretty math
-    if(upworld) {
-        float x_sign = entity->orientation.facing_left ? -1 : 1;
-        _sprites.at(spriteId).setPosition(position - sf::Vector2f(x_sign * shift.x, shift.y));
-        _sprites.at(spriteId).setScale(sf::Vector2f(x_sign, 1));
+    int x_sign = 1;
+    if(pos.upWorld) {
+        sprite->setRotation(0.0f);
+        x_sign = entity->orientation.facing_left ? -1 : 1;
     } else {
-        _sprites.at(spriteId).setRotation(180.0f*(int(upworld)-1));
-        float x_sign = entity->orientation.facing_left ? 1 : -1;
-        _sprites.at(spriteId).setPosition(position + sf::Vector2f(x_sign * shift.x, shift.y));
-        _sprites.at(spriteId).setScale(sf::Vector2f(x_sign, 1));
+        sprite->setRotation(180.0f);
+        x_sign = entity->orientation.facing_left ? 1 : -1;
+    }
+    sprite->setScale(sf::Vector2f(x_sign, 1));
+
+    // special transformation in case of warping player
+    auto player = dynamic_cast<Player*>(entity);
+    if (player != nullptr && player->state == PlayerState::Warping) {
+        float progress = player->getWarpProgress();
+        float x_scale = progress < 0.5
+            ? 1. - 2. * progress
+            : -.5 + 2. * progress;
+        sprite->scale(sf::Vector2f(x_scale, 1./(x_scale + .1)));
     }
 }
 
-auto drawPortal = [](Portal* portal, FloorView floorView, double time) {
+auto drawPortal = [](Portal* portal, double y, double time) {
     auto halfwidth = portal->getHalfWidth();
     auto result = sf::CircleShape(halfwidth);
-    auto floory_y = floorView.getBackgroundBaseLine(portal->position);
     result.setPosition(sf::Vector2f(
         portal->position.x - halfwidth,
-        floory_y - halfwidth * PORTAL_HEIGHT_RATIO + 2
+        y - halfwidth * PORTAL_HEIGHT_RATIO + 2
     ));
     result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
-    auto color = sf::Color(255, 0, 0);
+    auto color = portal->used ? sf::Color(100, 0, 255) : sf::Color(255, 0, 0);
     if (portal->lifetime > 0) {
         auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
         color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
@@ -84,7 +93,9 @@ bool GameView::draw(double time) {
             }
 
             if(portal->position.z == layer) {
-                _renderWindow->draw(drawPortal(portal, floorView, time));
+                auto [yUp, yDown] = floorView.getBothBaseLines(portal->position);
+                _renderWindow->draw(drawPortal(portal, yUp, time));
+                _renderWindow->draw(drawPortal(portal, yDown, time));
             }
         }
 
@@ -107,20 +118,21 @@ bool GameView::draw(double time) {
                 }
 
                _animations.at(id1).update(time);
-                adjustSprite(id1, enemy, true);
+                adjustSprite(id1, enemy, false);
                 _renderWindow->draw(_sprites.at(id1));
 
                 _animations.at(id2).update(time);
-                adjustSprite(id2, enemy, false);
+                adjustSprite(id2, enemy, true);
                 _renderWindow->draw(_sprites.at(id2));
             }
         }
 
         for(int p = 0; p < model.getNumberOfPlayers(); p++) {
-            if(model.getPlayer(p)->position.z == layer) {
-                int id = playerStateToSprite[model.getPlayer(p)->state];
+            auto player = model.getPlayer(p);
+            if(player->position.z == layer) {
+                int id = playerStateToSprite[player->state];
                 _animations.at(id).update(time);
-                adjustSprite(id, model.getPlayer(p), true); // TODO: get right
+                adjustSprite(id, player, false); // TODO: get right
                 _renderWindow->draw(_sprites.at(id));
             }
         }
@@ -138,7 +150,6 @@ bool GameView::setUp() {
     _textures.reserve(RESERVE_SPACE);
     _sprites.reserve(RESERVE_SPACE);
     _animations.reserve(RESERVE_SPACE);
-    _spriteCenters.reserve(RESERVE_SPACE);
 
     loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT);
     loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT);
@@ -162,13 +173,13 @@ bool GameView::loadAnimation(const std::string &filename, const unsigned int spr
         return false;
     }
 
-    _sprites.push_back(sf::Sprite(_textures.back()));
+    auto sprite = sf::Sprite(_textures.back());
+    sprite.setOrigin(sf::Vector2f(0.5 * spriteWidthPx, spriteHeightPx));
+    _sprites.push_back(sprite);
 
     _animations.push_back(Animation(&_sprites.back(), .1));
     for(int i=0; i<frameCount; ++i)
         _animations.back().addFrame(spriteWidthPx*i, 0, spriteWidthPx, spriteHeightPx);
-
-    _spriteCenters.push_back(sf::Vector2f(0.5 * spriteWidthPx, spriteHeightPx));
 
     return true;
 }

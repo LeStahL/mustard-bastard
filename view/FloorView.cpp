@@ -1,6 +1,6 @@
 #include "FloorView.h"
-
 #include <const.h>
+#include <utility>
 
 FloorView::FloorView(sf::RenderWindow *window) :
         window(window)
@@ -60,8 +60,14 @@ void FloorView::customDraw(sf::RenderWindow *window, double time) {
     DrawBackground();
 }
 
-int FloorView::getBackgroundBaseLine(WorldPosition position) {
-    int z = position.z;
-    bool upWorld = position.upWorld;
+auto baseLineFor = [](int z, bool upWorld) {
     return 0.5 * (yForLine(z, upWorld) + yForLine(z + 1, upWorld));
+};
+
+int FloorView::getBackgroundBaseLine(WorldPosition position) {
+    return baseLineFor(position.z, position.upWorld);
+}
+
+std::pair<int, int> FloorView::getBothBaseLines(WorldPosition position) {
+    return std::pair(baseLineFor(position.z, true), baseLineFor(position.z, false));
 }
