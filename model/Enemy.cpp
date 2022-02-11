@@ -49,3 +49,19 @@ void Enemy::doTargetUpdates(Model* model, float deltaT) {
         coords.x_acc = sgn(target.fixed_x) * ACCELERATION_TOWARDS_FIXED_X;
     }
 }
+
+std::string Enemy::name()
+{
+        switch (type)
+        {
+                case EntityType::IcebergAndFairy:
+                return "IcebergAndFairy";
+
+                case EntityType::ZombieAndCat:
+                return "ZombieAndCat";
+        }
+}
+
+void Enemy::update(float time)
+{
+}

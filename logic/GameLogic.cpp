@@ -4,6 +4,7 @@
 #include <GameLogic.h>
 #include <Portal.hpp>
 #include <Medikit.hpp>
+#include <Weapon.hpp>
 
 #include <random>
 #include <iostream>

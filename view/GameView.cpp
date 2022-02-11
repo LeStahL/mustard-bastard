@@ -8,6 +8,8 @@
 #include <const.h>
 #include <cmath>
 
+#include "Portal.hpp"
+
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing, Model::GraphicsId::player_standing },
     { PlayerState::Walking, Model::GraphicsId::player_walking },

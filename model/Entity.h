@@ -11,6 +11,8 @@ enum class EntityType {
     Medikit
 };
 
+#include <string>
+
 class Entity {
     private:
         static int id_counter;
@@ -34,6 +36,5 @@ class Entity {
         EntityType getType();
         virtual std::pair<float, float> getCollisionXInterval();
         virtual bool canCollide();
-
         void doCoordUpdates(float deltaT);
 };

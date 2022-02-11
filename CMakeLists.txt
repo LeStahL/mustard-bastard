@@ -19,6 +19,11 @@ add_executable(mustard-bastard
     model/HighscoreList.cpp
     model/Medikit.cpp
     model/PauseMenuState.cpp
+    model/Weapon.cpp
+    model/Portal.cpp
+    model/Mustard.cpp
+    model/PlayerAttachable.cpp
+    model/Cooldownable.cpp
 
     view/FloorView.cpp
     view/GameView.cpp

@@ -14,14 +14,17 @@ enum PlayerState {
 };
 
 class Player : public Entity {
+    std::string name;
+
     public:
+    Weapon *weapon;
     PlayerState state;
     float move_z_cooldown = 0.0f;
     AttackState attack_state;
     float power = 1.0f;
     float health = .5f;
     long points = 0;
-    std::string name;
+    float mustardness = 0.;
 
     const float HALFWIDTH = 80; // <-- put that... elsewhere? it's a bit arbitrary yet.
 
@@ -37,6 +40,9 @@ class Player : public Entity {
 
     void lock() { is_locked = true; }
     void unlock() { is_locked = false; }
+
+    std::string getName();
+
 };
 
 #endif /* PLAYER_H */
