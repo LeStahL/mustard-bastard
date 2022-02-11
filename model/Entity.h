@@ -43,5 +43,3 @@ class Entity {
 
 //        virtual bool onCollisionWith(Entity* other, void (*callback)(Entity* other)) = 0;
 };
-
-#endif /* ENTITY_H */

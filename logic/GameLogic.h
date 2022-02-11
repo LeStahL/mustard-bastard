@@ -14,7 +14,7 @@ class GameLogic {
     private:
     Model* model;
     std::vector<PlayerLogic*> playerLogic;
-    std::map<EnemyType, float> enemySpawnCooldown;
+    std::map<EntityType, float> enemySpawnCooldown;
 
     public:
     GameLogic(Model* model);
@@ -24,7 +24,7 @@ class GameLogic {
 
     private:
     void updateEnemies(float elapsedTime);
-    void spawnEnemy(EnemyType type, float elapsedTime);
+    void spawnEnemy(EntityType type, float elapsedTime);
     bool isEnemyTooFarAway(Enemy* enemy);
     void killEnemy(Enemy* enemy);
 

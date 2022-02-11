@@ -27,5 +27,7 @@ class Portal : public FloorThing {
 
     void shutDown() {
         used = true;
+        spawning = false;
+        lifetime = 0;
     }
 };

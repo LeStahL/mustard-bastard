@@ -23,16 +23,12 @@ class Player : public Entity {
     long points = 0;
     std::string name;
 
-    Player(WorldPosition position, WorldOrientation orientation);
-
     const float HALFWIDTH = 50;
 
     float warp_timer; // --> gonna be a Cooldownable / Timerthingy / whatever
 
-    public:
-    Player(std::string name, int graphicId, WorldPosition position, WorldOrientation orientation);
-
-    Player(WorldPosition position) : Player(position, WorldOrientation())
+    Player(std::string name, WorldPosition position, WorldOrientation orientation);
+    Player(std::string name, WorldPosition position) : Player(name, position, WorldOrientation())
     {}
 
     std::pair<float, float> getCollisionXInterval() override;

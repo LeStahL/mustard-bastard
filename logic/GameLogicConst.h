@@ -2,7 +2,7 @@
 
 #include <map>
 #include <Interval.hpp>
-#include <Enemy.hpp>
+#include <Entity.h>
 
 constexpr float PLAYER_MOVE_X_SPEED = 160.0;
 constexpr float PLAYER_MOVE_Z_COOLDONW = 0.3;
@@ -24,9 +24,9 @@ constexpr float PORTAL_ACTIVE_SECONDS = 4;
 constexpr float PORTAL_MAX_HALFWIDTH = 42;
 constexpr float PORTAL_HEIGHT_RATIO = 0.3;
 
-const std::map<EnemyType, Interval> INIT_COOLDOWN = {
-    { EnemyType::ZombieAndCat, Interval(2, 10)},
-    { EnemyType::IcebergAndFairy, Interval(120, 210)}
+const std::map<EntityType, Interval> INIT_COOLDOWN = {
+    { EntityType::ZombieAndCat, Interval(2, 10)},
+    { EntityType::IcebergAndFairy, Interval(120, 210)}
 };
 
 const std::map<Weapon, double> ATTACK_COOLDOWN = {

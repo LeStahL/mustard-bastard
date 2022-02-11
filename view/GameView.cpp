@@ -56,8 +56,8 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
         float progress = player->getWarpProgress();
         float x_scale = progress < 0.5
             ? 1. - 2. * progress
-            : -.5 + 2. * progress;
-        sprite->scale(sf::Vector2f(x_scale, 1./(x_scale + .1)));
+            : 2. * (progress - 0.5);
+        sprite->scale(sf::Vector2f(x_scale, 1./(x_scale + .01)));
     }
 }
 

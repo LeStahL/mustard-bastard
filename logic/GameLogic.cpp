@@ -9,7 +9,7 @@
 #include <const.h>
 #include <time.h>
 
-static const EnemyType AllEnemyTypes[] = {EnemyType::ZombieAndCat, EnemyType::IcebergAndFairy};
+static const EntityType AllEnemyTypes[] = {EntityType::ZombieAndCat, EntityType::IcebergAndFairy};
 
 GameLogic::GameLogic(Model* model) :
         model(model) {
@@ -21,7 +21,6 @@ GameLogic::GameLogic(Model* model) :
 
     for (auto enemyType : AllEnemyTypes) {
         enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
-        std::cout << "SPAWN " << enemyType << " in "  << enemySpawnCooldown[enemyType] << std::endl;
     }
 }
 
@@ -58,7 +57,6 @@ void GameLogic::updateEnemies(float timeElapsed) {
         } else {
             spawnEnemy(enemyType, timeElapsed);
             enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
-            std::cout << "SPAWN " << enemyType << " in "  << enemySpawnCooldown[enemyType] << std::endl;
         }
     }
 
@@ -72,9 +70,20 @@ void GameLogic::updateEnemies(float timeElapsed) {
     }
 }
 
-void GameLogic::spawnEnemy(EnemyType type, float elapsed) {
+void GameLogic::spawnEnemy(EntityType type, float elapsed) {
     bool upWorld = rand() % 2 == 0;
-    Enemy* enemy = new Enemy(type, WorldPosition(1000.0f, rand() % 3, upWorld));
+    auto position = WorldPosition(1000.0f, rand() % 3, upWorld);
+    Enemy* enemy;
+    switch (type) {
+        case EntityType::ZombieAndCat:
+            enemy = Enemy::getZombie(position);
+            break;
+        case EntityType::IcebergAndFairy:
+            enemy = Enemy::getIceberg(position);
+            break;
+        default:
+            return;
+    }
     model->getEnemies().push_back(enemy);
 }
 
