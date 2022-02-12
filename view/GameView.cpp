@@ -117,13 +117,15 @@ bool GameView::draw(double time) {
                         continue;
                 }
 
-               _animations.at(id1).update(time);
-                adjustSprite(id1, enemy, false);
-                _renderWindow->draw(_sprites.at(id1));
+                auto update = [=](int index, bool otherWorld) {
+                    _animations.at(index).setFrameDelay(100. / enemy->coords.x_speed); // see Issue #1
+                    _animations.at(index).update(time);
+                    adjustSprite(index, enemy, otherWorld);
+                    _renderWindow->draw(_sprites.at(index));
+                };
 
-                _animations.at(id2).update(time);
-                adjustSprite(id2, enemy, true);
-                _renderWindow->draw(_sprites.at(id2));
+                update(id1, false);
+                update(id2, true);
             }
         }
 

@@ -23,7 +23,7 @@ class Player : public Entity {
     long points = 0;
     std::string name;
 
-    const float HALFWIDTH = 50; // <-- put that... elsewhere? it's a bit arbitrary yet.
+    const float HALFWIDTH = 80; // <-- put that... elsewhere? it's a bit arbitrary yet.
 
     float warp_timer; // --> gonna be a Cooldownable / Timerthingy / whatever
 

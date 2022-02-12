@@ -61,7 +61,7 @@ void FloorView::customDraw(sf::RenderWindow *window, double time) {
 }
 
 auto baseLineFor = [](int z, bool upWorld) {
-    return 0.5 * (yForLine(z, upWorld) + yForLine(z + 1, upWorld));
+    return (int)(0.5 * (yForLine(z, upWorld) + yForLine(z + 1, upWorld)));
 };
 
 int FloorView::getBackgroundBaseLine(WorldCoordinates coords) {

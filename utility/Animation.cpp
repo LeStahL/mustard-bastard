@@ -16,7 +16,13 @@ void Animation::addFrame(int left, int top, int width, int height)
     _frameRectangles.push_back(rect);
 }
 
-void Animation::update(double elapsedTime) 
+void Animation::update(double elapsedTime)
 {
     _sprite->setTextureRect(_frameRectangles.at(int(elapsedTime/_delay) % _frameRectangles.size()));
 }
+
+void Animation::setFrameDelay(double delay)
+{
+    _delay = delay;
+}
+

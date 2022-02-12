@@ -94,8 +94,9 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
     if (portal != nullptr) {
         auto playerX = player->coords.x;
         auto [portalL, portalR] = portal->getCollisionXInterval();
+        auto portalX = 0.5 * (portalL + portalR);
 
-        if ((playerX >= portalL) && (playerX <= portalR)) {
+        if (fabs(playerX - portalX) <= portal->size) {
             beginWarp();
             portal->shutDown();
         }
