@@ -33,6 +33,7 @@ class GameLogic {
     void killPortal(FloorThing* portal);
 
     void handlePlayerCollisions(PlayerLogic* playerLogic, float elapsedTime);
+
 };
 
 #endif /* GAMELOGIC_H */

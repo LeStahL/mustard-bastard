@@ -14,8 +14,8 @@ constexpr unsigned int ZOMBIE_PIXEL_WIDTH = 150;
 constexpr unsigned int ZOMBIE_PIXEL_HEIGHT = 210;
 constexpr unsigned int ZOMBIE_FRAME_COUNT = 2;
 
-constexpr unsigned int CAT_PIXEL_WIDTH = 150;
-constexpr unsigned int CAT_PIXEL_HEIGHT = 150;
+constexpr unsigned int CAT_PIXEL_WIDTH = 85;
+constexpr unsigned int CAT_PIXEL_HEIGHT = 85;
 constexpr unsigned int CAT_FRAME_COUNT = 2;
 
 constexpr unsigned int ICEBERG_PIXEL_WIDTH = 400;

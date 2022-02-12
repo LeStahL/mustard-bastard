@@ -7,12 +7,12 @@ add_executable(${PROJECT_NAME}-test
 
     Model.h
     Entity.h
-    WorldPosition.h
+    WorldCoordinates.h
     Player.h
 
     Model.cpp
     Entity.cpp
-    WorldPosition.cpp
+    WorldCoordinates.cpp
     Player.cpp
 )
 

@@ -1,7 +1,9 @@
+#pragma once
+
 #include <SFML/Graphics/Color.hpp>
 
-constexpr unsigned int WIDTH = 66 * 16;
-constexpr unsigned int HEIGHT = 66 * 9;
+constexpr float WIDTH = 66 * 16;
+constexpr float HEIGHT = 66 * 9;
 
 constexpr unsigned int MAX_PLAYERS = 2;
 

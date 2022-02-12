@@ -61,13 +61,13 @@ void FloorView::customDraw(sf::RenderWindow *window, double time) {
 }
 
 auto baseLineFor = [](int z, bool upWorld) {
-    return 0.5 * (yForLine(z, upWorld) + yForLine(z + 1, upWorld));
+    return (int)(0.5 * (yForLine(z, upWorld) + yForLine(z + 1, upWorld)));
 };
 
-int FloorView::getBackgroundBaseLine(WorldPosition position) {
-    return baseLineFor(position.z, position.upWorld);
+int FloorView::getBackgroundBaseLine(WorldCoordinates coords) {
+    return baseLineFor(coords.z, coords.upWorld);
 }
 
-std::pair<int, int> FloorView::getBothBaseLines(WorldPosition position) {
-    return std::pair(baseLineFor(position.z, true), baseLineFor(position.z, false));
+std::pair<int, int> FloorView::getBothBaseLines(WorldCoordinates coords) {
+    return std::pair(baseLineFor(coords.z, true), baseLineFor(coords.z, false));
 }

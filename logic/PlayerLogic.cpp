@@ -9,23 +9,21 @@ void PlayerLogic::beginWarp() {
     player->state = PlayerState::Warping;
     player->lock();
     player->warp_timer = 0;
-    player->x_speed = 0;
+    player->coords.x_speed = 0;
+    player->coords.y = 0;
     warp_did_happen = false;
 }
 
 void PlayerLogic::update(float elapsed) {
-    player->position.x = std::clamp(
-        player->position.x + player->x_speed * elapsed,
-        PLAYER_X_BORDER_MARGIN,
-        WIDTH - PLAYER_X_BORDER_MARGIN
-    );
+    player->doCoordUpdates(elapsed);
+    player->coords.x = std::clamp(player->coords.x, PLAYER_X_BORDER_MARGIN, WIDTH - PLAYER_X_BORDER_MARGIN);
     player->move_z_cooldown = std::max(player->move_z_cooldown - elapsed, 0.f);
     player->attack_state.coolDown(elapsed);
 
     if (player->state == PlayerState::Warping) {
         player->warp_timer += elapsed;
         if (player->getWarpProgress() >= 0.5 && !warp_did_happen) {
-            player->position.upWorld ^= true;
+            player->coords.upWorld ^= true;
             warp_did_happen = true;
         }
         if (player->getWarpProgress() >= 1) {
@@ -40,23 +38,27 @@ void PlayerLogic::endWarp() {
 }
 
 void PlayerLogic::move_x(int sign, bool retreat) {
-    bool would_switch_direction = player->orientation.facing_left && (sign > 0)
-        || !player->orientation.facing_left && (sign < 0);
+    if (!player->coords.upWorld) {
+        sign *= -1;
+    }
+
+    bool would_switch_direction = player->coords.facing_left && (sign > 0)
+        || !player->coords.facing_left && (sign < 0);
 
     if (would_switch_direction && !retreat) {
-        player->x_speed = 0;
-        player->orientation.facing_left ^= true;
+        player->coords.x_speed = 0;
+        player->coords.facing_left ^= true;
     } else if (retreat) {
-        player->x_speed = -sign * PLAYER_MOVE_X_SPEED;
+        player->coords.x_speed = -sign * PLAYER_MOVE_X_SPEED;
     } else {
-        player->x_speed = sign * PLAYER_MOVE_X_SPEED;
+        player->coords.x_speed = sign * PLAYER_MOVE_X_SPEED;
     }
 
     if (!player->isLocked()) {
-        if (player->x_speed == 0 && player->state == PlayerState::Walking) {
+        if (player->coords.x_speed == 0 && player->state == PlayerState::Walking) {
             player->state = PlayerState::Standing;
         }
-        else if (player->x_speed != 0 && player->state == PlayerState::Standing) {
+        else if (player->coords.x_speed != 0 && player->state == PlayerState::Standing) {
             player->state = PlayerState::Walking;
         }
     }
@@ -67,7 +69,7 @@ void PlayerLogic::move_z(int sign) {
         return;
 
     if (player->move_z_cooldown <= 0) {
-        player->position.z = std::clamp(player->position.z + sign, 0, (int)Z_PLANES - 1);
+        player->coords.z = std::clamp(player->coords.z + sign, 0, (int)Z_PLANES - 1);
         player->move_z_cooldown = PLAYER_MOVE_Z_COOLDONW;
     }
 }
@@ -85,15 +87,16 @@ void PlayerLogic::attack() {
 }
 
 void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
-    if (player->position.z != entity->position.z) {
+    if (player->coords.z != entity->coords.z) {
         return;
     }
     auto portal = dynamic_cast<Portal*>(entity);
     if (portal != nullptr) {
-        auto playerX = player->position.x;
+        auto playerX = player->coords.x;
         auto [portalL, portalR] = portal->getCollisionXInterval();
+        auto portalX = 0.5 * (portalL + portalR);
 
-        if ((playerX >= portalL) && (playerX <= portalR)) {
+        if (fabs(playerX - portalX) <= portal->size) {
             beginWarp();
             portal->shutDown();
         }
