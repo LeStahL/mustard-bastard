@@ -10,12 +10,35 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include "View.hpp"
 
+class Entity;
+
+enum AnimationType {
+    BastardStanding,
+    BastardWalking,
+    BastardAttacking,
+    ZombieWalking,
+    CatWalking,
+    IcebergSliding,
+    FairyFlying
+};
+
+typedef struct {
+    std::string assetPath;
+    unsigned int width;
+    unsigned int height;
+    unsigned int frameCount;
+} AnimationAssetInformation;
+
+typedef struct {
+    sf::Texture *texture;
+    sf::Sprite *sprite;
+} AnimationData;
+
 class GameView : public View {
     private:
-    std::vector<sf::Texture> _textures;
-    std::vector<sf::Sprite> _sprites;
-    std::vector<sf::IntRect> _rects;
-    std::vector<Animation> _animations;
+    static const std::map<AnimationType, AnimationAssetInformation> assetInformations;
+    std::map<AnimationType, AnimationData> _animationData;
+    std::map<Entity *, Animation> _animations;
 
     sf::RenderWindow *_renderWindow;
     Model& model;
@@ -30,7 +53,9 @@ class GameView : public View {
     bool setUp() override;
     bool tearDown() override;
 
+    bool registerAnimation(Entity *entity, AnimationType type, double frameDelay, double initialTimeOffset);
+
     private:
     sf::Vector2f convertWorldCoordinates(WorldCoordinates coords);
-    bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
+    bool loadAnimationData(AnimationType type, AnimationAssetInformation information);
 };

@@ -8,8 +8,9 @@
 #include <const.h>
 #include <cmath>
 #include <Portal.hpp>
+#include <Entity.h>
 
-std::map<int, int> playerStateToSprite = {
+std::map<PlayerState, Model::GraphicsId> playerStateToSprite = {
     { PlayerState::Standing, Model::GraphicsId::player_standing },
     { PlayerState::Walking, Model::GraphicsId::player_walking },
     { PlayerState::Attacking, Model::GraphicsId::player_attack },
@@ -37,7 +38,7 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
     WorldCoordinates pos = entity->coords;
     pos.upWorld ^= invertWorld;
 
-    auto sprite = &(_sprites.at(spriteId));
+    auto sprite = _animations.at(entity).sprite();
     sprite->setPosition(convertWorldCoordinates(pos));
 
     int x_sign = 1;
@@ -118,10 +119,10 @@ bool GameView::draw(double time) {
                 }
 
                 auto update = [=](int index, bool otherWorld) {
-                    _animations.at(index).setFrameDelay(100. / enemy->coords.x_speed); // see Issue #1
-                    _animations.at(index).update(time);
+                    _animations.at(enemy).setFrameDelay(100. / enemy->coords.x_speed); // see Issue #1
+                    _animations.at(enemy).update(time);
                     adjustSprite(index, enemy, otherWorld);
-                    _renderWindow->draw(_sprites.at(index));
+                    _renderWindow->draw(*_animations.at(enemy).sprite());
                 };
 
                 update(id1, false);
@@ -133,9 +134,21 @@ bool GameView::draw(double time) {
             auto player = model.getPlayer(p);
             if(player->coords.z == layer) {
                 int id = playerStateToSprite[player->state];
-                _animations.at(id).update(time);
+                _animations.at(player).update(time);
                 adjustSprite(id, player, false); // TODO: get right
-                _renderWindow->draw(_sprites.at(id));
+                switch(player->state) {
+                    case PlayerState::Standing:
+                    _renderWindow->draw(*_animationData.at(AnimationType::BastardStanding).sprite);
+                    break;
+
+                    case PlayerState::Walking:
+                    _renderWindow->draw(*_animationData.at(AnimationType::BastardWalking).sprite);
+                    break;
+
+                    case PlayerState::Attacking:
+                    _renderWindow->draw(*_animationData.at(AnimationType::BastardAttacking).sprite);
+                    break;
+                }
             }
         }
     }
@@ -143,45 +156,55 @@ bool GameView::draw(double time) {
     return true;
 }
 
+// What does this do? We should add a comment explaining this here.
 #pragma warning( disable : 4834 )
 
 bool GameView::setUp() {
-    // reserving space is needed, becaus references on vector elements
-    // become invalid if a new element is added
-    const size_t RESERVE_SPACE = 20;
-    _textures.reserve(RESERVE_SPACE);
-    _sprites.reserve(RESERVE_SPACE);
-    _animations.reserve(RESERVE_SPACE);
-
-    loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT);
-    loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT);
-    loadAnimation("assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT);
-    loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT);
-    loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
-    loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
-    loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
-
+    for(std::map<AnimationType,AnimationAssetInformation>::const_iterator it = assetInformations.begin(); it != assetInformations.end(); ++it)
+        loadAnimationData(it->first, it->second);
+    
     return true;
 }
 
 bool GameView::tearDown() {
+    for(std::map<AnimationType, AnimationData>::iterator it = _animationData.begin(); it != _animationData.end(); ++it)
+    {
+        delete it->second.texture;
+        delete it->second.sprite;
+    }
+
     return true;
 }
 
-bool GameView::loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount) {
-    _textures.push_back(sf::Texture());
-    if(!_textures.back().loadFromFile(filename)) {
-        std::cout << "Failed to load texture: " << filename << std::endl;
-        return false;
-    }
+bool GameView::loadAnimationData(AnimationType type, AnimationAssetInformation information) {
+    AnimationData data;
 
-    auto sprite = sf::Sprite(_textures.back());
-    sprite.setOrigin(sf::Vector2f(0.5 * spriteWidthPx, spriteHeightPx));
-    _sprites.push_back(sprite);
+    data.texture = new sf::Texture();
+    data.texture->loadFromFile(information.assetPath);
+    data.sprite = new sf::Sprite(*data.texture);
+    data.sprite->setOrigin(sf::Vector2f(.5*information.width, information.height));
 
-    _animations.push_back(Animation(&_sprites.back(), .1));
-    for(int i=0; i<frameCount; ++i)
-        _animations.back().addFrame(spriteWidthPx*i, 0, spriteWidthPx, spriteHeightPx);
+    _animationData.insert({type, data});
+
+    return true;
+}
+
+const std::map<AnimationType, AnimationAssetInformation> GameView::assetInformations = {
+    {AnimationType::BastardStanding, {"assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT}},
+    {AnimationType::BastardWalking, {"assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT}},
+    {AnimationType::BastardAttacking, {"assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT}},
+    {AnimationType::ZombieWalking, {"assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT}},
+    {AnimationType::CatWalking, {"assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT}},
+    {AnimationType::IcebergSliding, {"assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT}},
+    {AnimationType::FairyFlying, {"assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT}}
+};
+
+bool GameView::registerAnimation(Entity *entity, AnimationType type, double frameDelay, double initialTimeOffset)
+{
+    Animation animation(_animationData.at(type).sprite, frameDelay, initialTimeOffset);
+    for(int i=0; i<assetInformations.at(type).frameCount; ++i)
+        animation.addFrame(assetInformations.at(type).width*i, 0, assetInformations.at(type).width, assetInformations.at(type).height);
+    _animations.insert({entity, animation});
 
     return true;
 }
