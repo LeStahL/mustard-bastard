@@ -5,15 +5,16 @@
 #include <Entity.h>
 #include <GameLogicConst.h>
 
-class Enemy : public Entity {
-    public:
-    float speed = 0.f;
+class Model;
 
+class Enemy : public Entity {
     private:
-    EnemyState state;
+    EnemyState state = EnemyState::Idle;
     EnemyStats stats;
-    int targetPlayer = -1;
-    float targetX = 0;
+    EnemyTarget target;
+    float missing_target_player_for_seconds = 0;
+
+
     Enemy(EntityType type, WorldCoordinates coords) :
             Entity(type, coords) {
         stats = INIT_ENEMY_STATS.at(type);
@@ -26,7 +27,8 @@ class Enemy : public Entity {
     float getHealth() { return stats.health; }
     float getArmor() { return stats.armor; }
 
-    void target(int player_number);
-    void target(float x);
+    void targetPlayer(int player_number);
+    void targetFixedX(float x);
     void lose_target();
+    void doTargetUpdates(Model* model, float deltaT);
 };

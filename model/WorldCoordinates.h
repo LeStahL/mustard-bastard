@@ -1,5 +1,7 @@
 #pragma once
 
+#include <const.h>
+
 class WorldCoordinates {
     public:
         float x;
@@ -20,4 +22,8 @@ class WorldCoordinates {
         bool collides_with(WorldCoordinates other);
 
         void doPhysicalUpdates(float deltaT);
+
+        static WorldCoordinates RandomPositionOutside(float distance);
+
+        void mightTurnAroundForTarget(float target_x);
 };

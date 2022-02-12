@@ -14,11 +14,11 @@ bool Entity::canCollide() {
     return true;
 }
 
-void Entity::doPhysicalUpdates(float deltaT) {
+void Entity::doCoordUpdates(float deltaT) {
     if (fabs(coords.x_speed) < 1e-3) {
         coords.x_speed = 0;
     } else {
-        coords.facing_left = coords.x_speed > 0;
+        coords.facing_left = coords.x_speed < 0;
     }
     coords.doPhysicalUpdates(deltaT);
 }

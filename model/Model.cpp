@@ -18,7 +18,12 @@ Model::Model()
 }
 
 Player* Model::getPlayer(int player_number) {
-    return players[player_number];
+    try {
+        return players.at(player_number);
+    }
+    catch (const std::out_of_range& err) {
+        return nullptr;
+    }
 }
 
 int Model::getNumberOfPlayers() {

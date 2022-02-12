@@ -9,16 +9,14 @@ void PlayerLogic::beginWarp() {
     player->state = PlayerState::Warping;
     player->lock();
     player->warp_timer = 0;
-    player->x_speed = 0;
+    player->coords.x_speed = 0;
+    player->coords.y = 0;
     warp_did_happen = false;
 }
 
 void PlayerLogic::update(float elapsed) {
-    player->coords.x = std::clamp(
-        player->coords.x + player->x_speed * elapsed,
-        PLAYER_X_BORDER_MARGIN,
-        WIDTH - PLAYER_X_BORDER_MARGIN
-    );
+    player->doCoordUpdates(elapsed);
+    player->coords.x = std::clamp(player->coords.x, PLAYER_X_BORDER_MARGIN, WIDTH - PLAYER_X_BORDER_MARGIN);
     player->move_z_cooldown = std::max(player->move_z_cooldown - elapsed, 0.f);
     player->attack_state.coolDown(elapsed);
 
@@ -40,23 +38,27 @@ void PlayerLogic::endWarp() {
 }
 
 void PlayerLogic::move_x(int sign, bool retreat) {
+    if (!player->coords.upWorld) {
+        sign *= -1;
+    }
+
     bool would_switch_direction = player->coords.facing_left && (sign > 0)
         || !player->coords.facing_left && (sign < 0);
 
     if (would_switch_direction && !retreat) {
-        player->x_speed = 0;
+        player->coords.x_speed = 0;
         player->coords.facing_left ^= true;
     } else if (retreat) {
-        player->x_speed = -sign * PLAYER_MOVE_X_SPEED;
+        player->coords.x_speed = -sign * PLAYER_MOVE_X_SPEED;
     } else {
-        player->x_speed = sign * PLAYER_MOVE_X_SPEED;
+        player->coords.x_speed = sign * PLAYER_MOVE_X_SPEED;
     }
 
     if (!player->isLocked()) {
-        if (player->x_speed == 0 && player->state == PlayerState::Walking) {
+        if (player->coords.x_speed == 0 && player->state == PlayerState::Walking) {
             player->state = PlayerState::Standing;
         }
-        else if (player->x_speed != 0 && player->state == PlayerState::Standing) {
+        else if (player->coords.x_speed != 0 && player->state == PlayerState::Standing) {
             player->state = PlayerState::Walking;
         }
     }

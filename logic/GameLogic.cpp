@@ -49,8 +49,6 @@ void GameLogic::move_player(int player_number, int x_sign, bool retreat, int z_s
 
 void GameLogic::updateEnemies(float timeElapsed) {
 
-    maybeSpawnPortal();
-
     for (const auto enemyType : AllEnemyTypes) {
         if (enemySpawnCooldown[enemyType] > 0) { // TODO -> Cooldownable
             enemySpawnCooldown[enemyType] -= timeElapsed;
@@ -61,7 +59,8 @@ void GameLogic::updateEnemies(float timeElapsed) {
     }
 
     for (auto enemy : model->getEnemies()) {
-        enemy->doPhysicalUpdates(timeElapsed);
+        enemy->doTargetUpdates(model, timeElapsed);
+        enemy->doCoordUpdates(timeElapsed);
 
         if (isEnemyTooFarAway(enemy))
         {
@@ -71,8 +70,8 @@ void GameLogic::updateEnemies(float timeElapsed) {
 }
 
 void GameLogic::spawnEnemy(EntityType type, float elapsed) {
-    bool upWorld = rand() % 2 == 0;
-    auto position = WorldCoordinates(1000.0f, rand() % 3, upWorld);
+    float spawn_distance = 100;
+    auto position = WorldCoordinates::RandomPositionOutside(spawn_distance);
     Enemy* enemy;
     switch (type) {
         case EntityType::ZombieAndCat:
@@ -84,6 +83,8 @@ void GameLogic::spawnEnemy(EntityType type, float elapsed) {
         default:
             return;
     }
+    float far_other_side = position.x < 0 ? 2 * WIDTH : -WIDTH;
+    enemy->targetFixedX(far_other_side);
     model->getEnemies().push_back(enemy);
 }
 
@@ -106,8 +107,6 @@ int GameLogic::nPlayers() {
 
 void GameLogic::maybeSpawnPortal()
 {
-    // for now, there's only type FloorThingType::Portal
-
     bool doSpawn = rand() % PORTAL_SPAWN_MODULO < 1;
     if (!doSpawn)
         return;

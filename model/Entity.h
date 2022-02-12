@@ -19,7 +19,6 @@ class Entity {
     public:
         int id;
         WorldCoordinates coords;
-        float x_speed = 0;
 
     public:
         Entity(EntityType type, WorldCoordinates coords) :
@@ -35,5 +34,5 @@ class Entity {
         virtual std::pair<float, float> getCollisionXInterval();
         virtual bool canCollide();
 
-        void doPhysicalUpdates(float deltaT);
+        void doCoordUpdates(float deltaT);
 };
