@@ -25,6 +25,8 @@ constexpr float PORTAL_ACTIVE_SECONDS = 4;
 constexpr float PORTAL_MAX_HALFWIDTH = 42;
 constexpr float PORTAL_HEIGHT_RATIO = 0.3;
 
+constexpr int MEDIKIT_SPAWN_MODULO = 100;
+
 const std::map<EntityType, Interval> INIT_COOLDOWN = {
     { EntityType::ZombieAndCat, Interval(2, 10)},
     { EntityType::IcebergAndFairy, Interval(120, 210)}
@@ -39,4 +41,9 @@ const std::map<Weapon, double> ATTACK_COOLDOWN = {
 const std::map<EntityType, EnemyStats> INIT_ENEMY_STATS = {
     { EntityType::ZombieAndCat, EnemyStats(30, 3) },
     { EntityType::IcebergAndFairy, EnemyStats(100, 1e6) },
+};
+
+const std::map<EntityType, int> FLOOR_THING_SPAWN_MODULO = {
+    { EntityType::Portal, PORTAL_SPAWN_MODULO },
+    { EntityType::Medikit, MEDIKIT_SPAWN_MODULO}
 };

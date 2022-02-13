@@ -4,6 +4,7 @@
 #include <Portal.hpp>
 #include <const.h>
 #include <algorithm>
+#include <cmath>
 
 void PlayerLogic::beginWarp() {
     player->state = PlayerState::Warping;

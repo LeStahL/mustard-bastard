@@ -84,7 +84,7 @@ bool GameView::draw(double time) {
     for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
 
         for(FloorThing* floorThing: model.getFloorThings()) {
-            Portal* portal = dynamic_cast<Portal*>(floorThing);
+             Portal* portal = dynamic_cast<Portal*>(floorThing);
             if (portal == NULL)
                 continue;
 
@@ -98,7 +98,6 @@ bool GameView::draw(double time) {
                 _renderWindow->draw(drawPortal(portal, yDown, time));
             }
         }
-
         for(Enemy* enemy : model.getEnemies()) {
 
             if(enemy->coords.z == layer) {

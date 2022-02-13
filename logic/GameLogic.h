@@ -29,7 +29,7 @@ class GameLogic {
     void killEnemy(Enemy* enemy);
 
     void updateFloorThings(float elapsedTime);
-    void maybeSpawnPortal();
+    void maybeSpawnFloorThing(EntityType type);
     void killPortal(FloorThing* portal);
 
     void handlePlayerCollisions(PlayerLogic* playerLogic, float elapsedTime);

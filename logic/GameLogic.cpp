@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "FloorThing.hpp"
 #include <GameLogic.h>
+#include <Medikit.hpp>
 
 #include <random>
 #include <iostream>
@@ -105,20 +106,6 @@ int GameLogic::nPlayers() {
     return model->getNumberOfPlayers();
 }
 
-void GameLogic::maybeSpawnPortal()
-{
-    bool doSpawn = rand() % PORTAL_SPAWN_MODULO < 1;
-    if (!doSpawn)
-        return;
-
-    float random_x = PLAYER_X_BORDER_MARGIN
-        + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
-    int random_z = rand() % Z_PLANES;
-
-    Portal* portal = new Portal(WorldCoordinates(random_x, random_z, true));
-    model->getFloorThings().push_back(portal);
-}
-
 auto updatePortal = [](Portal* portal, float elapsedTime) {
     if (portal->spawning) {
         if (portal->size < 1) {
@@ -143,7 +130,8 @@ auto updatePortal = [](Portal* portal, float elapsedTime) {
 
 void GameLogic::updateFloorThings(float elapsedTime)
 {
-    maybeSpawnPortal();
+    maybeSpawnFloorThing(EntityType::Portal);
+    maybeSpawnFloorThing(EntityType::Medikit);
 
     for (FloorThing* floory : model->getFloorThings()) {
         auto portal = dynamic_cast<Portal*>(floory);
@@ -152,6 +140,27 @@ void GameLogic::updateFloorThings(float elapsedTime)
                 killPortal(floory);
             };
         }
+    }
+}
+
+void GameLogic::maybeSpawnFloorThing(EntityType type) {
+    bool doSpawn = rand() % FLOOR_THING_SPAWN_MODULO.at(type) < 1;
+    if (!doSpawn)
+        return;
+
+    float random_x = PLAYER_X_BORDER_MARGIN
+        + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
+    int random_z = rand() % Z_PLANES;
+
+    switch(type) {
+    case EntityType::Portal:
+        model->getFloorThings().push_back(new Portal(WorldCoordinates(random_x, random_z, true)));
+        break;
+    case EntityType::Medikit:
+        model->getFloorThings().push_back(new Medikit(WorldCoordinates(random_x, random_z, true)));
+        break;
+    default:
+        break;
     }
 }
 

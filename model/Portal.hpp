@@ -11,7 +11,7 @@ class Portal : public FloorThing {
     float lifetime = 0;
     bool used = false;
 
-    Portal(WorldCoordinates position) : FloorThing(position) {
+    Portal(WorldCoordinates position) : FloorThing(EntityType::Portal, position) {
     };
 
     float getHalfWidth() { return size * PORTAL_MAX_HALFWIDTH; }
