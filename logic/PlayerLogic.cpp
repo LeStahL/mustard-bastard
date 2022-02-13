@@ -4,6 +4,7 @@
 #include <Portal.hpp>
 #include <const.h>
 #include <algorithm>
+#include <stdexcept>
 
 void PlayerLogic::beginWarp() {
     player->state = PlayerState::Warping;
@@ -19,6 +20,9 @@ void PlayerLogic::update(float elapsed) {
     player->coords.x = std::clamp(player->coords.x, PLAYER_X_BORDER_MARGIN, WIDTH - PLAYER_X_BORDER_MARGIN);
     player->move_z_cooldown = std::max(player->move_z_cooldown - elapsed, 0.f);
     player->attack_state.coolDown(elapsed);
+    if (player->state == PlayerState::Attacking && player->attack_state.cooldown == 0) {
+        player->state = PlayerState::Standing;
+    }
 
     if (player->state == PlayerState::Warping) {
         player->warp_timer += elapsed;
@@ -90,15 +94,32 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
     if (player->coords.z != entity->coords.z) {
         return;
     }
-    auto portal = dynamic_cast<Portal*>(entity);
-    if (portal != nullptr) {
+    auto [playerL, playerR] = player->getCollisionXInterval();
+    auto [entityL, entityR] = entity->getCollisionXInterval();
+    if (playerL > playerR || entityL > entityR) {
+        throw std::runtime_error {"Whatever you did, some entity->getCollisionXInterval() isn't in right order and I DO NOT TOLERATE THAT >:("};
+    }
+    // special case: check player<->portal collision (could be done better, I know)
+    if (Portal* portal = dynamic_cast<Portal*>(entity)) {
         auto playerX = player->coords.x;
-        auto [portalL, portalR] = portal->getCollisionXInterval();
-        auto portalX = 0.5 * (portalL + portalR);
-
+        auto portalX = 0.5 * (entityL + entityR);
         if (fabs(playerX - portalX) <= portal->size) {
             beginWarp();
             portal->shutDown();
+        }
+    } else {
+        bool playerCollidesFromLeft = playerL < entityL && playerR >= entityL;
+        bool playerCollidesFromRight = playerR > entityR && playerL <= entityR;
+
+        if (playerCollidesFromLeft) {
+            player->coords.x += entityL - playerR - 1;
+            // TODO: QM: what to do with mass? they should obviously have one.
+            player->coords.applyAcceleration(-20, 20, true);
+            entity->coords.applyAcceleration(5, 5, true);
+        } else if (playerCollidesFromRight) {
+            player->coords.x += entityR - playerL + 1;
+            player->coords.applyAcceleration(20, 20, true);
+            entity->coords.applyAcceleration(-5, 5, true);
         }
     }
 }

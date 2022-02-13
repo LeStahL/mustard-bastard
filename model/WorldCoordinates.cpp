@@ -38,6 +38,17 @@ void WorldCoordinates::doPhysicalUpdates(float deltaT) {
     }
 }
 
+void WorldCoordinates::applyAcceleration(float _x_acc, float _y_acc, bool stop_first) {
+    if (stop_first) {
+        x_speed = 0;
+        y_speed = 0;
+        x_acc = 0;
+        y_acc = 0;
+    }
+    x_speed += _x_acc;
+    y_speed += _y_acc;
+    y_acc = 10;
+};
 
 void WorldCoordinates::mightTurnAroundForTarget(float target_x) {
     if (sgn(x_speed) != sgn(target_x - x)) {
