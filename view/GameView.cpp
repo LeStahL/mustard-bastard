@@ -7,7 +7,6 @@
 #include <GameLogicConst.h>
 #include <const.h>
 #include <cmath>
-#include <Portal.hpp>
 
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing, Model::GraphicsId::player_standing },
@@ -61,43 +60,27 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
     }
 }
 
-auto drawPortal = [](Portal* portal, double y, double time) {
-    auto halfwidth = portal->getHalfWidth();
-    auto result = sf::CircleShape(halfwidth);
-    result.setPosition(sf::Vector2f(
-        portal->coords.x - halfwidth,
-        y - halfwidth * PORTAL_HEIGHT_RATIO + 2
-    ));
-    result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
-    auto color = portal->used ? sf::Color(100, 0, 255) : sf::Color(255, 0, 0);
-    if (portal->lifetime > 0) {
-        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
-        color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
-    }
-    result.setFillColor(color);
-    return result;
-};
-
 bool GameView::draw(double time) {
     floorView.DrawBackground();
 
     for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
 
         for(FloorThing* floorThing: model.getFloorThings()) {
-             Portal* portal = dynamic_cast<Portal*>(floorThing);
-            if (portal == NULL)
+            if(floorThing->coords.z != layer)
                 continue;
 
-            if (floorThing->getType() != EntityType::Portal) {
+            switch (floorThing->getType()) {
+                case EntityType::Portal:
+                    drawPortal(dynamic_cast<Portal*>(floorThing), time);
+                    break;
+                case EntityType::Medikit:
+                    drawMedikit(dynamic_cast<Medikit*>(floorThing), time);
+                    break;
+                default:
                 continue;
-            }
-
-            if(portal->coords.z == layer) {
-                auto [yUp, yDown] = floorView.getBothBaseLines(portal->coords);
-                _renderWindow->draw(drawPortal(portal, yUp, time));
-                _renderWindow->draw(drawPortal(portal, yDown, time));
             }
         }
+
         for(Enemy* enemy : model.getEnemies()) {
 
             if(enemy->coords.z == layer) {
@@ -140,6 +123,41 @@ bool GameView::draw(double time) {
     }
 
     return true;
+}
+
+auto drawPortalHelper = [](Portal* portal, double y, double time) {
+    auto halfwidth = portal->getHalfWidth();
+    auto result = sf::CircleShape(halfwidth);
+    result.setPosition(sf::Vector2f(
+        portal->coords.x - halfwidth,
+        y - halfwidth * PORTAL_HEIGHT_RATIO + 2
+    ));
+    result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
+    auto color = portal->used ? sf::Color(100, 0, 255) : sf::Color(255, 0, 0);
+    if (portal->lifetime > 0) {
+        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
+        color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
+    }
+    result.setFillColor(color);
+    return result;
+};
+
+void GameView::drawPortal(Portal *portal, double time) {
+    auto [yUp, yDown] = floorView.getBothBaseLines(portal->coords);
+    _renderWindow->draw(drawPortalHelper(portal, yUp, time));
+    _renderWindow->draw(drawPortalHelper(portal, yDown, time));
+}
+
+void GameView::drawMedikit(Medikit *medikit, double time) {
+    sf::RectangleShape rectangle;
+    rectangle.setSize(sf::Vector2f(20.0f, 20.0f));
+    rectangle.setFillColor(sf::Color::White);
+
+    sf::Vector2f position(medikit->coords.x, 1.0f);
+    position.y = floorView.getBackgroundBaseLine(medikit->coords);
+    rectangle.setPosition(position);
+
+    _renderWindow->draw(rectangle);
 }
 
 #pragma warning( disable : 4834 )

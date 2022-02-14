@@ -133,12 +133,23 @@ void GameLogic::updateFloorThings(float elapsedTime)
     maybeSpawnFloorThing(EntityType::Portal);
     maybeSpawnFloorThing(EntityType::Medikit);
 
+    Portal *portal = nullptr;
+    Medikit *medikit = nullptr;
+
     for (FloorThing* floory : model->getFloorThings()) {
-        auto portal = dynamic_cast<Portal*>(floory);
-        if (portal != nullptr) {
-            if (!updatePortal(portal, elapsedTime)) {
-                killPortal(floory);
-            };
+        switch(floory->getType()) {
+        case EntityType::Portal:
+            portal = dynamic_cast<Portal*>(floory);
+            if (portal != nullptr) {
+                if (!updatePortal(portal, elapsedTime)) {
+                    killPortal(floory);
+                };
+            }
+            break;
+        case EntityType::Medikit:
+            break;
+        default:
+            break;
         }
     }
 }

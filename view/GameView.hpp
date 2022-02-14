@@ -9,6 +9,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include "View.hpp"
+#include <Portal.hpp>
+#include <Medikit.hpp>
 
 class GameView : public View {
     private:
@@ -32,5 +34,7 @@ class GameView : public View {
 
     private:
     sf::Vector2f convertWorldCoordinates(WorldCoordinates coords);
+    void drawPortal(Portal *portal, double time);
+    void drawMedikit(Medikit *medikit, double time);
     bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
 };
