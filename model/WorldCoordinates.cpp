@@ -28,13 +28,14 @@ void WorldCoordinates::doPhysicalUpdates(float deltaT) {
     x_speed += x_acc * deltaT;
     x += x_speed * deltaT;
 
-    y_speed += y_acc * deltaT;
+    y_speed += (y_acc + gravity) * deltaT;
     y += y_speed * deltaT;
 
     // it's just the ground, innit
     if (y < 0) {
         y = 0;
         y_speed = 0;
+        // todo: could bounce off in some funny way here
     }
 }
 
@@ -45,9 +46,8 @@ void WorldCoordinates::applyAcceleration(float _x_acc, float _y_acc, bool stop_f
         x_acc = 0;
         y_acc = 0;
     }
-    x_speed += _x_acc;
-    y_speed += _y_acc;
-    y_acc = 10;
+    x_acc += _x_acc;
+    y_acc += _y_acc;
 };
 
 void WorldCoordinates::mightTurnAroundForTarget(float target_x) {

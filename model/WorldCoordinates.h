@@ -15,6 +15,7 @@ class WorldCoordinates {
         float x_acc = 0;
         float y_speed = 0;
         float y_acc = 0;
+        float gravity = 10;
         float collision_width = 0;
 
         WorldCoordinates(float x, int z, bool upWorld);
