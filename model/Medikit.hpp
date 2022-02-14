@@ -4,9 +4,11 @@
 
 class Medikit : public FloorThing {
     public:
-    bool spawning = true;
+    bool spawning = false;
+    bool wasUsed = false;
 
     Medikit(WorldCoordinates coords) : FloorThing(EntityType::Medikit, coords) {};
 
+    float width();
     bool canCollide() override;
 };

@@ -8,6 +8,7 @@
 constexpr float PLAYER_MOVE_X_SPEED = 160.0;
 constexpr float PLAYER_MOVE_Z_COOLDONW = 0.3;
 constexpr float PLAYER_X_BORDER_MARGIN = 30.;
+constexpr float PLAYER_MAX_HEALTH = 1.0f;
 constexpr float PLAYER_MAX_ACCEPTABLE_MUSTARDNESS = 30;
 constexpr float PLAYER_MUSTARDNESS_PER_SPOON = 13;
 constexpr float PLAYER_MUSTARDNESS_REDUCTION_FACTOR = 0.5;
@@ -25,7 +26,8 @@ constexpr float PORTAL_ACTIVE_SECONDS = 4;
 constexpr float PORTAL_MAX_HALFWIDTH = 42;
 constexpr float PORTAL_HEIGHT_RATIO = 0.3;
 
-constexpr int MEDIKIT_SPAWN_MODULO = 100;
+constexpr int MEDIKIT_SPAWN_MODULO = 2000;
+constexpr float MEDIKIT_HP = 0.1f;
 
 const std::map<EntityType, Interval> INIT_COOLDOWN = {
     { EntityType::ZombieAndCat, Interval(2, 10)},

@@ -19,6 +19,8 @@ class PlayerLogic {
         void beginWarp();
         void endWarp();
 
+        void healUp(float healthPoints);
+
         void handleCollisions(Entity *entity, float elapsedTime);
 
         bool isLocked() {

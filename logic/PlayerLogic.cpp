@@ -2,6 +2,7 @@
 #include <Player.h>
 #include <GameLogicConst.h>
 #include <Portal.hpp>
+#include <Medikit.hpp>
 #include <const.h>
 #include <algorithm>
 #include <cmath>
@@ -87,6 +88,10 @@ void PlayerLogic::attack() {
     }
 }
 
+void PlayerLogic::healUp(float healthPoints) {
+    player->health = std::min(player->health + healthPoints, PLAYER_MAX_HEALTH);
+}
+
 void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
     if (player->coords.z != entity->coords.z) {
         return;
@@ -102,4 +107,32 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
             portal->shutDown();
         }
     }
+
+    auto medikit = dynamic_cast<Medikit*>(entity);
+    if(medikit != nullptr) {
+        if(fabs(player->coords.x - medikit->coords.x) <= medikit->width()) {
+            healUp(MEDIKIT_HP);
+            medikit->wasUsed = true;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

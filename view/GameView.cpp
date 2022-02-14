@@ -149,15 +149,11 @@ void GameView::drawPortal(Portal *portal, double time) {
 }
 
 void GameView::drawMedikit(Medikit *medikit, double time) {
-    sf::RectangleShape rectangle;
-    rectangle.setSize(sf::Vector2f(20.0f, 20.0f));
-    rectangle.setFillColor(sf::Color::White);
-
-    sf::Vector2f position(medikit->coords.x, 1.0f);
-    position.y = floorView.getBackgroundBaseLine(medikit->coords);
-    rectangle.setPosition(position);
-
-    _renderWindow->draw(rectangle);
+    auto sprite = &(_sprites.at(Model::GraphicsId::medikit));
+    WorldCoordinates pos = medikit->coords;
+    sprite->setPosition(convertWorldCoordinates(pos));
+    adjustSprite(Model::GraphicsId::medikit, medikit, !pos.upWorld);
+    _renderWindow->draw(_sprites.at(Model::GraphicsId::medikit));
 }
 
 #pragma warning( disable : 4834 )
@@ -177,6 +173,7 @@ bool GameView::setUp() {
     loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
     loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
     loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
+    loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT);
 
     return true;
 }

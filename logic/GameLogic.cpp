@@ -133,24 +133,27 @@ void GameLogic::updateFloorThings(float elapsedTime)
     maybeSpawnFloorThing(EntityType::Portal);
     maybeSpawnFloorThing(EntityType::Medikit);
 
-    Portal *portal = nullptr;
-    Medikit *medikit = nullptr;
+    std::vector<FloorThing*> &modelList = model->getFloorThings();
+    for (auto it = modelList.begin(); it != modelList.end();) {
+        FloorThing *floory = *it;
 
-    for (FloorThing* floory : model->getFloorThings()) {
-        switch(floory->getType()) {
-        case EntityType::Portal:
-            portal = dynamic_cast<Portal*>(floory);
-            if (portal != nullptr) {
-                if (!updatePortal(portal, elapsedTime)) {
-                    killPortal(floory);
-                };
+        Portal *portal = dynamic_cast<Portal*>(floory);
+        if (portal != nullptr) {
+            if (!updatePortal(portal, elapsedTime)) {
+                it = modelList.erase(it);
+                continue;
             }
-            break;
-        case EntityType::Medikit:
-            break;
-        default:
-            break;
         }
+
+        Medikit *medikit = dynamic_cast<Medikit*>(floory);
+        if (medikit != nullptr) {
+            if (medikit->wasUsed) {
+                it = modelList.erase(it);
+                continue;
+            }
+        }
+
+        it++;
     }
 }
 
@@ -172,19 +175,6 @@ void GameLogic::maybeSpawnFloorThing(EntityType type) {
         break;
     default:
         break;
-    }
-}
-
-void GameLogic::killPortal(FloorThing* floorThing)
-{
-    int id = floorThing->id;
-
-    auto modelList = model->getFloorThings();
-    for(auto it = modelList.begin(); it != modelList.end(); it++) {
-        if((*it)->id == id) {
-            modelList.erase(it);
-            break;
-        }
     }
 }
 
