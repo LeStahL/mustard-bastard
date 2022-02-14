@@ -170,13 +170,21 @@ void GameLogic::killPortal(FloorThing* floorThing)
 
 void GameLogic::handlePlayerCollisions(PlayerLogic *playerLogic, float elapsed)
 {
-    for (Entity* entity : model->getFloorThings()) {
-        if (!playerLogic->canCollide()) {
+    if (!playerLogic->canCollide()) {
+        return;
+    }
+
+    auto handleCollision = [=](Entity* entity) {
+        if (!entity->canCollide()) {
             return;
         }
-        if (!entity->canCollide()) {
-            continue;
-        }
         playerLogic->handleCollisions(entity, elapsed);
+    };
+
+    for (Entity* entity : model->getFloorThings()) {
+        handleCollision(entity);
+    }
+    for (Entity* entity : model->getEnemies()) {
+        handleCollision(entity);
     }
 }
