@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "FloorThing.hpp"
 #include <GameLogic.h>
+#include <Portal.hpp>
 #include <Medikit.hpp>
 
 #include <random>
@@ -150,6 +151,8 @@ void GameLogic::updateFloorThings(float elapsedTime)
             if (medikit->wasUsed) {
                 it = modelList.erase(it);
                 continue;
+            } else {
+                updateMedikit(medikit, elapsedTime);
             }
         }
 
@@ -166,16 +169,30 @@ void GameLogic::maybeSpawnFloorThing(EntityType type) {
         + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
     int random_z = rand() % Z_PLANES;
 
+    WorldCoordinates coords(random_x, random_z, true);
+
     switch(type) {
     case EntityType::Portal:
-        model->getFloorThings().push_back(new Portal(WorldCoordinates(random_x, random_z, true)));
+        model->getFloorThings().push_back(new Portal(coords));
         break;
     case EntityType::Medikit:
-        model->getFloorThings().push_back(new Medikit(WorldCoordinates(random_x, random_z, true)));
+        coords.x_speed = MEDIKIT_INITIAL_X_SPEED_PX_PER_S;
+        coords.y = HEIGHT*0.5 + MEDIKIT_SPAWN_HEIGHT_OFFSET;
+        coords.y_speed = MEDIKIT_FALL_SPEED_PX_PER_S;
+        model->getFloorThings().push_back(new Medikit(coords));
         break;
     default:
         break;
     }
+}
+
+void GameLogic::updateMedikit(Medikit *medikit, float elapsedTime) {
+    if(!medikit->spawning)
+        return;
+
+    medikit->coords.x_acc = -MEDIKIT_X_FREQUENCY_PER_S*(medikit->coords.x-medikit->x0);
+    medikit->doCoordUpdates(elapsedTime);
+    medikit->spawning = medikit->coords.y > 1e-3f;
 }
 
 void GameLogic::handlePlayerCollisions(PlayerLogic *playerLogic, float elapsed)

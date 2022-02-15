@@ -8,7 +8,7 @@
 #include <AttackState.hpp>
 #include <FloorThing.hpp>
 #include <GameLogicConst.h>
-#include <Portal.hpp>
+#include <Medikit.hpp>
 
 class GameLogic {
     private:
@@ -30,7 +30,8 @@ class GameLogic {
 
     void updateFloorThings(float elapsedTime);
     void maybeSpawnFloorThing(EntityType type);
-    void killPortal(FloorThing* portal);
+
+    void updateMedikit(Medikit *medikit, float time);
 
     void handlePlayerCollisions(PlayerLogic* playerLogic, float elapsedTime);
 

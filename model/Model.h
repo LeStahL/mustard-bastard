@@ -16,7 +16,8 @@ class Model {
         cat,
         iceberg,
         fairy,
-        medikit
+        medikit,
+        parachute
     };
 
     private:

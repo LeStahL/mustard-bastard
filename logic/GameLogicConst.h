@@ -28,6 +28,10 @@ constexpr float PORTAL_HEIGHT_RATIO = 0.3;
 
 constexpr int MEDIKIT_SPAWN_MODULO = 2000;
 constexpr float MEDIKIT_HP = 0.1f;
+constexpr float MEDIKIT_SPAWN_HEIGHT_OFFSET = 30.0f;
+constexpr float MEDIKIT_FALL_SPEED_PX_PER_S = -20.0f;
+constexpr float MEDIKIT_INITIAL_X_SPEED_PX_PER_S = 50.0f;
+constexpr float MEDIKIT_X_FREQUENCY_PER_S = 10.0f;
 
 const std::map<EntityType, Interval> INIT_COOLDOWN = {
     { EntityType::ZombieAndCat, Interval(2, 10)},

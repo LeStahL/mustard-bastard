@@ -25,7 +25,7 @@ sf::Vector2f GameView::convertWorldCoordinates(WorldCoordinates position) {
     sf::Vector2f pixelPos;
 
     pixelPos.x = position.x;
-    pixelPos.y = floorView.getBackgroundBaseLine(position);
+    pixelPos.y = floorView.getBackgroundBaseLine(position) - position.y;
 
     return pixelPos;
 }
@@ -149,11 +149,14 @@ void GameView::drawPortal(Portal *portal, double time) {
 }
 
 void GameView::drawMedikit(Medikit *medikit, double time) {
-    auto sprite = &(_sprites.at(Model::GraphicsId::medikit));
-    WorldCoordinates pos = medikit->coords;
-    sprite->setPosition(convertWorldCoordinates(pos));
-    adjustSprite(Model::GraphicsId::medikit, medikit, !pos.upWorld);
+    adjustSprite(Model::GraphicsId::medikit, medikit, false);
     _renderWindow->draw(_sprites.at(Model::GraphicsId::medikit));
+
+    if(medikit->spawning) {
+        adjustSprite(Model::GraphicsId::parachute, medikit, false);
+        _sprites.at(Model::GraphicsId::parachute).move(sf::Vector2f(0.0f, MEDIKIT_PARACHUTE_OFFSET));
+        _renderWindow->draw(_sprites.at(Model::GraphicsId::parachute));
+    }
 }
 
 #pragma warning( disable : 4834 )
@@ -174,6 +177,7 @@ bool GameView::setUp() {
     loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
     loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
     loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT);
+    loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT);
 
     return true;
 }
