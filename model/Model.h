@@ -15,7 +15,9 @@ class Model {
         zombie,
         cat,
         iceberg,
-        fairy
+        fairy,
+        medikit,
+        parachute
     };
 
     private:

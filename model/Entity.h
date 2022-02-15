@@ -7,7 +7,8 @@ enum class EntityType {
     Player,
     ZombieAndCat,
     IcebergAndFairy,
-    Portal
+    Portal,
+    Medikit
 };
 
 class Entity {

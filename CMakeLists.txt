@@ -14,6 +14,7 @@ add_executable(mustard-bastard Main.cpp
     model/MainMenuState.cpp
     model/MenuState.cpp
     model/HighscoreList.cpp
+    model/Medikit.cpp
 
     view/FloorView.cpp
     view/GameView.cpp

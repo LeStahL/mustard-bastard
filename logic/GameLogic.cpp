@@ -2,6 +2,8 @@
 #include "Entity.h"
 #include "FloorThing.hpp"
 #include <GameLogic.h>
+#include <Portal.hpp>
+#include <Medikit.hpp>
 
 #include <random>
 #include <iostream>
@@ -105,20 +107,6 @@ int GameLogic::nPlayers() {
     return model->getNumberOfPlayers();
 }
 
-void GameLogic::maybeSpawnPortal()
-{
-    bool doSpawn = rand() % PORTAL_SPAWN_MODULO < 1;
-    if (!doSpawn)
-        return;
-
-    float random_x = PLAYER_X_BORDER_MARGIN
-        + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
-    int random_z = rand() % Z_PLANES;
-
-    Portal* portal = new Portal(WorldCoordinates(random_x, random_z, true));
-    model->getFloorThings().push_back(portal);
-}
-
 auto updatePortal = [](Portal* portal, float elapsedTime) {
     if (portal->spawning) {
         if (portal->size < 1) {
@@ -143,29 +131,68 @@ auto updatePortal = [](Portal* portal, float elapsedTime) {
 
 void GameLogic::updateFloorThings(float elapsedTime)
 {
-    maybeSpawnPortal();
+    maybeSpawnFloorThing(EntityType::Portal);
+    maybeSpawnFloorThing(EntityType::Medikit);
 
-    for (FloorThing* floory : model->getFloorThings()) {
-        auto portal = dynamic_cast<Portal*>(floory);
+    std::vector<FloorThing*> &modelList = model->getFloorThings();
+    for (auto it = modelList.begin(); it != modelList.end();) {
+        FloorThing *floory = *it;
+
+        Portal *portal = dynamic_cast<Portal*>(floory);
         if (portal != nullptr) {
             if (!updatePortal(portal, elapsedTime)) {
-                killPortal(floory);
-            };
+                it = modelList.erase(it);
+                continue;
+            }
         }
+
+        Medikit *medikit = dynamic_cast<Medikit*>(floory);
+        if (medikit != nullptr) {
+            if (medikit->wasUsed) {
+                it = modelList.erase(it);
+                continue;
+            } else {
+                updateMedikit(medikit, elapsedTime);
+            }
+        }
+
+        it++;
     }
 }
 
-void GameLogic::killPortal(FloorThing* floorThing)
-{
-    int id = floorThing->id;
+void GameLogic::maybeSpawnFloorThing(EntityType type) {
+    bool doSpawn = rand() % FLOOR_THING_SPAWN_MODULO.at(type) < 1;
+    if (!doSpawn)
+        return;
 
-    auto modelList = model->getFloorThings();
-    for(auto it = modelList.begin(); it != modelList.end(); it++) {
-        if((*it)->id == id) {
-            modelList.erase(it);
-            break;
-        }
+    float random_x = PLAYER_X_BORDER_MARGIN
+        + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
+    int random_z = rand() % Z_PLANES;
+
+    WorldCoordinates coords(random_x, random_z, true);
+
+    switch(type) {
+    case EntityType::Portal:
+        model->getFloorThings().push_back(new Portal(coords));
+        break;
+    case EntityType::Medikit:
+        coords.x_speed = MEDIKIT_INITIAL_X_SPEED_PX_PER_S;
+        coords.y = HEIGHT*0.5 + MEDIKIT_SPAWN_HEIGHT_OFFSET;
+        coords.y_speed = MEDIKIT_FALL_SPEED_PX_PER_S;
+        model->getFloorThings().push_back(new Medikit(coords));
+        break;
+    default:
+        break;
     }
+}
+
+void GameLogic::updateMedikit(Medikit *medikit, float elapsedTime) {
+    if(!medikit->spawning)
+        return;
+
+    medikit->coords.x_acc = -MEDIKIT_X_FREQUENCY_PER_S*(medikit->coords.x-medikit->x0);
+    medikit->doCoordUpdates(elapsedTime);
+    medikit->spawning = medikit->coords.y > 1e-3f;
 }
 
 void GameLogic::handlePlayerCollisions(PlayerLogic *playerLogic, float elapsed)

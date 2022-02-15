@@ -7,7 +7,6 @@
 #include <GameLogicConst.h>
 #include <const.h>
 #include <cmath>
-#include <Portal.hpp>
 
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing, Model::GraphicsId::player_standing },
@@ -26,7 +25,7 @@ sf::Vector2f GameView::convertWorldCoordinates(WorldCoordinates position) {
     sf::Vector2f pixelPos;
 
     pixelPos.x = position.x;
-    pixelPos.y = floorView.getBackgroundBaseLine(position);
+    pixelPos.y = floorView.getBackgroundBaseLine(position) - position.y;
 
     return pixelPos;
 }
@@ -61,41 +60,24 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
     }
 }
 
-auto drawPortal = [](Portal* portal, double y, double time) {
-    auto halfwidth = portal->getHalfWidth();
-    auto result = sf::CircleShape(halfwidth);
-    result.setPosition(sf::Vector2f(
-        portal->coords.x - halfwidth,
-        y - halfwidth * PORTAL_HEIGHT_RATIO + 2
-    ));
-    result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
-    auto color = portal->used ? sf::Color(100, 0, 255) : sf::Color(255, 0, 0);
-    if (portal->lifetime > 0) {
-        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
-        color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
-    }
-    result.setFillColor(color);
-    return result;
-};
-
 bool GameView::draw(double time) {
     floorView.DrawBackground();
 
     for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
 
         for(FloorThing* floorThing: model.getFloorThings()) {
-            Portal* portal = dynamic_cast<Portal*>(floorThing);
-            if (portal == NULL)
+            if(floorThing->coords.z != layer)
                 continue;
 
-            if (floorThing->getType() != EntityType::Portal) {
+            switch (floorThing->getType()) {
+                case EntityType::Portal:
+                    drawPortal(dynamic_cast<Portal*>(floorThing), time);
+                    break;
+                case EntityType::Medikit:
+                    drawMedikit(dynamic_cast<Medikit*>(floorThing), time);
+                    break;
+                default:
                 continue;
-            }
-
-            if(portal->coords.z == layer) {
-                auto [yUp, yDown] = floorView.getBothBaseLines(portal->coords);
-                _renderWindow->draw(drawPortal(portal, yUp, time));
-                _renderWindow->draw(drawPortal(portal, yDown, time));
             }
         }
 
@@ -143,6 +125,40 @@ bool GameView::draw(double time) {
     return true;
 }
 
+auto drawPortalHelper = [](Portal* portal, double y, double time) {
+    auto halfwidth = portal->getHalfWidth();
+    auto result = sf::CircleShape(halfwidth);
+    result.setPosition(sf::Vector2f(
+        portal->coords.x - halfwidth,
+        y - halfwidth * PORTAL_HEIGHT_RATIO + 2
+    ));
+    result.setScale(sf::Vector2f(1., PORTAL_HEIGHT_RATIO));
+    auto color = portal->used ? sf::Color(100, 0, 255) : sf::Color(255, 0, 0);
+    if (portal->lifetime > 0) {
+        auto glow_phase = 0.5 * (PORTAL_ACTIVE_SECONDS - portal->lifetime) * 2. * 3.14159;
+        color.g = 160. * std::max(sin(glow_phase) * sin(glow_phase), 0.);
+    }
+    result.setFillColor(color);
+    return result;
+};
+
+void GameView::drawPortal(Portal *portal, double time) {
+    auto [yUp, yDown] = floorView.getBothBaseLines(portal->coords);
+    _renderWindow->draw(drawPortalHelper(portal, yUp, time));
+    _renderWindow->draw(drawPortalHelper(portal, yDown, time));
+}
+
+void GameView::drawMedikit(Medikit *medikit, double time) {
+    adjustSprite(Model::GraphicsId::medikit, medikit, false);
+    _renderWindow->draw(_sprites.at(Model::GraphicsId::medikit));
+
+    if(medikit->spawning) {
+        adjustSprite(Model::GraphicsId::parachute, medikit, false);
+        _sprites.at(Model::GraphicsId::parachute).move(sf::Vector2f(0.0f, MEDIKIT_PARACHUTE_OFFSET));
+        _renderWindow->draw(_sprites.at(Model::GraphicsId::parachute));
+    }
+}
+
 #pragma warning( disable : 4834 )
 
 bool GameView::setUp() {
@@ -160,6 +176,8 @@ bool GameView::setUp() {
     loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
     loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
     loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
+    loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT);
+    loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT);
 
     return true;
 }

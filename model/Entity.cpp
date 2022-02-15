@@ -1,4 +1,5 @@
 #include <Entity.h>
+#include <cmath>
 
 int Entity::id_counter = 0;
 
