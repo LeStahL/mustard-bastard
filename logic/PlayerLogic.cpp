@@ -113,6 +113,11 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
             beginWarp();
             portal->shutDown();
         }
+    } else if(Medikit *medikit = dynamic_cast<Medikit*>(entity)) {
+        if(fabs(player->coords.x - medikit->coords.x) <= medikit->width()) {
+            healUp(MEDIKIT_HP);
+            medikit->wasUsed = true;
+        }
     } else {
         bool playerCollidesFromLeft = playerL < entityL && playerR >= entityL;
         bool playerCollidesFromRight = playerR > entityR && playerL <= entityR;
@@ -126,13 +131,6 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
             player->coords.x += entityR - playerL + 1;
             player->coords.applyAcceleration(200, 200, true);
             entity->coords.applyAcceleration(-50, 50, true);
-        }
-    }
-
-    if(Medikit *medikit = dynamic_cast<Medikit*>(entity)) {
-        if(fabs(player->coords.x - medikit->coords.x) <= medikit->width()) {
-            healUp(MEDIKIT_HP);
-            medikit->wasUsed = true;
         }
     }
 }
