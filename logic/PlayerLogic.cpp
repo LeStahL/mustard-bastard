@@ -108,31 +108,10 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
         }
     }
 
-    auto medikit = dynamic_cast<Medikit*>(entity);
-    if(medikit != nullptr) {
+    if(Medikit *medikit = dynamic_cast<Medikit*>(entity)) {
         if(fabs(player->coords.x - medikit->coords.x) <= medikit->width()) {
             healUp(MEDIKIT_HP);
             medikit->wasUsed = true;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
