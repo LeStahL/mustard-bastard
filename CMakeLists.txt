@@ -15,6 +15,7 @@ add_executable(mustard-bastard Main.cpp
     model/MenuState.cpp
     model/HighscoreList.cpp
     model/Medikit.cpp
+    model/PauseMenuState.cpp
 
     view/FloorView.cpp
     view/GameView.cpp
@@ -32,6 +33,7 @@ add_executable(mustard-bastard Main.cpp
     controller/GameInputController.cpp
     controller/MenuController.cpp
     controller/HighscoreMenuInputController.cpp
+    controller/PauseMenuInputController.cpp
 )
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
