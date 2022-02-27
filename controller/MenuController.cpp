@@ -1,6 +1,8 @@
 #include "MenuController.hpp"
 
-MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView, MusicPlayer *musicPlayer, HeadsUpDisplayView *headsUpDisplayView)
+#include <iostream>
+
+MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView, MusicPlayer *musicPlayer, HeadsUpDisplayView *headsUpDisplayView, GameLogic *gameLogic)
     : _state(state)
     , _window(window)
     , _mainMenuState(mainMenuState)
@@ -12,12 +14,18 @@ MenuController::MenuController(MenuState *state, sf::RenderWindow *window, MainM
     , _highscoreMenuView(highscoreMenuView)
     , _musicPlayer(musicPlayer)
     , _headsUpDisplayView(headsUpDisplayView)
+    , _gameLogic(gameLogic)
 {
 }
 
 void MenuController::setGameInputController(GameInputController *gameInputController)
 {
     _gameInputController = gameInputController;
+}
+
+void MenuController::setPauseMenuInputController(PauseMenuInputController *pauseMenuInputController)
+{
+    _pauseMenuInputController = pauseMenuInputController;
 }
 
 void MenuController::setMainMenuInputController(MainMenuInputController *mainMenuInputController)
@@ -38,24 +46,27 @@ bool MenuController::canEnterState(MenuState::MenuType type)
 
 bool MenuController::exitCurrentState()
 {
-    if(_view != nullptr) _view->tearDown();
+    //if(_view != nullptr) _view->tearDown();
     _musicPlayer->stop();
 
     switch(_state->currentType())
     {
         case MenuState::MenuType::Game:
-        _headsUpDisplayView->tearDown();
+        break;
+        case MenuState::MenuType::PauseMenu:
+        //_headsUpDisplayView->tearDown();
+        //_gameView->tearDown();
         // TODO: Reset game, player, level, score state etc
         // TODO: Unload game scene
+        break;
+
+        case MenuState::Loading:
         break;
 
         case MenuState::MenuType::HighScoreMenu:
         break;
 
         case MenuState::MenuType::MainMenu:
-        break;
-
-        case MenuState::MenuType::PauseMenu:
         break;
 
         case MenuState::MenuType::SettingsMenu:
@@ -80,12 +91,17 @@ bool MenuController::enterState(MenuState::MenuType type)
         _window->close();
         return true;
 
-        case MenuState::MenuType::Game:
+        case MenuState::MenuType::Loading:
         _headsUpDisplayView->setUp();
+        _gameView->setUp();
+        enterState(MenuState::Game);
+        return true;
+
+        case MenuState::MenuType::Game:
         _view = _gameView;
         _inputController = _gameInputController;
-        _view->setUp();
         _musicPlayer->playSound(MusicPlayer::SoundType::GameSound);
+        _gameLogic->resumeGame();
         return true;
 
         case MenuState::MenuType::HighScoreMenu:
@@ -94,13 +110,15 @@ bool MenuController::enterState(MenuState::MenuType type)
         _view->setUp();
         break;
 
-        case MenuState::MenuType::MainMenu:
+        case MenuState::MenuType::MainMenu:    
         _view = _mainMenuView;
         _inputController = _mainMenuInputController;
         _view->setUp();
         return true;
 
         case MenuState::MenuType::PauseMenu:
+        _view = _gameView;
+        _inputController = _pauseMenuInputController;
         break;
 
         case MenuState::MenuType::SettingsMenu:

@@ -15,14 +15,16 @@
 #include "MenuController.hpp"
 #include "MainMenuInputController.hpp"
 #include "GameInputController.hpp"
+#include "PauseMenuInputController.hpp"
 #include <const.h>
 #include <GameLogicConst.h>
 #include <GameView.hpp>
 #include "HighscoreList.hpp"
 #include "MusicPlayer.hpp"
 #include "HeadsUpDisplayView.hpp"
+#include "PauseMenuView.hpp"
 
-constexpr bool QM_QUICKDEVEL = true;
+constexpr bool QM_QUICKDEVEL = false;
 
 int main()
 {
@@ -34,14 +36,15 @@ int main()
     sf::Clock gameClock;
     sf::Clock animationClock;
 
+    PauseMenuState pauseMenuState;
+    PauseMenuView pauseMenuView(&window, &pauseMenuState);
+
     std::cout << "Init Model?" << std::endl;
     Model model;
     std::cout << "Init GameLogic?" << std::endl;
     GameLogic gameLogic(&model);
-    std::cout << "Init GameInputContrller?" << std::endl;
-    GameInputController gameInputController(gameLogic);
     std::cout << "Init GameView?" << std::endl;
-    GameView gameView(&window, model);
+    GameView gameView(&window, model, pauseMenuView);
     std::cout << "Survived initialization." << std::endl;
 
     MusicPlayer musicPlayer(QM_QUICKDEVEL);
@@ -63,15 +66,20 @@ int main()
 
     HeadsUpDisplayView headsUpDisplayView(&window, &menuState, player1, player2);
 
-    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView, &musicPlayer, &headsUpDisplayView);
+    MenuController menuController(&menuState, &window, &mainMenuState, &mainMenuView, &gameView, &highscoreList, &highscoreMenuView, &musicPlayer, &headsUpDisplayView, &gameLogic);
 
     MainMenuInputController mainMenuInputController(&mainMenuState, &menuController);
     HighscoreMenuInputController highscoreMenuInputController(&mainMenuState, &menuController);
+    PauseMenuInputController pauseMenuInputController(&pauseMenuState, &menuController);
+
+    std::cout << "Init GameInputContrller?" << std::endl;
+    GameInputController gameInputController(gameLogic, &menuController);
 
     menuController.setGameInputController(&gameInputController);
     menuController.setMainMenuInputController(&mainMenuInputController);
     menuController.setHighscoreMenuInputController(&highscoreMenuInputController);
-    menuController.enterState(QM_QUICKDEVEL ? MenuState::Game : MenuState::MenuType::MainMenu);
+    menuController.setPauseMenuInputController(&pauseMenuInputController);
+    menuController.enterState(QM_QUICKDEVEL ? MenuState::Loading : MenuState::MenuType::MainMenu);
 
 
     while (window.isOpen())
@@ -79,8 +87,8 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed
-                || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+            if (event.type == sf::Event::Closed)
+                //|| sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
                 window.close();
         }
 

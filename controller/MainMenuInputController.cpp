@@ -7,27 +7,25 @@ const double MainMenuInputController::disableTime = .15;
 MainMenuInputController::MainMenuInputController(MainMenuState *mainMenuState, MenuController *menuController)
     : _mainMenuState(mainMenuState)
     , _menuController(menuController)
-    , _disabled(false)
 {
+    _pressedKey = sf::Keyboard::Unknown;
 }
 
 void MainMenuInputController::pullEvents() {
-    if(_disableClock.getElapsedTime().asSeconds() > disableTime)
-    {
-        _disabled = false;
-        _disableClock.restart();
+    if(sf::Keyboard::isKeyPressed(_pressedKey) && _disableClock.getElapsedTime().asSeconds() < disableTime) {
+        return;
     }
-
-    if(_disabled) return;
-    
-    _disabled = true;
+    _pressedKey = sf::Keyboard::Unknown;
     _disableClock.restart();
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        _pressedKey = sf::Keyboard::Down;
         _mainMenuState->selectIndex((_mainMenuState->selectedIndex() + 1) % 4);
     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        _pressedKey = sf::Keyboard::Up;
         _mainMenuState->selectIndex((_mainMenuState->selectedIndex() + 3) % 4);
     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+        _pressedKey = sf::Keyboard::Enter;
         if(_mainMenuState->selectedIndex() == 3)
         {
             _menuController->exitCurrentState();
@@ -41,7 +39,7 @@ void MainMenuInputController::pullEvents() {
         else if(_mainMenuState->selectedIndex() == 0)
         {
             _menuController->exitCurrentState();
-            _menuController->enterState(MenuState::MenuType::Game);
+            _menuController->enterState(MenuState::MenuType::Loading);
         }
     }
 }

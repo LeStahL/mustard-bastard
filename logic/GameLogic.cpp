@@ -27,6 +27,9 @@ GameLogic::GameLogic(Model* model) :
 }
 
 void GameLogic::update(float timeElapsed) {
+    if(model->getGameState() == Model::GameState::Paused)
+        return;
+
     updateEnemies(timeElapsed);
     updateFloorThings(timeElapsed);
 
@@ -105,6 +108,14 @@ void GameLogic::killEnemy(Enemy* enemy) {
 
 int GameLogic::nPlayers() {
     return model->getNumberOfPlayers();
+}
+
+void GameLogic::pauseGame() {
+    model->setGameState(Model::GameState::Paused);
+}
+
+void GameLogic::resumeGame() {
+    model->setGameState(Model::GameState::Running);
 }
 
 auto updatePortal = [](Portal* portal, float elapsedTime) {

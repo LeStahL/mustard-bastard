@@ -15,6 +15,18 @@ Model::Model()
     players.push_back(eumel);
     //players.push_back(new Player(GraphicsId::player_standing, START_PLAYER2));
     //players.at(1)->name = "Bert";
+
+    gameState = GameState::Running;
+}
+
+void Model::setGameState(const GameState newGameState)
+{
+    gameState = newGameState;
+}
+
+Model::GameState Model::getGameState() const
+{
+    return gameState;
 }
 
 Player* Model::getPlayer(int player_number) {

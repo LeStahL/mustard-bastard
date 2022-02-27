@@ -4,8 +4,6 @@
 #include <MainMenuState.hpp>
 class MenuController;
 
-#include <SFML/System.hpp>
-
 class HighscoreMenuInputController : public InputController 
 {
     MainMenuState *_mainMenuState;

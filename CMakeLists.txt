@@ -22,6 +22,7 @@ add_executable(mustard-bastard Main.cpp
     view/MainMenuView.cpp
     view/HighscoreMenuView.cpp
     view/HeadsUpDisplayView.cpp
+    view/PauseMenuView.cpp
 
     logic/GameLogic.cpp
     logic/PlayerLogic.cpp
@@ -29,6 +30,7 @@ add_executable(mustard-bastard Main.cpp
     utility/Animation.cpp
     utility/MusicPlayer.cpp
 
+    controller/InputController.cpp
     controller/MainMenuInputController.cpp
     controller/GameInputController.cpp
     controller/MenuController.cpp

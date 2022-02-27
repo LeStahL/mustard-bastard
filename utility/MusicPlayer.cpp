@@ -1,6 +1,6 @@
 #include "MusicPlayer.hpp"
 
-MusicPlayer::MusicPlayer(bool muted) : _muted(muted)
+MusicPlayer::MusicPlayer(bool muted) : _muted(muted), _currentlyPlaying(nullptr)
 {
     _gameSoundBuffer.loadFromFile("assets/senfschleife.mp3");
     _gameSound.setBuffer(_gameSoundBuffer);

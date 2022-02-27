@@ -20,14 +20,24 @@ class Model {
         parachute
     };
 
+    enum class GameState {
+        Running,
+        Paused
+    };
+
     private:
     std::vector<Player*> players;
     std::vector<Enemy*> enemies;
     std::vector<Entity*> entities;
     std::vector<FloorThing*> floorThings;
 
+    GameState gameState;
+
     public:
     Model();
+
+    void setGameState(const GameState newGameState);
+    GameState getGameState() const;
 
     Player* getPlayer(int player_number);
     int getNumberOfPlayers();

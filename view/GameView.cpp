@@ -15,10 +15,12 @@ std::map<int, int> playerStateToSprite = {
     { PlayerState::Warping, Model::GraphicsId::player_standing }
 };
 
-GameView::GameView(sf::RenderWindow *renderWindow, Model& model) :
+GameView::GameView(sf::RenderWindow *renderWindow, Model& model, PauseMenuView &pauseMenuView) :
     _renderWindow(renderWindow),
     model(model),
-    floorView(FloorView(_renderWindow)) {
+    floorView(FloorView(_renderWindow)),
+    pauseMenuView(pauseMenuView) {
+    pauseMenuView.setUp();
 }
 
 sf::Vector2f GameView::convertWorldCoordinates(WorldCoordinates position) {
@@ -61,6 +63,9 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
 }
 
 bool GameView::draw(double time) {
+    if(model.getGameState() == Model::GameState::Paused)
+        time = 0.0;
+
     floorView.DrawBackground();
 
     for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
@@ -121,6 +126,9 @@ bool GameView::draw(double time) {
             }
         }
     }
+
+    if(model.getGameState() == Model::GameState::Paused)
+        pauseMenuView.draw(time);
 
     return true;
 }

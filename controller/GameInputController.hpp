@@ -1,14 +1,15 @@
 #pragma once
 
 #include <GameLogic.h>
-#include <GameInputController.hpp>
 #include "InputController.hpp"
+class MenuController;
 
 class GameInputController : public InputController {
 private:
     GameLogic& gameLogic;
+    MenuController  *menuController;
 
 public:
-    GameInputController(GameLogic& GameLogic);
+    GameInputController(GameLogic& gameLogic, MenuController *menuController);
     void pullEvents() override;
 };
