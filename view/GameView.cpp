@@ -15,12 +15,11 @@ std::map<int, int> playerStateToSprite = {
     { PlayerState::Warping, Model::GraphicsId::player_standing }
 };
 
-GameView::GameView(sf::RenderWindow *renderWindow, Model& model, PauseMenuView &pauseMenuView) :
+GameView::GameView(sf::RenderWindow *renderWindow, Model *model) :
     _renderWindow(renderWindow),
     model(model),
-    floorView(FloorView(_renderWindow)),
-    pauseMenuView(pauseMenuView) {
-    pauseMenuView.setUp();
+    floorView(FloorView(_renderWindow))
+{
 }
 
 sf::Vector2f GameView::convertWorldCoordinates(WorldCoordinates position) {
@@ -63,14 +62,14 @@ void GameView::adjustSprite(int spriteId, Entity* entity, bool invertWorld)
 }
 
 bool GameView::draw(double time) {
-    if(model.getGameState() == Model::GameState::Paused)
+    if(model->getGameState() == Model::GameState::Paused)
         time = 0.0;
 
     floorView.DrawBackground();
 
     for(int layer = Z_PLANES - 1; layer >= 0; layer--) {
 
-        for(FloorThing* floorThing: model.getFloorThings()) {
+        for(FloorThing* floorThing: model->getFloorThings()) {
             if(floorThing->coords.z != layer)
                 continue;
 
@@ -86,7 +85,7 @@ bool GameView::draw(double time) {
             }
         }
 
-        for(Enemy* enemy : model.getEnemies()) {
+        for(Enemy* enemy : model->getEnemies()) {
 
             if(enemy->coords.z == layer) {
                 int id1, id2 = 0;
@@ -116,8 +115,8 @@ bool GameView::draw(double time) {
             }
         }
 
-        for(int p = 0; p < model.getNumberOfPlayers(); p++) {
-            auto player = model.getPlayer(p);
+        for(int p = 0; p < model->getNumberOfPlayers(); p++) {
+            auto player = model->getPlayer(p);
             if(player->coords.z == layer) {
                 int id = playerStateToSprite[player->state];
                 _animations.at(id).update(time);
@@ -126,9 +125,6 @@ bool GameView::draw(double time) {
             }
         }
     }
-
-    if(model.getGameState() == Model::GameState::Paused)
-        pauseMenuView.draw(time);
 
     return true;
 }

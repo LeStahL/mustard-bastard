@@ -3,6 +3,7 @@
 
 Player::Player(std::string name, WorldCoordinates coords) :
         Entity(EntityType::Player, coords), name(name) {
+    warp_timer = 0.0f;
     state = PlayerState::Standing;
     attack_state = AttackState();
 }

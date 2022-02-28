@@ -39,7 +39,7 @@ void MainMenuInputController::pullEvents() {
         else if(_mainMenuState->selectedIndex() == 0)
         {
             _menuController->exitCurrentState();
-            _menuController->enterState(MenuState::MenuType::Loading);
+            _menuController->enterState(MenuState::MenuType::StartGame);
         }
     }
 }

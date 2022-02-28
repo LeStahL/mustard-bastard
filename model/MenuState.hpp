@@ -4,9 +4,7 @@ class MenuState {
     public:
     enum MenuType {
         MainMenu,
-        Loading,
-        Game,
-        PauseMenu,
+        StartGame,
         SettingsMenu,
         HighScoreMenu,
         Exit

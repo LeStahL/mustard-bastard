@@ -2,14 +2,14 @@
 
 #include <GameLogic.h>
 #include "InputController.hpp"
-class MenuController;
+class GameController;
 
 class GameInputController : public InputController {
 private:
     GameLogic& gameLogic;
-    MenuController  *menuController;
+    GameController *gameController;
 
 public:
-    GameInputController(GameLogic& gameLogic, MenuController *menuController);
+    GameInputController(GameLogic& gameLogic, GameController *gameController);
     void pullEvents() override;
 };

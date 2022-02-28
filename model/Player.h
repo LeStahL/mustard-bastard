@@ -16,10 +16,10 @@ enum PlayerState {
 class Player : public Entity {
     public:
     PlayerState state;
-    float move_z_cooldown;
+    float move_z_cooldown = 0.0f;
     AttackState attack_state;
-    float power = 1;
-    float health = .5;
+    float power = 1.0f;
+    float health = .5f;
     long points = 0;
     std::string name;
 

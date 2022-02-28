@@ -9,14 +9,32 @@ const WorldCoordinates START_PLAYER2 = WorldCoordinates(440., 410, true);
 
 Model::Model()
 {
-    // ignore background for now
-    // background = Object(GraphicsId::game_background, IsDrawable::DrawType::texture, WorldCoordinates(0, 0, true));
+    reset();
+}
+
+void Model::reset()
+{
+    // clear all lists
+    for(Player *player : players) {
+        delete player;
+    }
+    players.clear();
+
+    for(Enemy *enemy : enemies) {
+        delete enemy;
+    }
+    enemies.clear();
+
+    for(FloorThing *floorThing : floorThings) {
+        delete floorThing;
+    }
+    floorThings.clear();
+
+    // init clean
+    gameState = GameState::Running;
+
     Player* eumel = new Player("Eumel", START_PLAYER1);
     players.push_back(eumel);
-    //players.push_back(new Player(GraphicsId::player_standing, START_PLAYER2));
-    //players.at(1)->name = "Bert";
-
-    gameState = GameState::Running;
 }
 
 void Model::setGameState(const GameState newGameState)

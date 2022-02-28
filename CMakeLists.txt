@@ -5,7 +5,10 @@ project(mustard-bastard)
 add_subdirectory(thirdparty/SFML)
 set(SFML_BUILD_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/SFML/lib/Release")
 
-add_executable(mustard-bastard Main.cpp
+add_executable(mustard-bastard
+    Main.cpp
+    Application.cpp
+
     model/Model.cpp
     model/Entity.cpp
     model/WorldCoordinates.cpp
@@ -30,6 +33,7 @@ add_executable(mustard-bastard Main.cpp
     utility/Animation.cpp
     utility/MusicPlayer.cpp
 
+    controller/GameController.cpp
     controller/InputController.cpp
     controller/MainMenuInputController.cpp
     controller/GameInputController.cpp

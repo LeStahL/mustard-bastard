@@ -18,6 +18,7 @@ class GameLogic {
 
     public:
     GameLogic(Model* model);
+    void init();
     void update(float elapsedTime);
     void move_player(int player, int x_sign, bool retreat, int z_sign, bool attack);
     int nPlayers();

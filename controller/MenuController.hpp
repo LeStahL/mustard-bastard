@@ -1,48 +1,49 @@
 #pragma once
 
+#include <SFML/System.hpp>
+
 #include "MenuState.hpp"
 #include "View.hpp"
-#include "MainMenuView.hpp"
-#include "GameView.hpp"
-#include "GameInputController.hpp"
-#include "MainMenuInputController.hpp"
-#include "PauseMenuInputController.hpp"
 #include "InputController.hpp"
+
+#include "MainMenuState.hpp"
+#include "MainMenuView.hpp"
+#include "MainMenuInputController.hpp"
+
 #include "HighscoreList.hpp"
-#include "HighscoreMenuInputController.hpp"
 #include "HighscoreMenuView.hpp"
-#include "MusicPlayer.hpp"
-#include "HeadsUpDisplayView.hpp"
-#include <GameLogic.h>
+#include "HighscoreMenuInputController.hpp"
+
+class Application;
 
 class MenuController
 {
-    MenuState *_state;
-    View *_view;
+    private:
     sf::RenderWindow *_window;
-    MainMenuState *_mainMenuState;
-    MainMenuView *_mainMenuView;
-    GameView *_gameView;
-    GameInputController *_gameInputController;
-    MainMenuInputController *_mainMenuInputController;
-    PauseMenuInputController *_pauseMenuInputController;
+    sf::Clock _menuClock;
+    Application *_application;
+
+    MenuState _menuState;
+    View *_view;
     InputController *_inputController;
-    HighscoreMenuView *_highscoreMenuView;
-    HighscoreMenuInputController *_highscoreMenuInputController;
-    HighscoreList *_highscoreList;
-    MusicPlayer *_musicPlayer;
-    HeadsUpDisplayView *_headsUpDisplayView;
-    GameLogic *_gameLogic;
+
+    // main menu
+    MainMenuState _mainMenuState;
+    MainMenuView _mainMenuView;
+    MainMenuInputController _mainMenuInputController;
+
+    // TODO: settings menu
+
+    // highscore menu
+    HighscoreList _highscoreList;
+    HighscoreMenuView _highscoreMenuView;
+    HighscoreMenuInputController _highscoreMenuInputController;
 
     public:
-    MenuController(MenuState *state, sf::RenderWindow *window, MainMenuState *mainMenuState, MainMenuView *mainMenuView, GameView *gameView, HighscoreList *highscoreList, HighscoreMenuView *highscoreMenuView, MusicPlayer *musicPlayer, HeadsUpDisplayView *headsUpDisplayView, GameLogic *gameLogic);
-    void setMainMenuInputController(MainMenuInputController *mainMenuInputController);
-    void setGameInputController(GameInputController *gameInputController);
-    void setPauseMenuInputController(PauseMenuInputController *pauseMenuInputController);
-    void setHighscoreMenuInputController(HighscoreMenuInputController *highscoreMenuInputController);
+    MenuController(sf::RenderWindow *window, Application *application);
     bool canEnterState(MenuState::MenuType type);
     bool exitCurrentState();
     bool enterState(MenuState::MenuType type);
 
-    bool draw(double time);
+    bool update();
 };

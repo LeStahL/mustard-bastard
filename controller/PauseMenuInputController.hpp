@@ -2,15 +2,15 @@
 
 #include <InputController.hpp>
 #include <PauseMenuState.hpp>
-class MenuController;
+class GameController;
 
 class PauseMenuInputController : public InputController 
 {
     PauseMenuState *_PauseMenuState;
-    MenuController *_menuController;
+    GameController *_gameController;
 
 public:
-    PauseMenuInputController(PauseMenuState *PauseMenuState, MenuController *menuController);
+    PauseMenuInputController(PauseMenuState *PauseMenuState, GameController *gameController);
     void pullEvents() override;
 
     static const double disableTime;

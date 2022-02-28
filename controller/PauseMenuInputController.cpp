@@ -1,12 +1,12 @@
 #include "PauseMenuInputController.hpp"
-#include "MenuController.hpp"
+#include <GameController.hpp>
 #include <SFML/Window.hpp>
 
 const double PauseMenuInputController::disableTime = .15;
 
-PauseMenuInputController::PauseMenuInputController(PauseMenuState *PauseMenuState, MenuController *menuController)
-    : _PauseMenuState(PauseMenuState)
-    , _menuController(menuController)
+PauseMenuInputController::PauseMenuInputController(PauseMenuState *pauseMenuState, GameController *gameController)
+    : _PauseMenuState(pauseMenuState)
+    , _gameController(gameController)
 {
     _pressedKey = sf::Keyboard::Unknown;
 }
@@ -28,13 +28,11 @@ void PauseMenuInputController::pullEvents() {
         _pressedKey = sf::Keyboard::Enter;
         if(_PauseMenuState->selectedIndex() == 0)
         {
-            _menuController->exitCurrentState();
-            _menuController->enterState(MenuState::MenuType::Game);
+            _gameController->resumeGame();
         }
         else if(_PauseMenuState->selectedIndex() == 1)
         {
-            _menuController->exitCurrentState();
-            _menuController->enterState(MenuState::MenuType::MainMenu);
+            _gameController->exitGame();
         }
     }
 }

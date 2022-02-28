@@ -2,11 +2,11 @@
 #include <GameInputController.hpp>
 #include <SFML/Window.hpp>
 #include <const.h>
-#include <MenuController.hpp>
+#include <GameController.hpp>
 
-GameInputController::GameInputController(GameLogic& gameLogic, MenuController *menuController) :
+GameInputController::GameInputController(GameLogic& gameLogic, GameController *gameController) :
         gameLogic(gameLogic),
-        menuController(menuController) {
+        gameController(gameController) {
 }
 
 enum Key
@@ -43,7 +43,7 @@ std::map<int, std::map<Key, sf::Keyboard::Key>> PlayerKey = {
 void GameInputController::pullEvents() {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         gameLogic.pauseGame();
-        menuController->enterState(MenuState::PauseMenu);
+        gameController->pauseGame();
         return;
     }
 

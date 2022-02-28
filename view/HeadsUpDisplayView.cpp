@@ -4,13 +4,20 @@
 
 #include <iostream>
 
-HeadsUpDisplayView::HeadsUpDisplayView(sf::RenderWindow *renderWindow, MenuState *menuState, Player *player1, Player *player2)
+HeadsUpDisplayView::HeadsUpDisplayView(sf::RenderWindow *renderWindow)
     : _renderWindow(renderWindow)
-    , _menuState(menuState)
-    , _player1(player1)
-    , _player2(player2)
+    , _player1(nullptr)
+    , _player2(nullptr)
 {
     auto _ = _font.loadFromFile("assets/FiraCode-Regular.ttf");
+}
+
+void HeadsUpDisplayView::setPlayer1(Player *player) {
+    _player1 = player;
+}
+
+void HeadsUpDisplayView::setPlayer2(Player *player) {
+    _player2 = player;
 }
 
 void HeadsUpDisplayView::drawPlayerHUD(Player *player, HUDSide where)

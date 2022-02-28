@@ -17,12 +17,20 @@ GameLogic::GameLogic(Model* model) :
         model(model) {
     srand(time(NULL));
 
-    for (int p = 0; p < model->getNumberOfPlayers(); p++) {
-        playerLogic.push_back(new PlayerLogic(model->getPlayer(p)));
-    }
-
     for (auto enemyType : AllEnemyTypes) {
         enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
+    }
+}
+
+void GameLogic::init()
+{
+    for(PlayerLogic *playerLogic : playerLogic) {
+        delete playerLogic;
+    }
+    playerLogic.clear();
+
+    for (int p = 0; p < model->getNumberOfPlayers(); p++) {
+        playerLogic.push_back(new PlayerLogic(model->getPlayer(p)));
     }
 }
 
@@ -222,6 +230,7 @@ void GameLogic::handlePlayerCollisions(PlayerLogic *playerLogic, float elapsed)
     for (Entity* entity : model->getFloorThings()) {
         handleCollision(entity);
     }
+
     for (Entity* entity : model->getEnemies()) {
         handleCollision(entity);
     }

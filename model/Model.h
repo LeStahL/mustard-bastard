@@ -28,13 +28,13 @@ class Model {
     private:
     std::vector<Player*> players;
     std::vector<Enemy*> enemies;
-    std::vector<Entity*> entities;
     std::vector<FloorThing*> floorThings;
 
     GameState gameState;
 
     public:
     Model();
+    void reset();
 
     void setGameState(const GameState newGameState);
     GameState getGameState() const;
