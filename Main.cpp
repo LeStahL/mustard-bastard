@@ -11,7 +11,7 @@ int main()
     settings.antialiasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Mustard Bastard / 2022 Global Game Jam / Team210 at work (hardly)", sf::Style::Default, settings);
 
-    Application application(&window);
+    Application application(&window, QM_QUICKDEVEL);
     application.run();
 
     return 0;

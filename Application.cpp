@@ -1,10 +1,18 @@
 #include <Application.hpp>
 
-Application::Application(sf::RenderWindow *window) :
+Application::Application(sf::RenderWindow *window, bool qm_quickdevel) :
     window(window),
     applicationState(ApplicationState::MainMenu),
     menuController(window, this),
-    gameController(window, this)
+    gameController(window, this),
+    musicPlayer(qm_quickdevel)
+{
+    if(qm_quickdevel)
+        startGame();
+}
+
+Application::Application(sf::RenderWindow *window) :
+    Application(window, false)
 {
 
 }
@@ -40,10 +48,12 @@ void Application::startGame()
 {
     applicationState = ApplicationState::InGame;
     gameController.startGame();
+    musicPlayer.playSound(MusicPlayer::SoundType::GameSound);
 }
 
 void Application::exitGame()
 {
     applicationState = ApplicationState::MainMenu;
     menuController.enterState(MenuState::MenuType::MainMenu);
+    musicPlayer.stop();
 }
