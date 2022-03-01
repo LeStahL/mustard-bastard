@@ -5,11 +5,11 @@ MenuController::MenuController(sf::RenderWindow *window, Application *applicatio
     _window(window),
     _application(application),
     _view(&_mainMenuView),
-    _inputController(&_mainMenuInputController),
+    _inputRouter(&_mainMenuInputRouter),
     _mainMenuView(window, &_menuState, &_mainMenuState),
-    _mainMenuInputController(&_mainMenuState, this),
+    _mainMenuInputRouter(&_mainMenuState, this),
     _highscoreMenuView(window, &_menuState, &_highscoreList),
-    _highscoreMenuInputController(&_mainMenuState, this)
+    _highscoreMenuInputRouter(&_mainMenuState, this)
 {
 }
 
@@ -39,7 +39,7 @@ bool MenuController::exitCurrentState()
     }
 
     _view = nullptr;
-    _inputController = nullptr;
+    _inputRouter = nullptr;
 
     return false;
 }
@@ -59,13 +59,13 @@ bool MenuController::enterState(MenuState::MenuType type)
 
         case MenuState::MenuType::HighScoreMenu:
         _view = &_highscoreMenuView;
-        _inputController = &_highscoreMenuInputController;
+        _inputRouter = &_highscoreMenuInputRouter;
         _view->setUp();
         break;
 
         case MenuState::MenuType::MainMenu:    
         _view = &_mainMenuView;
-        _inputController = &_mainMenuInputController;
+        _inputRouter = &_mainMenuInputRouter;
         _view->setUp();
         return true;
 
@@ -81,7 +81,7 @@ bool MenuController::enterState(MenuState::MenuType type)
 
 bool MenuController::update()
 {
-    if(_inputController != nullptr) _inputController->pullEvents();
+    if(_inputRouter != nullptr) _inputRouter->pullEvents();
 
     bool result = false;
     if(_view != nullptr) result = _view->draw(_menuClock.getElapsedTime().asSeconds());

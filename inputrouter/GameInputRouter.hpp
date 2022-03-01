@@ -1,15 +1,15 @@
 #pragma once
 
 #include <GameLogic.h>
-#include "InputController.hpp"
+#include "InputRouter.hpp"
 class GameController;
 
-class GameInputController : public InputController {
+class GameInputRouter : public InputRouter {
 private:
     GameLogic& gameLogic;
     GameController *gameController;
 
 public:
-    GameInputController(GameLogic& gameLogic, GameController *gameController);
+    GameInputRouter(GameLogic& gameLogic, GameController *gameController);
     void pullEvents() override;
 };

@@ -3,13 +3,13 @@
 
 GameController::GameController(sf::RenderWindow *window, Application *application) :
     application(application),
-    inputController(&gameInputController),
+    inputRouter(&gameInputRouter),
     gameView(window, &model),
     headsUpDisplayView(window),
-    gameInputController(gameLogic, this),
+    gameInputRouter(gameLogic, this),
     gameLogic(&model),
     pauseMenuView(window, &pauseMenuState),
-    pauseMenuInputController(&pauseMenuState, this)
+    pauseMenuInputRouter(&pauseMenuState, this)
 {
     viewList.reserve(3);
     viewList.push_back(&gameView);
@@ -27,7 +27,7 @@ void GameController::update()
         elapsedTime = 0.0f;
     }
 
-    inputController->pullEvents();
+    inputRouter->pullEvents();
     gameLogic.update(elapsedTime);
     for(View* view : viewList) {
         view->draw(continuousTime);
@@ -38,7 +38,7 @@ void GameController::startGame() {
     model.reset();
     gameLogic.init();
     headsUpDisplayView.setPlayer1(model.getPlayer(0));
-    inputController = &gameInputController;
+    inputRouter = &gameInputRouter;
 
     gameView.setUp();
     headsUpDisplayView.setUp();
@@ -63,12 +63,12 @@ void GameController::pauseGame()
 {
     model.setGameState(Model::GameState::Paused);
     viewList.push_back(&pauseMenuView);
-    inputController = &pauseMenuInputController;
+    inputRouter = &pauseMenuInputRouter;
 }
 
 void GameController::resumeGame()
 {
     model.setGameState(Model::GameState::Running);
     viewList.pop_back();
-    inputController = &gameInputController;
+    inputRouter = &gameInputRouter;
 }

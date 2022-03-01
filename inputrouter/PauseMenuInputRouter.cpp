@@ -1,17 +1,17 @@
-#include "PauseMenuInputController.hpp"
+#include "PauseMenuInputRouter.hpp"
 #include <GameController.hpp>
 #include <SFML/Window.hpp>
 
-const double PauseMenuInputController::disableTime = .15;
+const double PauseMenuInputRouter::disableTime = .15;
 
-PauseMenuInputController::PauseMenuInputController(PauseMenuState *pauseMenuState, GameController *gameController)
+PauseMenuInputRouter::PauseMenuInputRouter(PauseMenuState *pauseMenuState, GameController *gameController)
     : _PauseMenuState(pauseMenuState)
     , _gameController(gameController)
 {
     _pressedKey = sf::Keyboard::Unknown;
 }
 
-void PauseMenuInputController::pullEvents() {
+void PauseMenuInputRouter::pullEvents() {
     if(sf::Keyboard::isKeyPressed(_pressedKey) && _disableClock.getElapsedTime().asSeconds() < disableTime) {
         return;
     }

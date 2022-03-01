@@ -1,10 +1,10 @@
 #include <map>
-#include <GameInputController.hpp>
+#include <GameInputRouter.hpp>
 #include <SFML/Window.hpp>
 #include <const.h>
 #include <GameController.hpp>
 
-GameInputController::GameInputController(GameLogic& gameLogic, GameController *gameController) :
+GameInputRouter::GameInputRouter(GameLogic& gameLogic, GameController *gameController) :
         gameLogic(gameLogic),
         gameController(gameController) {
 }
@@ -40,7 +40,7 @@ std::map<int, std::map<Key, sf::Keyboard::Key>> PlayerKey = {
     } }
 };
 
-void GameInputController::pullEvents() {
+void GameInputRouter::pullEvents() {
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         gameLogic.pauseGame();
         gameController->pauseGame();

@@ -1,16 +1,16 @@
 #pragma once
 
-#include <InputController.hpp>
+#include <InputRouter.hpp>
 #include <PauseMenuState.hpp>
 class GameController;
 
-class PauseMenuInputController : public InputController 
+class PauseMenuInputRouter : public InputRouter
 {
     PauseMenuState *_PauseMenuState;
     GameController *_gameController;
 
 public:
-    PauseMenuInputController(PauseMenuState *PauseMenuState, GameController *gameController);
+    PauseMenuInputRouter(PauseMenuState *PauseMenuState, GameController *gameController);
     void pullEvents() override;
 
     static const double disableTime;

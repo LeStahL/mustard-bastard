@@ -3,11 +3,11 @@
 #include <SFML/System.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-class InputController {
+class InputRouter {
 protected:
     static sf::Keyboard::Key _pressedKey;
     static sf::Clock _disableClock;
 public:
-    InputController() = default;
+    InputRouter() = default;
     virtual void pullEvents() = 0;
 };

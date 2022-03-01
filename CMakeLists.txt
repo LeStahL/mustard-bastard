@@ -33,13 +33,14 @@ add_executable(mustard-bastard
     utility/Animation.cpp
     utility/MusicPlayer.cpp
 
-    controller/GameController.cpp
-    controller/InputController.cpp
-    controller/MainMenuInputController.cpp
-    controller/GameInputController.cpp
     controller/MenuController.cpp
-    controller/HighscoreMenuInputController.cpp
-    controller/PauseMenuInputController.cpp
+    controller/GameController.cpp
+
+    inputrouter/InputRouter.cpp
+    inputrouter/MainMenuInputRouter.cpp
+    inputrouter/GameInputRouter.cpp
+    inputrouter/HighscoreMenuInputRouter.cpp
+    inputrouter/PauseMenuInputRouter.cpp
 )
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
@@ -49,6 +50,7 @@ target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/controller/"
     "${PROJECT_SOURCE_DIR}/utility/"
     "${PROJECT_SOURCE_DIR}/logic/"
+    "${PROJECT_SOURCE_DIR}/inputrouter/"
 )
 target_link_directories(mustard-bastard PUBLIC ${SFML_BUILD_DIRECTORY})
 set(SFML_LIBRARIES

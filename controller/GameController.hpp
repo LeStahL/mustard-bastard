@@ -5,17 +5,17 @@
 #include <SFML/System/Clock.hpp>
 
 #include <View.hpp>
-#include <InputController.hpp>
+#include <InputRouter.hpp>
 
 #include <Model.h>
 #include <GameView.hpp>
 #include <HeadsUpDisplayView.hpp>
-#include <GameInputController.hpp>
+#include <GameInputRouter.hpp>
 #include <GameLogic.h>
 
 #include <PauseMenuState.hpp>
 #include <PauseMenuView.hpp>
-#include <PauseMenuInputController.hpp>
+#include <PauseMenuInputRouter.hpp>
 
 class Application;
 
@@ -24,7 +24,7 @@ class GameController {
     private:
     Application *application;
     std::vector<View*> viewList;
-    InputController *inputController;
+    InputRouter *inputRouter;
 
     sf::Clock continuousTimeClock;
     sf::Clock elapsedTimeClock;
@@ -33,13 +33,13 @@ class GameController {
     Model model;
     GameView gameView;
     HeadsUpDisplayView headsUpDisplayView;
-    GameInputController gameInputController;
+    GameInputRouter gameInputRouter;
     GameLogic gameLogic;
 
     // pause menu
     PauseMenuState pauseMenuState;
     PauseMenuView pauseMenuView;
-    PauseMenuInputController pauseMenuInputController;
+    PauseMenuInputRouter pauseMenuInputRouter;
 
     public:
     GameController(sf::RenderWindow *window, Application *application);

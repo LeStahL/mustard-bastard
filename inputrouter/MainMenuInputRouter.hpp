@@ -1,16 +1,16 @@
 #pragma once
 
-#include <InputController.hpp>
+#include <InputRouter.hpp>
 #include <MainMenuState.hpp>
 class MenuController;
 
-class MainMenuInputController : public InputController 
+class MainMenuInputRouter : public InputRouter
 {
     MainMenuState *_mainMenuState;
     MenuController *_menuController;
 
 public:
-    MainMenuInputController(MainMenuState *mainMenuState, MenuController *menuController);
+    MainMenuInputRouter(MainMenuState *mainMenuState, MenuController *menuController);
     void pullEvents() override;
 
     static const double disableTime;

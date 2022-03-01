@@ -1,17 +1,17 @@
-#include "MainMenuInputController.hpp"
+#include "MainMenuInputRouter.hpp"
 #include "MenuController.hpp"
 #include <SFML/Window.hpp>
 
-const double MainMenuInputController::disableTime = .15;
+const double MainMenuInputRouter::disableTime = .15;
 
-MainMenuInputController::MainMenuInputController(MainMenuState *mainMenuState, MenuController *menuController)
+MainMenuInputRouter::MainMenuInputRouter(MainMenuState *mainMenuState, MenuController *menuController)
     : _mainMenuState(mainMenuState)
     , _menuController(menuController)
 {
     _pressedKey = sf::Keyboard::Unknown;
 }
 
-void MainMenuInputController::pullEvents() {
+void MainMenuInputRouter::pullEvents() {
     if(sf::Keyboard::isKeyPressed(_pressedKey) && _disableClock.getElapsedTime().asSeconds() < disableTime) {
         return;
     }

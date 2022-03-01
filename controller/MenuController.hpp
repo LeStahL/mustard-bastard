@@ -4,15 +4,15 @@
 
 #include "MenuState.hpp"
 #include "View.hpp"
-#include "InputController.hpp"
+#include "InputRouter.hpp"
 
 #include "MainMenuState.hpp"
 #include "MainMenuView.hpp"
-#include "MainMenuInputController.hpp"
+#include "MainMenuInputRouter.hpp"
 
 #include "HighscoreList.hpp"
 #include "HighscoreMenuView.hpp"
-#include "HighscoreMenuInputController.hpp"
+#include "HighscoreMenuInputRouter.hpp"
 
 class Application;
 
@@ -25,19 +25,19 @@ class MenuController
 
     MenuState _menuState;
     View *_view;
-    InputController *_inputController;
+    InputRouter *_inputRouter;
 
     // main menu
     MainMenuState _mainMenuState;
     MainMenuView _mainMenuView;
-    MainMenuInputController _mainMenuInputController;
+    MainMenuInputRouter _mainMenuInputRouter;
 
     // TODO: settings menu
 
     // highscore menu
     HighscoreList _highscoreList;
     HighscoreMenuView _highscoreMenuView;
-    HighscoreMenuInputController _highscoreMenuInputController;
+    HighscoreMenuInputRouter _highscoreMenuInputRouter;
 
     public:
     MenuController(sf::RenderWindow *window, Application *application);
