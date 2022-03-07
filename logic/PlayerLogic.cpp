@@ -87,7 +87,7 @@ void PlayerLogic::attack() {
 
     if (canAttack) {
         player->state = PlayerState::Attacking;
-        player->attack_state.setCoolDown(ATTACK_COOLDOWN.at(player->attack_state.weapon));
+        player->attack_state.setCoolDown(ATTACK_COOLDOWN.at(player->attack_state.weapon.type));
         player->power *= PLAYER_ATTACK_POWER_REDUCTION_FACTOR;
     }
 }

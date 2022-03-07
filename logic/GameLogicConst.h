@@ -4,6 +4,7 @@
 #include <Interval.hpp>
 #include <Entity.h>
 #include <SimpleEnumsAndStructs.h>
+#include <Weapon.hpp>
 
 constexpr float PLAYER_MOVE_X_SPEED = 160.0;
 constexpr float PLAYER_MOVE_Z_COOLDONW = 0.3;
@@ -38,10 +39,10 @@ const std::map<EntityType, Interval> INIT_COOLDOWN = {
     { EntityType::IcebergAndFairy, Interval(120, 210)}
 };
 
-const std::map<Weapon, double> ATTACK_COOLDOWN = {
-    { Weapon::Hand, 500.},
-    { Weapon::Axe, 2000.},
-    { Weapon::Mustard, 1000.},
+const std::map<WeaponType, double> ATTACK_COOLDOWN = {
+    { WeaponType::Hand, 500.},
+    { WeaponType::Axe, 2000.},
+    { WeaponType::Mustard, 1000.},
 };
 
 const std::map<EntityType, EnemyStats> INIT_ENEMY_STATS = {

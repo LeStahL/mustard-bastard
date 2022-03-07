@@ -1,10 +1,11 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
+
+#include <string>
 
 #include <Entity.h>
-#include <AttackState.hpp>
+#include <Weapon.hpp>
 #include <GameLogicConst.h>
-#include <string>
+#include <AttackState.hpp>
 
 enum PlayerState {
     Standing,
@@ -14,13 +15,15 @@ enum PlayerState {
 };
 
 class Player : public Entity {
+private:
     std::string name;
 
-    public:
+public:
     Weapon *weapon;
     PlayerState state;
-    float move_z_cooldown = 0.0f;
     AttackState attack_state;
+    float move_z_cooldown = 0.0f;
+    float attack_cooldown = 0.0f;
     float power = 1.0f;
     float health = .5f;
     long points = 0;
@@ -44,5 +47,3 @@ class Player : public Entity {
     std::string getName();
 
 };
-
-#endif /* PLAYER_H */

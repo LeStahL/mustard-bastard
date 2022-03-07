@@ -7,9 +7,10 @@
 #include <string>
 #include <map>
 
-enum WeaponType {
+enum class WeaponType {
     Hand,
-    Axe
+    Axe,
+    Mustard
 };
 
 class Weapon : public Entity, public Cooldownable, public PlayerAttachable {
@@ -18,9 +19,9 @@ class Weapon : public Entity, public Cooldownable, public PlayerAttachable {
 
     public:
     Weapon(WeaponType type, WorldCoordinates position);
-    ~Weapon();
 
     WeaponType type;
     int damageOnHit;
+    float attackRange;
     void update(float time);
 };

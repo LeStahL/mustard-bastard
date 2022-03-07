@@ -21,7 +21,7 @@ add_executable(mustard-bastard
     model/PauseMenuState.cpp
     model/Weapon.cpp
     model/Portal.cpp
-    model/Mustard.cpp
+    #model/Mustard.cpp
     model/PlayerAttachable.cpp
     model/Cooldownable.cpp
 

@@ -5,8 +5,10 @@
 Player::Player(std::string name, WorldCoordinates coords) :
     Entity(EntityType::Player, coords),
     name(name),
-    weapon(new Weapon()) {
-    warp_timer = 0.0f;
+    weapon(new Weapon(WeaponType::Hand, WorldCoordinates(0.0, 0.0, false))),
+    warp_timer(0.0f)
+{
+
 }
 
 std::string Player::getName()

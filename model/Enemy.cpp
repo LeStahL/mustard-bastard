@@ -50,7 +50,7 @@ void Enemy::doTargetUpdates(Model* model, float deltaT) {
     }
 }
 
-std::string Enemy::name()
+/*std::string Enemy::name()
 {
         switch (type)
         {
@@ -60,8 +60,8 @@ std::string Enemy::name()
                 case EntityType::ZombieAndCat:
                 return "ZombieAndCat";
         }
-}
+}*/
 
-void Enemy::update(float time)
+/*void Enemy::update(float time)
 {
-}
+}*/

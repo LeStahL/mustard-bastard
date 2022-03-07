@@ -1,6 +1,6 @@
 #include "Weapon.hpp"
 
-Weapon::Weapon(WeaponType type, WorldCoordinates position)
+Weapon::Weapon(WeaponType type,WorldCoordinates position)
     : Entity(EntityType::ZombieAndCat, position)
     , Cooldownable(cooldowns[type])
     , PlayerAttachable()
