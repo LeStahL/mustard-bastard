@@ -8,7 +8,8 @@ enum class EntityType {
     ZombieAndCat,
     IcebergAndFairy,
     Portal,
-    Medikit
+    Medikit,
+    Weapon
 };
 
 #include <string>

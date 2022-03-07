@@ -22,8 +22,6 @@ add_executable(mustard-bastard
     model/Weapon.cpp
     model/Portal.cpp
     #model/Mustard.cpp
-    model/PlayerAttachable.cpp
-    model/Cooldownable.cpp
 
     view/FloorView.cpp
     view/GameView.cpp
@@ -34,6 +32,7 @@ add_executable(mustard-bastard
 
     logic/GameLogic.cpp
     logic/PlayerLogic.cpp
+    logic/AttackLogic.cpp
 
     utility/Animation.cpp
     utility/MusicPlayer.cpp

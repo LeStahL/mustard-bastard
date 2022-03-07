@@ -6,6 +6,7 @@
 #include <Weapon.hpp>
 #include <GameLogicConst.h>
 #include <AttackState.hpp>
+#include <Cooldown.hpp>
 
 enum PlayerState {
     Standing,
@@ -19,11 +20,10 @@ private:
     std::string name;
 
 public:
-    Weapon *weapon;
     PlayerState state;
-    AttackState attack_state;
+    Weapon *weapon;   
     float move_z_cooldown = 0.0f;
-    float attack_cooldown = 0.0f;
+    Cooldown attackCooldown;
     float power = 1.0f;
     float health = .5f;
     long points = 0;

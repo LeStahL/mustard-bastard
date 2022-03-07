@@ -26,6 +26,9 @@ private:
     static Enemy* getZombie(WorldCoordinates coords);
     static Enemy* getIceberg(WorldCoordinates coords);
 
+    float getHealth() const { return health; }
+    void setHealth(const float health) { this->health = health; }
+
     //float getHealth() { return stats.health; }
     //float getArmor() { return stats.armor; }
 

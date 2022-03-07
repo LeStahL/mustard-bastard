@@ -1,19 +1,35 @@
-#include "Weapon.hpp"
+#include <Weapon.hpp>
 
-Weapon::Weapon(WeaponType type,WorldCoordinates position)
-    : Entity(EntityType::ZombieAndCat, position)
-    , Cooldownable(cooldowns[type])
-    , PlayerAttachable()
+Weapon::Weapon(
+        WeaponType type,
+        int damage, float attackRange,
+        float coolDown,
+        WorldCoordinates position) :
+    FloorThing(EntityType::Weapon, position),
+    type(type),
+    damage(damage),
+    attackRange(attackRange),
+    coolDown(coolDown)
 {
 
 }
 
-void Weapon::update(float time)
+Weapon *Weapon::getHand()
 {
-    Cooldownable::update(time);
+    return new Weapon(
+                WeaponType::Hand,
+                WEAPON_HAND_DAMAGE,
+                WEAPON_HAND_ATTACKRANGE,
+                WEAPON_HAND_COOLDOWN,
+                WorldCoordinates(0.0f, 0.0f, false));
 }
 
-std::map<WeaponType, float> Weapon::cooldowns = {
-    {WeaponType::Hand, 1},
-    {WeaponType::Axe, 2}
-};
+Weapon *Weapon::getAxe(WorldCoordinates position)
+{
+    return new Weapon(
+                WeaponType::Axe,
+                WEAPON_AXE_DAMAGE,
+                WEAPON_AXE_ATTACKRANGE,
+                WEAPON_AXE_COOLDOWN,
+                position);
+}

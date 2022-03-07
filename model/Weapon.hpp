@@ -1,11 +1,14 @@
 #pragma once
 
-#include "Entity.h"
-#include "PlayerAttachable.hpp"
-#include "Cooldownable.hpp"
+#include <FloorThing.hpp>
+#include <WorldCoordinates.h>
 
-#include <string>
-#include <map>
+constexpr int   WEAPON_HAND_DAMAGE = 5;
+constexpr float WEAPON_HAND_ATTACKRANGE = 30.0f;
+constexpr float WEAPON_HAND_COOLDOWN = 5.0f;
+constexpr int   WEAPON_AXE_DAMAGE = 20;
+constexpr float WEAPON_AXE_ATTACKRANGE = 15.0f;
+constexpr float WEAPON_AXE_COOLDOWN = 10.0f;
 
 enum class WeaponType {
     Hand,
@@ -13,15 +16,21 @@ enum class WeaponType {
     Mustard
 };
 
-class Weapon : public Entity, public Cooldownable, public PlayerAttachable {
-    private:
-    static std::map<WeaponType, float> cooldowns;
+class Weapon : public FloorThing {
+public:
+    const WeaponType type;
+    const int damage;
+    const float attackRange;
+    const float coolDown;
 
-    public:
-    Weapon(WeaponType type, WorldCoordinates position);
+private:
+    Weapon(WeaponType type,
+           int damage,
+           float attackRange,
+           float coolDown,
+           WorldCoordinates position);
 
-    WeaponType type;
-    int damageOnHit;
-    float attackRange;
-    void update(float time);
+public:
+    static Weapon *getHand();
+    static Weapon *getAxe(WorldCoordinates position);
 };

@@ -15,7 +15,8 @@
 static const EntityType AllEnemyTypes[] = {EntityType::ZombieAndCat, EntityType::IcebergAndFairy};
 
 GameLogic::GameLogic(Model* model) :
-        model(model) {
+    model(model)
+{
     srand(time(NULL));
 
     for (auto enemyType : AllEnemyTypes) {
@@ -30,8 +31,14 @@ void GameLogic::init()
     }
     playerLogic.clear();
 
+    for(AttackLogic *attackLogic : attackLogic) {
+        delete attackLogic;
+    }
+    attackLogic.clear();
+
     for (int p = 0; p < model->getNumberOfPlayers(); p++) {
         playerLogic.push_back(new PlayerLogic(model->getPlayer(p)));
+        attackLogic.push_back(new AttackLogic(model->getPlayer(p), model->getEnemies()));
     }
 }
 
@@ -51,13 +58,14 @@ void GameLogic::update(float timeElapsed) {
 
 void GameLogic::move_player(int player_number, int x_sign, bool retreat, int z_sign, bool attack) {
     auto pl = playerLogic[player_number];
+    auto al = attackLogic[player_number];
     if (pl->isLocked()) {
         return;
     }
     pl->move_x(x_sign, retreat);
     pl->move_z(z_sign);
     if (attack) {
-        pl->attack();
+        al->attack();
     }
 }
 
@@ -76,10 +84,8 @@ void GameLogic::updateEnemies(float timeElapsed) {
         enemy->doTargetUpdates(model, timeElapsed);
         enemy->doCoordUpdates(timeElapsed);
 
-        if (isEnemyTooFarAway(enemy))
-        {
+        if (isEnemyTooFarAway(enemy) || enemy->getHealth() < 1e-3f)
             killEnemy(enemy);
-        }
     }
 }
 
