@@ -9,15 +9,18 @@
 #include <FloorThing.hpp>
 #include <GameLogicConst.h>
 #include <Medikit.hpp>
+#include <NeedsEnemyNotifications.hpp>
 
 class GameLogic {
     private:
     Model* model;
+    NeedsEnemyNotifications *needsEnemyNotifications;
+
     std::vector<PlayerLogic*> playerLogic;
     std::map<EntityType, float> enemySpawnCooldown;
 
     public:
-    GameLogic(Model* model);
+    GameLogic(Model* model, NeedsEnemyNotifications* needsEnemyNotifications);
     void init();
     void update(float elapsedTime);
     void move_player(int player, int x_sign, bool retreat, int z_sign, bool attack);

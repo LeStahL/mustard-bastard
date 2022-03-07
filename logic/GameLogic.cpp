@@ -13,8 +13,9 @@
 
 static const EntityType AllEnemyTypes[] = {EntityType::ZombieAndCat, EntityType::IcebergAndFairy};
 
-GameLogic::GameLogic(Model* model) :
-        model(model) {
+GameLogic::GameLogic(Model* model, NeedsEnemyNotifications* needsEnemyNotifications) :
+        model(model),
+        needsEnemyNotifications(needsEnemyNotifications) {
     srand(time(NULL));
 
     for (auto enemyType : AllEnemyTypes) {
@@ -71,7 +72,7 @@ void GameLogic::updateEnemies(float timeElapsed) {
         }
     }
 
-    for (auto enemy : model->getEnemies()) {
+    for (Enemy *enemy : model->getEnemies()) {
         enemy->doTargetUpdates(model, timeElapsed);
         enemy->doCoordUpdates(timeElapsed);
 
@@ -85,6 +86,9 @@ void GameLogic::updateEnemies(float timeElapsed) {
 void GameLogic::spawnEnemy(EntityType type, float elapsed) {
     float spawn_distance = 100;
     auto position = WorldCoordinates::RandomPositionOutside(spawn_distance);
+
+    // position = WorldCoordinates(model->getEnemies().size() * 200.0f, 0, true); // debug
+
     Enemy* enemy;
     switch (type) {
         case EntityType::ZombieAndCat:
@@ -99,6 +103,8 @@ void GameLogic::spawnEnemy(EntityType type, float elapsed) {
     float far_other_side = position.x < 0 ? 2 * WIDTH : -WIDTH;
     enemy->targetFixedX(far_other_side);
     model->getEnemies().push_back(enemy);
+
+    needsEnemyNotifications->enemyAdded();
 }
 
 bool GameLogic::isEnemyTooFarAway(Enemy* enemy) {
@@ -108,7 +114,8 @@ bool GameLogic::isEnemyTooFarAway(Enemy* enemy) {
 void GameLogic::killEnemy(Enemy* enemy) {
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
         if((*it)->id == enemy->id) {
-            model->getEnemies().erase(it);
+            needsEnemyNotifications->enemyRemoved(it - model->getEnemies().begin());
+            model->getEnemies().erase(it);          
             break;
         }
     }

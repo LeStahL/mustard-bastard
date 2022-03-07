@@ -12,5 +12,6 @@ class Animation
     Animation(sf::Sprite *sprite, double delay);
     void addFrame(int left, int top, int width, int height);
     void update(double elapsedTime);
+    void update(double elapsedTime, double phase);
     void setFrameDelay(double delay);
 };

@@ -7,7 +7,7 @@ GameController::GameController(sf::RenderWindow *window, Application *applicatio
     gameView(window, &model),
     headsUpDisplayView(window),
     gameInputRouter(gameLogic, this),
-    gameLogic(&model),
+    gameLogic(&model, &gameView),
     pauseMenuView(window, &pauseMenuState),
     pauseMenuInputRouter(&pauseMenuState, this)
 {

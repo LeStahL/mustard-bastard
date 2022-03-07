@@ -21,6 +21,11 @@ void Animation::update(double elapsedTime)
     _sprite->setTextureRect(_frameRectangles.at(int(elapsedTime/_delay) % _frameRectangles.size()));
 }
 
+void Animation::update(double elapsedTime, double phase)
+{
+    _sprite->setTextureRect(_frameRectangles.at(int(elapsedTime/_delay + phase) % _frameRectangles.size()));
+}
+
 void Animation::setFrameDelay(double delay)
 {
     _delay = delay;

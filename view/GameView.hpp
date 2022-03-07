@@ -1,18 +1,21 @@
 #pragma once
 
 #include <vector>
-#include <Model.h>
-#include <Animation.hpp>
-#include <FloorView.h>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include "View.hpp"
+
+#include <View.hpp>
+#include <NeedsEnemyNotifications.hpp>
+
+#include <Model.h>
+#include <Animation.hpp>
+#include <FloorView.h>
 #include <Portal.hpp>
 #include <Medikit.hpp>
 
-class GameView : public View {
+class GameView : public View, public NeedsEnemyNotifications {
     private:
     std::vector<sf::Texture> _textures;
     std::vector<sf::Sprite> _sprites;
@@ -23,6 +26,8 @@ class GameView : public View {
     Model *model;
     FloorView floorView;;
 
+    std::vector<float> enemyLocalPhase;
+
     void adjustSprite(int spriteId, Entity* entity, bool upworld);
 
     public:
@@ -31,6 +36,10 @@ class GameView : public View {
     bool draw(double time) override;
     bool setUp() override;
     bool tearDown() override;
+
+    // NeedsEnemyNotifications implemetations
+    void enemyAdded() override;
+    void enemyRemoved(int index) override;
 
     private:
     sf::Vector2f convertWorldCoordinates(WorldCoordinates coords);

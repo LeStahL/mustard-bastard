@@ -7,6 +7,7 @@
 #include <GameLogicConst.h>
 #include <const.h>
 #include <cmath>
+#include <random>
 
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing, Model::GraphicsId::player_standing },
@@ -85,7 +86,10 @@ bool GameView::draw(double time) {
             }
         }
 
-        for(Enemy* enemy : model->getEnemies()) {
+        //for(Enemy* enemy : model->getEnemies()) {
+        for(std::vector<Enemy*>::iterator it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
+            Enemy *enemy = *it;
+            int enemyIndex = it - model->getEnemies().begin();
 
             if(enemy->coords.z == layer) {
                 int id1, id2 = 0;
@@ -103,15 +107,15 @@ bool GameView::draw(double time) {
                         continue;
                 }
 
-                auto update = [=](int index, bool otherWorld) {
-                    _animations.at(index).setFrameDelay(100. / enemy->coords.x_speed); // see Issue #1
-                    _animations.at(index).update(time);
+                auto update = [=](int index, bool otherWorld, int enemyIndex) {
+                    //_animations.at(index).setFrameDelay(100. / enemy->coords.x_speed); // see Issue #1
+                    _animations.at(index).update(time, enemyLocalPhase.at(enemyIndex));
                     adjustSprite(index, enemy, otherWorld);
                     _renderWindow->draw(_sprites.at(index));
                 };
 
-                update(id1, false);
-                update(id2, true);
+                update(id1, false, enemyIndex);
+                update(id2, true, enemyIndex);
             }
         }
 
@@ -173,28 +177,42 @@ bool GameView::setUp() {
     _sprites.reserve(RESERVE_SPACE);
     _animations.reserve(RESERVE_SPACE);
 
-    loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT);
-    loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT);
-    loadAnimation("assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT);
-    loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT);
-    loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
-    loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
-    loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
-    loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT);
-    loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT);
+    bool result = true;
 
-    return true;
+    result &= loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT);
+    result &= loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT);
+    result &= loadAnimation("assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT);
+    result &= loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT);
+    result &= loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
+    result &= loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
+    result &= loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
+    result &= loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT);
+    result &= loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT);
+
+    return result;
 }
 
 bool GameView::tearDown() {
     return true;
 }
 
+void GameView::enemyAdded()
+{
+    float localPhase = float((random() % 100)/100.0f);
+    enemyLocalPhase.push_back(localPhase);
+}
+
+void GameView::enemyRemoved(int index)
+{
+    std::vector<float>::iterator it = enemyLocalPhase.begin() + index;
+    enemyLocalPhase.erase(it);
+}
+
 bool GameView::loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount) {
     _textures.push_back(sf::Texture());
-    if(!_textures.back().loadFromFile(filename)) {
+    if(bool result = !_textures.back().loadFromFile(filename)) {
         std::cout << "Failed to load texture: " << filename << std::endl;
-        return false;
+        return result;
     }
 
     auto sprite = sf::Sprite(_textures.back());
