@@ -22,6 +22,7 @@ public:
     const int damage;
     const float attackRange;
     const float coolDown;
+    bool pickedUp;
 
 private:
     Weapon(WeaponType type,
@@ -33,4 +34,6 @@ private:
 public:
     static Weapon *getHand();
     static Weapon *getAxe(WorldCoordinates position);
+
+    float width() const;
 };

@@ -3,7 +3,7 @@
 #include <SFML/Window.hpp>
 #include <Application.hpp>
 
-constexpr bool QM_QUICKDEVEL = false;
+constexpr bool QM_QUICKDEVEL = true;
 
 int main()
 {

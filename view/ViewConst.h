@@ -1,5 +1,9 @@
+#pragma once
+
 // drawing constants
 constexpr float MEDIKIT_PARACHUTE_OFFSET = -29.0f;
+constexpr float WEAPON_AXE_HAND_X_OFFSET = 43.0f;
+constexpr float WEAPON_AXE_HAND_Y_OFFSET = -80.0f;
 
 // animation constants
 constexpr unsigned int BASTARD_STANDING_PIXEL_WIDTH = 96;
@@ -37,3 +41,7 @@ constexpr unsigned int MEDIKIT_FRAME_COUNT = 1;
 constexpr unsigned int PARACHUTE_PIXEL_WIDTH = 32;
 constexpr unsigned int PARACHUTE_PIXEL_HEIGHT = 32;
 constexpr unsigned int PARACHUTE_FRAME_COUNT = 1;
+
+constexpr unsigned int AXE_PIXEL_WIDTH = 80;
+constexpr unsigned int AXE_PIXEL_HEIGHT = 80;
+constexpr unsigned int AXE_FRAME_COUNT = 1;

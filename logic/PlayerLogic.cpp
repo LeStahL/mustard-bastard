@@ -106,6 +106,12 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
             healUp(MEDIKIT_HP);
             medikit->wasUsed = true;
         }
+    } else if(Weapon *weapon = dynamic_cast<Weapon*>(entity)) {
+        if(fabs(player->coords.x - weapon->coords.x) <= weapon->width()*0.5f && player->weapon->type == WeaponType::Hand) {
+            delete player->weapon;
+            player->weapon = weapon;
+            weapon->pickedUp = true;
+        }
     } else {
         bool playerCollidesFromLeft = playerL < entityL && playerR >= entityL;
         bool playerCollidesFromRight = playerR > entityR && playerL <= entityR;

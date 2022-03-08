@@ -159,26 +159,28 @@ void GameLogic::updateFloorThings(float elapsedTime)
 {
     maybeSpawnFloorThing(EntityType::Portal);
     maybeSpawnFloorThing(EntityType::Medikit);
+    maybeSpawnFloorThing(EntityType::Weapon);
 
     std::vector<FloorThing*> &modelList = model->getFloorThings();
     for (auto it = modelList.begin(); it != modelList.end();) {
         FloorThing *floory = *it;
 
-        Portal *portal = dynamic_cast<Portal*>(floory);
-        if (portal != nullptr) {
+        if (Portal *portal = dynamic_cast<Portal*>(floory)) {
             if (!updatePortal(portal, elapsedTime)) {
                 it = modelList.erase(it);
                 continue;
             }
-        }
-
-        Medikit *medikit = dynamic_cast<Medikit*>(floory);
-        if (medikit != nullptr) {
+        } else if (Medikit *medikit = dynamic_cast<Medikit*>(floory)) {
             if (medikit->wasUsed) {
                 it = modelList.erase(it);
                 continue;
             } else {
                 updateMedikit(medikit, elapsedTime);
+            }
+        } else if(Weapon *weapon = dynamic_cast<Weapon*>(floory)) {
+            if(weapon->pickedUp) {
+                it = modelList.erase(it);
+                continue;
             }
         }
 
@@ -206,6 +208,9 @@ void GameLogic::maybeSpawnFloorThing(EntityType type) {
         coords.y = HEIGHT*0.5 + MEDIKIT_SPAWN_HEIGHT_OFFSET;
         coords.y_speed = MEDIKIT_FALL_SPEED_PX_PER_S;
         model->getFloorThings().push_back(new Medikit(coords));
+        break;
+    case EntityType::Weapon:
+        model->getFloorThings().push_back(Weapon::getAxe(coords));
         break;
     default:
         break;

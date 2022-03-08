@@ -34,6 +34,8 @@ constexpr float MEDIKIT_FALL_SPEED_PX_PER_S = -20.0f;
 constexpr float MEDIKIT_INITIAL_X_SPEED_PX_PER_S = 50.0f;
 constexpr float MEDIKIT_X_FREQUENCY_PER_S = 10.0f;
 
+constexpr float WEAPON_SPAWN_MODULO = 2000;
+
 const std::map<EntityType, Interval> INIT_COOLDOWN = {
     { EntityType::ZombieAndCat, Interval(2, 10)},
     { EntityType::IcebergAndFairy, Interval(120, 210)}
@@ -52,5 +54,6 @@ const std::map<EntityType, EnemyStats> INIT_ENEMY_STATS = {
 
 const std::map<EntityType, int> FLOOR_THING_SPAWN_MODULO = {
     { EntityType::Portal, PORTAL_SPAWN_MODULO },
-    { EntityType::Medikit, MEDIKIT_SPAWN_MODULO}
+    { EntityType::Medikit, MEDIKIT_SPAWN_MODULO},
+    { EntityType::Weapon, WEAPON_SPAWN_MODULO}
 };

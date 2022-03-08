@@ -36,5 +36,6 @@ class GameView : public View {
     sf::Vector2f convertWorldCoordinates(WorldCoordinates coords);
     void drawPortal(Portal *portal, double time);
     void drawMedikit(Medikit *medikit, double time);
+    void drawWeapon(Weapon *weapon, double time);
     bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
 };

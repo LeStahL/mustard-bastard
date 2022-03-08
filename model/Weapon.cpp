@@ -1,4 +1,5 @@
 #include <Weapon.hpp>
+#include <ViewConst.h>
 
 Weapon::Weapon(
         WeaponType type,
@@ -9,7 +10,8 @@ Weapon::Weapon(
     type(type),
     damage(damage),
     attackRange(attackRange),
-    coolDown(coolDown)
+    coolDown(coolDown),
+    pickedUp(false)
 {
 
 }
@@ -32,4 +34,9 @@ Weapon *Weapon::getAxe(WorldCoordinates position)
                 WEAPON_AXE_ATTACKRANGE,
                 WEAPON_AXE_COOLDOWN,
                 position);
+}
+
+float Weapon::width() const
+{
+    return static_cast<float>(AXE_PIXEL_WIDTH);
 }

@@ -19,6 +19,7 @@ public:
     void endWarp();
 
     void healUp(float healthPoints);
+    void pickUpWeapon(Weapon *weapon);
 
     void handleCollisions(Entity *entity, float elapsedTime);
 
