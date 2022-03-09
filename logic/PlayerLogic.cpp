@@ -22,7 +22,9 @@ void PlayerLogic::update(float elapsed) {
     player->coords.x = std::clamp(player->coords.x, PLAYER_X_BORDER_MARGIN, WIDTH - PLAYER_X_BORDER_MARGIN);
     player->move_z_cooldown = std::max(player->move_z_cooldown - elapsed, 0.f);
     player->attackCooldown.coolDownBy(elapsed);
-    if (player->state == PlayerState::Attacking && player->attackCooldown.cooledDown()) {
+    player->attackDuration.coolDownBy(elapsed);
+
+    if (player->state == PlayerState::Attacking && player->attackDuration.cooledDown()) {
         player->state = PlayerState::Standing;
     }
 

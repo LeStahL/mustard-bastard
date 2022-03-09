@@ -24,6 +24,8 @@ public:
     Weapon *weapon;   
     float move_z_cooldown = 0.0f;
     Cooldown attackCooldown;
+    Cooldown attackDuration;
+
     float power = 1.0f;
     float health = .5f;
     long points = 0;

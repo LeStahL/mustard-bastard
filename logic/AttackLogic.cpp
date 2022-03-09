@@ -15,6 +15,7 @@ void AttackLogic::attack()
 
     player->state = PlayerState::Attacking;
     player->attackCooldown.setCooldown(player->weapon->coolDown);
+    player->attackDuration.setCooldown(PLAYER_ATTACK_DURATION);
     player->power *= PLAYER_ATTACK_POWER_REDUCTION_FACTOR;
 
     std::vector<Enemy*> enemiesInAttackRange = getEnemiesInAttackRange();
