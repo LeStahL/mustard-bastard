@@ -6,6 +6,8 @@ constexpr float WEAPON_AXE_HAND_X_OFFSET = 43.0f;
 constexpr float WEAPON_AXE_HAND_Y_OFFSET = -80.0f;
 
 // animation constants
+constexpr float DEFAULT_FRAME_DELAY = 0.1f;
+
 constexpr unsigned int BASTARD_STANDING_PIXEL_WIDTH = 96;
 constexpr unsigned int BASTARD_STANDING_PIXEL_HEIGHT = 160;
 constexpr unsigned int BASTARD_STANDING_FRAME_COUNT = 2;
@@ -17,6 +19,7 @@ constexpr unsigned int BASTARD_WALKING_FRAME_COUNT = 4;
 constexpr unsigned int BASTARD_ATTACK_PIXEL_WIDTH = 96;
 constexpr unsigned int BASTARD_ATTACK_PIXEL_HEIGHT = 160;
 constexpr unsigned int BASTARD_ATTACK_FRAME_COUNT = 2;
+constexpr float        BASTARD_ATTACK_FRAME_DELAY = 0.25f;
 
 constexpr unsigned int ZOMBIE_PIXEL_WIDTH = 150;
 constexpr unsigned int ZOMBIE_PIXEL_HEIGHT = 210;

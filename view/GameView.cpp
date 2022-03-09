@@ -125,17 +125,21 @@ bool GameView::draw(double time) {
 
         for(int p = 0; p < model->getNumberOfPlayers(); p++) {
             auto player = model->getPlayer(p);
-            if(player->coords.z == layer) {
+            if(player->coords.z == layer) { 
                 if(player->state == PlayerState::Attacking && player->weapon->type != WeaponType::Hand) {
-                    Model::GraphicsId weaponId = weaponTypeToSprite[player->weapon->type];
+                    weaponUp = static_cast<bool>(int(time/0.25) % 2);
 
-                    adjustSprite(weaponId, player, false);
-                    int x_sign = player->coords.facing_left ? -1 : 1;
-                    int y_sign = player->coords.upWorld ? 1 : -1;
-                    sf::Vector2f offset(WEAPON_AXE_HAND_X_OFFSET*x_sign, WEAPON_AXE_HAND_Y_OFFSET*y_sign);
-                    _sprites.at(weaponId).move(offset);
+                    if(weaponUp) {
+                        Model::GraphicsId weaponId = weaponTypeToSprite[player->weapon->type];
 
-                    _renderWindow->draw(_sprites.at(weaponId));
+                        adjustSprite(weaponId, player, false);
+                        int x_sign = player->coords.facing_left ? -1 : 1;
+                        int y_sign = player->coords.upWorld ? 1 : -1;
+                        sf::Vector2f offset(WEAPON_AXE_HAND_X_OFFSET*x_sign, WEAPON_AXE_HAND_Y_OFFSET*y_sign);
+                        _sprites.at(weaponId).move(offset);
+
+                        _renderWindow->draw(_sprites.at(weaponId));
+                    }
                 }
 
                 int id = playerStateToSprite[player->state];
@@ -198,19 +202,16 @@ bool GameView::setUp() {
     _sprites.reserve(RESERVE_SPACE);
     _animations.reserve(RESERVE_SPACE);
 
-    loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT);
-    loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT);
-    loadAnimation("assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT);
-
-    _animations.back().setFrameDelay(0.25); // TODO: include into loadAnimation funciton call
-
-    loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT);
-    loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
-    loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
-    loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
-    loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT);
-    loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT);
-    loadAnimation("assets/beil.png", AXE_PIXEL_WIDTH, AXE_PIXEL_HEIGHT, AXE_FRAME_COUNT);
+    loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT, BASTARD_ATTACK_FRAME_DELAY);
+    loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    loadAnimation("assets/beil.png", AXE_PIXEL_WIDTH, AXE_PIXEL_HEIGHT, AXE_FRAME_COUNT, DEFAULT_FRAME_DELAY);
 
     return true;
 }
@@ -219,7 +220,7 @@ bool GameView::tearDown() {
     return true;
 }
 
-bool GameView::loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount) {
+bool GameView::loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount, const float frameDelay) {
     _textures.push_back(sf::Texture());
     if(!_textures.back().loadFromFile(filename)) {
         std::cout << "Failed to load texture: " << filename << std::endl;
@@ -230,7 +231,7 @@ bool GameView::loadAnimation(const std::string &filename, const unsigned int spr
     sprite.setOrigin(sf::Vector2f(0.5 * spriteWidthPx, spriteHeightPx));
     _sprites.push_back(sprite);
 
-    _animations.push_back(Animation(&_sprites.back(), .1));
+    _animations.push_back(Animation(&_sprites.back(), frameDelay));
     for(int i=0; i<frameCount; ++i)
         _animations.back().addFrame(spriteWidthPx*i, 0, spriteWidthPx, spriteHeightPx);
 

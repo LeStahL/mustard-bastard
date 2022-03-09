@@ -22,6 +22,8 @@ class GameView : public View {
     sf::RenderWindow *_renderWindow;
     Model *model;
     FloorView floorView;;
+    float attackTime;
+    bool weaponUp;
 
     void adjustSprite(int spriteId, Entity* entity, bool upworld);
 
@@ -37,5 +39,5 @@ class GameView : public View {
     void drawPortal(Portal *portal, double time);
     void drawMedikit(Medikit *medikit, double time);
     void drawWeapon(Weapon *weapon, double time);
-    bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
+    bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount, const float frameDelay);
 };
