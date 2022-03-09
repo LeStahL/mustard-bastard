@@ -39,7 +39,13 @@ std::vector<Enemy*> AttackLogic::getEnemiesInAttackRange() const
     std::vector<Enemy*> enemiesInAttackRange;
 
     for(Enemy *enemy : enemies) {
-        enemiesInAttackRange.push_back(enemy);
+        float totalAttackRange = player->HALFWIDTH + player->weapon->attackRange;
+        float directionSign = player->coords.facing_left ? -1.0f : 1.0f;
+        float attackXCoordinate = player->coords.x + directionSign*totalAttackRange;
+        auto [enemyL, enemyR] = enemy->getCollisionXInterval();
+
+        if(enemyL < attackXCoordinate && enemyR > attackXCoordinate)
+            enemiesInAttackRange.push_back(enemy);
     }
 
     return enemiesInAttackRange;

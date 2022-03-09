@@ -7,6 +7,7 @@
 #include <GameLogicConst.h>
 #include <AttackState.hpp>
 #include <Cooldown.hpp>
+#include <ViewConst.h>
 
 enum PlayerState {
     Standing,
@@ -31,7 +32,7 @@ public:
     long points = 0;
     float mustardness = 0.;
 
-    const float HALFWIDTH = 80; // <-- put that... elsewhere? it's a bit arbitrary yet.
+    const float HALFWIDTH = BASTARD_STANDING_PIXEL_WIDTH*0.5f; // <-- put that... elsewhere? it's a bit arbitrary yet.
 
     float warp_timer; // --> gonna be a Cooldownable / Timerthingy / whatever
 

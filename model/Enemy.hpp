@@ -16,11 +16,7 @@ private:
     EnemyTarget target;
     float missing_target_player_for_seconds = 0;
 
-
-    Enemy(EntityType type, WorldCoordinates coords) :
-            Entity(type, coords) {
-        //stats = INIT_ENEMY_STATS.at(type);
-    }
+    Enemy(EntityType type, WorldCoordinates coords);
 
     public:
     static Enemy* getZombie(WorldCoordinates coords);
@@ -36,4 +32,6 @@ private:
     void targetFixedX(float x);
     void lose_target();
     void doTargetUpdates(Model* model, float deltaT);
+
+    std::pair<float, float> getCollisionXInterval() override;
 };

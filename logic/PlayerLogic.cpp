@@ -121,12 +121,12 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
         if (playerCollidesFromLeft) {
             player->coords.x += entityL - playerR - 1;
             // TODO: QM: what to do with mass? they should obviously have one.
-            player->coords.applyAcceleration(-2000, 2000, true);
-            entity->coords.applyAcceleration(500, 500, true);
+            player->coords.applyAcceleration(0, 0, true);
+            entity->coords.applyAcceleration(0, 0, true);
         } else if (playerCollidesFromRight) {
             player->coords.x += entityR - playerL + 1;
-            player->coords.applyAcceleration(200, 200, true);
-            entity->coords.applyAcceleration(-50, 50, true);
+            player->coords.applyAcceleration(0, 0, true);
+            entity->coords.applyAcceleration(0, 0, true);
         }
     }
 }
