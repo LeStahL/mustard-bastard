@@ -17,7 +17,8 @@ class Model {
         iceberg,
         fairy,
         medikit,
-        parachute
+        parachute,
+        axe
     };
 
     enum class GameState {

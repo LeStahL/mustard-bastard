@@ -25,6 +25,8 @@ class GameView : public View, public NeedsEnemyNotifications {
     sf::RenderWindow *_renderWindow;
     Model *model;
     FloorView floorView;;
+    float attackTime;
+    bool weaponUp;
 
     std::vector<float> enemyLocalPhase;
 
@@ -45,5 +47,6 @@ class GameView : public View, public NeedsEnemyNotifications {
     sf::Vector2f convertWorldCoordinates(WorldCoordinates coords);
     void drawPortal(Portal *portal, double time);
     void drawMedikit(Medikit *medikit, double time);
-    bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frame_count);
+    void drawWeapon(Weapon *weapon, double time);
+    bool loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount, const float frameDelay);
 };

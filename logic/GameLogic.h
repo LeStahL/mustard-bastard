@@ -5,7 +5,7 @@
 #include <map>
 #include <Model.h>
 #include <PlayerLogic.h>
-#include <AttackState.hpp>
+#include <AttackLogic.hpp>
 #include <FloorThing.hpp>
 #include <GameLogicConst.h>
 #include <Medikit.hpp>
@@ -17,6 +17,7 @@ class GameLogic {
     NeedsEnemyNotifications *needsEnemyNotifications;
 
     std::vector<PlayerLogic*> playerLogic;
+    std::vector<AttackLogic*> attackLogic;
     std::map<EntityType, float> enemySpawnCooldown;
 
     public:

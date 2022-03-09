@@ -1,10 +1,13 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
+
+#include <string>
 
 #include <Entity.h>
-#include <AttackState.hpp>
+#include <Weapon.hpp>
 #include <GameLogicConst.h>
-#include <string>
+#include <AttackState.hpp>
+#include <Cooldown.hpp>
+#include <ViewConst.h>
 
 enum PlayerState {
     Standing,
@@ -14,16 +17,22 @@ enum PlayerState {
 };
 
 class Player : public Entity {
-    public:
+private:
+    std::string name;
+
+public:
     PlayerState state;
+    Weapon *weapon;   
     float move_z_cooldown = 0.0f;
-    AttackState attack_state;
+    Cooldown attackCooldown;
+    Cooldown attackDuration;
+
     float power = 1.0f;
     float health = .5f;
     long points = 0;
-    std::string name;
+    float mustardness = 0.;
 
-    const float HALFWIDTH = 80; // <-- put that... elsewhere? it's a bit arbitrary yet.
+    const float HALFWIDTH = BASTARD_STANDING_PIXEL_WIDTH*0.5f; // <-- put that... elsewhere? it's a bit arbitrary yet.
 
     float warp_timer; // --> gonna be a Cooldownable / Timerthingy / whatever
 
@@ -37,6 +46,7 @@ class Player : public Entity {
 
     void lock() { is_locked = true; }
     void unlock() { is_locked = false; }
-};
 
-#endif /* PLAYER_H */
+    std::string getName();
+
+};

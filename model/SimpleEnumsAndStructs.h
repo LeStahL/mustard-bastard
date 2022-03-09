@@ -23,9 +23,3 @@ struct EnemyTarget {
     static EnemyTarget NoTarget() { return EnemyTarget(); }
     bool isPlayerTarget() { return player_number > -1; }
 };
-
-enum class Weapon {
-    Hand,
-    Axe,
-    Mustard
-};

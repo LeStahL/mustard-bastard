@@ -28,7 +28,7 @@ void HeadsUpDisplayView::drawPlayerHUD(Player *player, HUDSide where)
     // Player name
     sf::Text nametext;
     nametext.setFont(_font);
-    nametext.setString(player->name);
+    nametext.setString(player->getName());
     nametext.setCharacterSize(24);
     nametext.setFillColor(sf::Color::White);
     nametext.setPosition(sf::Vector2f(20+xdelta,GAME_HEIGHT));

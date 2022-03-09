@@ -9,11 +9,17 @@
 #include <cmath>
 #include <random>
 
+#include "Portal.hpp"
+
 std::map<int, int> playerStateToSprite = {
     { PlayerState::Standing, Model::GraphicsId::player_standing },
     { PlayerState::Walking, Model::GraphicsId::player_walking },
     { PlayerState::Attacking, Model::GraphicsId::player_attack },
     { PlayerState::Warping, Model::GraphicsId::player_standing }
+};
+
+std::map<WeaponType, Model::GraphicsId> weaponTypeToSprite = {
+    { WeaponType::Axe, Model::GraphicsId::axe }
 };
 
 GameView::GameView(sf::RenderWindow *renderWindow, Model *model) :
@@ -81,6 +87,8 @@ bool GameView::draw(double time) {
                 case EntityType::Medikit:
                     drawMedikit(dynamic_cast<Medikit*>(floorThing), time);
                     break;
+                case EntityType::Weapon:
+                    drawWeapon(dynamic_cast<Weapon*>(floorThing), time);
                 default:
                 continue;
             }
@@ -121,7 +129,23 @@ bool GameView::draw(double time) {
 
         for(int p = 0; p < model->getNumberOfPlayers(); p++) {
             auto player = model->getPlayer(p);
-            if(player->coords.z == layer) {
+            if(player->coords.z == layer) { 
+                if(player->state == PlayerState::Attacking && player->weapon->type != WeaponType::Hand) {
+                    weaponUp = static_cast<bool>(int(time/0.25) % 2);
+
+                    if(weaponUp) {
+                        Model::GraphicsId weaponId = weaponTypeToSprite[player->weapon->type];
+
+                        adjustSprite(weaponId, player, false);
+                        int x_sign = player->coords.facing_left ? -1 : 1;
+                        int y_sign = player->coords.upWorld ? 1 : -1;
+                        sf::Vector2f offset(WEAPON_AXE_HAND_X_OFFSET*x_sign, WEAPON_AXE_HAND_Y_OFFSET*y_sign);
+                        _sprites.at(weaponId).move(offset);
+
+                        _renderWindow->draw(_sprites.at(weaponId));
+                    }
+                }
+
                 int id = playerStateToSprite[player->state];
                 _animations.at(id).update(time);
                 adjustSprite(id, player, false); // TODO: get right
@@ -167,6 +191,11 @@ void GameView::drawMedikit(Medikit *medikit, double time) {
     }
 }
 
+void GameView::drawWeapon(Weapon *weapon, double time) {
+    adjustSprite(Model::GraphicsId::axe, weapon, false);
+    _renderWindow->draw(_sprites.at(Model::GraphicsId::axe));
+}
+
 #pragma warning( disable : 4834 )
 
 bool GameView::setUp() {
@@ -178,16 +207,16 @@ bool GameView::setUp() {
     _animations.reserve(RESERVE_SPACE);
 
     bool result = true;
-
-    result &= loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT);
-    result &= loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT);
-    result &= loadAnimation("assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT);
-    result &= loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT);
-    result &= loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT);
-    result &= loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT);
-    result &= loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT);
-    result &= loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT);
-    result &= loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT);
+    result &= loadAnimation("assets/bastard_standing.png", BASTARD_STANDING_PIXEL_WIDTH, BASTARD_STANDING_PIXEL_HEIGHT, BASTARD_STANDING_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/bastard_walking.png", BASTARD_WALKING_PIXEL_WIDTH, BASTARD_WALKING_PIXEL_HEIGHT, BASTARD_WALKING_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/bastard_attack.png", BASTARD_ATTACK_PIXEL_WIDTH, BASTARD_ATTACK_PIXEL_HEIGHT, BASTARD_ATTACK_FRAME_COUNT, BASTARD_ATTACK_FRAME_DELAY);
+    result &= loadAnimation("assets/Zombie_01.png", ZOMBIE_PIXEL_WIDTH, ZOMBIE_PIXEL_HEIGHT, ZOMBIE_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/katze_01_small.png", CAT_PIXEL_WIDTH, CAT_PIXEL_HEIGHT, CAT_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/Eisberg_01.png", ICEBERG_PIXEL_WIDTH, ICEBERG_PIXEL_HEIGHT, ICEBERG_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/Fee_01.png", FAIRY_PIXEL_WIDTH, FAIRY_PIXEL_HEIGHT, FAIRY_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/medikit.png", MEDIKIT_PIXEL_WIDTH, MEDIKIT_PIXEL_HEIGHT, MEDIKIT_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/parachute.png", PARACHUTE_PIXEL_WIDTH, PARACHUTE_PIXEL_HEIGHT, PARACHUTE_FRAME_COUNT, DEFAULT_FRAME_DELAY);
+    result &= loadAnimation("assets/beil.png", AXE_PIXEL_WIDTH, AXE_PIXEL_HEIGHT, AXE_FRAME_COUNT, DEFAULT_FRAME_DELAY);
 
     return result;
 }
@@ -208,7 +237,7 @@ void GameView::enemyRemoved(int index)
     enemyLocalPhase.erase(it);
 }
 
-bool GameView::loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount) {
+bool GameView::loadAnimation(const std::string &filename, const unsigned int spriteWidthPx, const unsigned int spriteHeightPx, const int frameCount, const float frameDelay) {
     _textures.push_back(sf::Texture());
     if(bool result = !_textures.back().loadFromFile(filename)) {
         std::cout << "Failed to load texture: " << filename << std::endl;
@@ -219,7 +248,7 @@ bool GameView::loadAnimation(const std::string &filename, const unsigned int spr
     sprite.setOrigin(sf::Vector2f(0.5 * spriteWidthPx, spriteHeightPx));
     _sprites.push_back(sprite);
 
-    _animations.push_back(Animation(&_sprites.back(), .1));
+    _animations.push_back(Animation(&_sprites.back(), frameDelay));
     for(int i=0; i<frameCount; ++i)
         _animations.back().addFrame(spriteWidthPx*i, 0, spriteWidthPx, spriteHeightPx);
 

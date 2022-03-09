@@ -2,6 +2,14 @@
 #include <Enemy.hpp>
 #include <helpers.h>
 #include <Model.h>
+#include <ViewConst.h>
+
+Enemy::Enemy(EntityType type, WorldCoordinates coords) :
+    Entity(type, coords),
+    health(10.0f)
+{
+    //stats = INIT_ENEMY_STATS.at(type);
+}
 
 Enemy* Enemy::getZombie(WorldCoordinates position) {
     return new Enemy(EntityType::ZombieAndCat, position);
@@ -47,5 +55,15 @@ void Enemy::doTargetUpdates(Model* model, float deltaT) {
     // ... or a fixed X coordinate.
     } else {
         coords.x_acc = sgn(target.fixed_x) * ACCELERATION_TOWARDS_FIXED_X;
+    }
+}
+
+std::pair<float, float> Enemy::getCollisionXInterval()
+{
+    switch (type) {
+        case EntityType::ZombieAndCat:
+            return std::pair<float, float>(coords.x-ZOMBIE_PIXEL_WIDTH*0.5f, coords.x+ZOMBIE_PIXEL_WIDTH*0.5f);
+        default:
+            return Entity::getCollisionXInterval();
     }
 }

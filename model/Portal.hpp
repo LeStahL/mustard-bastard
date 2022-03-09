@@ -11,23 +11,11 @@ class Portal : public FloorThing {
     float lifetime = 0;
     bool used = false;
 
-    Portal(WorldCoordinates position) : FloorThing(EntityType::Portal, position) {
-    };
+    public:
+    Portal(WorldCoordinates position);
+    float getHalfWidth();
+    void shutDown();
 
-    float getHalfWidth() { return size * PORTAL_MAX_HALFWIDTH; }
-
-    std::pair<float, float> getCollisionXInterval() override {
-        float halfWidth = getHalfWidth();
-        return std::pair(coords.x - halfWidth, coords.x + halfWidth);
-    }
-
-    bool canCollide() override {
-        return !spawning && lifetime > 0 && !used;
-    }
-
-    void shutDown() {
-        used = true;
-        spawning = false;
-        lifetime = 0;
-    }
+    std::pair<float, float> getCollisionXInterval() override;
+    bool canCollide() override;
 };

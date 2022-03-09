@@ -8,8 +8,11 @@ enum class EntityType {
     ZombieAndCat,
     IcebergAndFairy,
     Portal,
-    Medikit
+    Medikit,
+    Weapon
 };
+
+#include <string>
 
 class Entity {
     private:
@@ -34,6 +37,5 @@ class Entity {
         EntityType getType();
         virtual std::pair<float, float> getCollisionXInterval();
         virtual bool canCollide();
-
         void doCoordUpdates(float deltaT);
 };

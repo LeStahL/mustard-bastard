@@ -1,11 +1,20 @@
 #include <Player.h>
 #include <WorldCoordinates.h>
+#include "Weapon.hpp"
 
 Player::Player(std::string name, WorldCoordinates coords) :
-        Entity(EntityType::Player, coords), name(name) {
-    warp_timer = 0.0f;
-    state = PlayerState::Standing;
-    attack_state = AttackState();
+    Entity(EntityType::Player, coords),
+    name(name),
+    state(PlayerState::Standing),
+    weapon(Weapon::getHand()),
+    warp_timer(0.0f)
+{
+
+}
+
+std::string Player::getName()
+{
+    return name;
 }
 
 std::pair<float, float> Player::getCollisionXInterval() {
@@ -19,9 +28,3 @@ bool Player::canCollide() {
 bool Player::isLocked() {
     return is_locked;
 }
-
-/*
-bool Player::onCollisionWith(Entity* other, void (*callback)(Entity* other)) {
-    return false;
-}
-*/

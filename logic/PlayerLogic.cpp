@@ -21,8 +21,10 @@ void PlayerLogic::update(float elapsed) {
     player->doCoordUpdates(elapsed);
     player->coords.x = std::clamp(player->coords.x, PLAYER_X_BORDER_MARGIN, WIDTH - PLAYER_X_BORDER_MARGIN);
     player->move_z_cooldown = std::max(player->move_z_cooldown - elapsed, 0.f);
-    player->attack_state.coolDown(elapsed);
-    if (player->state == PlayerState::Attacking && player->attack_state.cooldown == 0) {
+    player->attackCooldown.coolDownBy(elapsed);
+    player->attackDuration.coolDownBy(elapsed);
+
+    if (player->state == PlayerState::Attacking && player->attackDuration.cooledDown()) {
         player->state = PlayerState::Standing;
     }
 
@@ -80,18 +82,6 @@ void PlayerLogic::move_z(int sign) {
     }
 }
 
-void PlayerLogic::attack() {
-    bool canAttack = player->attack_state.cooldown <= 0
-        && player->attack_state.mustardedness <= PLAYER_MAX_ACCEPTABLE_MUSTARDNESS
-        && player->power >= PLAYER_MIN_REQUIRED_POWER;
-
-    if (canAttack) {
-        player->state = PlayerState::Attacking;
-        player->attack_state.setCoolDown(ATTACK_COOLDOWN.at(player->attack_state.weapon));
-        player->power *= PLAYER_ATTACK_POWER_REDUCTION_FACTOR;
-    }
-}
-
 void PlayerLogic::healUp(float healthPoints) {
     player->health = std::min(player->health + healthPoints, PLAYER_MAX_HEALTH);
 }
@@ -118,6 +108,12 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
             healUp(MEDIKIT_HP);
             medikit->wasUsed = true;
         }
+    } else if(Weapon *weapon = dynamic_cast<Weapon*>(entity)) {
+        if(fabs(player->coords.x - weapon->coords.x) <= weapon->width()*0.5f && player->weapon->type == WeaponType::Hand) {
+            delete player->weapon;
+            player->weapon = weapon;
+            weapon->pickedUp = true;
+        }
     } else {
         bool playerCollidesFromLeft = playerL < entityL && playerR >= entityL;
         bool playerCollidesFromRight = playerR > entityR && playerL <= entityR;
@@ -125,12 +121,12 @@ void PlayerLogic::handleCollisions(Entity *entity, float elapsedTime) {
         if (playerCollidesFromLeft) {
             player->coords.x += entityL - playerR - 1;
             // TODO: QM: what to do with mass? they should obviously have one.
-            player->coords.applyAcceleration(-2000, 2000, true);
-            entity->coords.applyAcceleration(500, 500, true);
+            player->coords.applyAcceleration(0, 0, true);
+            entity->coords.applyAcceleration(0, 0, true);
         } else if (playerCollidesFromRight) {
             player->coords.x += entityR - playerL + 1;
-            player->coords.applyAcceleration(200, 200, true);
-            entity->coords.applyAcceleration(-50, 50, true);
+            player->coords.applyAcceleration(0, 0, true);
+            entity->coords.applyAcceleration(0, 0, true);
         }
     }
 }
