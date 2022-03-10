@@ -6,5 +6,5 @@
 
 class FloorThing : public Entity {
     public:
-    FloorThing(WorldCoordinates coords) : Entity(EntityType::Portal, coords) {};
+    FloorThing(EntityType type, WorldCoordinates coords) : Entity(type, coords) {};
 };

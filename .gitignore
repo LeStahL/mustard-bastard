@@ -37,3 +37,4 @@ build
 # VS-code
 .vscode
 .cache
+CMakeLists.txt.user

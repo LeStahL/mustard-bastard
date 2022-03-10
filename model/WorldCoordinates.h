@@ -15,6 +15,7 @@ class WorldCoordinates {
         float x_acc = 0;
         float y_speed = 0;
         float y_acc = 0;
+        float gravity = -9.81f;
         float collision_width = 0;
 
         WorldCoordinates(float x, int z, bool upWorld);
@@ -22,6 +23,7 @@ class WorldCoordinates {
         bool collides_with(WorldCoordinates other);
 
         void doPhysicalUpdates(float deltaT);
+        void applyAcceleration(float x_acc, float y_acc, bool stop_first);
 
         static WorldCoordinates RandomPositionOutside(float distance);
 

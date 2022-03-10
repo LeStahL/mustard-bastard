@@ -6,13 +6,13 @@ class Animation
 {
     std::vector<sf::IntRect> _frameRectangles;
     double _delay;
-    double _initialTimeOffset;
     sf::Sprite *_sprite;
 
     public:
-    Animation(sf::Sprite *sprite, double delay, double initialTimeOffset);
+    Animation(sf::Sprite *sprite, double delay);
     void addFrame(int left, int top, int width, int height);
     void update(double elapsedTime);
+    void update(double elapsedTime, double phase);
     void setFrameDelay(double delay);
 
     sf::Sprite *sprite();

@@ -5,7 +5,10 @@ project(mustard-bastard)
 add_subdirectory(thirdparty/SFML)
 set(SFML_BUILD_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/SFML/lib/Release")
 
-add_executable(mustard-bastard Main.cpp
+add_executable(mustard-bastard
+    Main.cpp
+    Application.cpp
+
     model/Model.cpp
     model/Entity.cpp
     model/WorldCoordinates.cpp
@@ -14,23 +17,34 @@ add_executable(mustard-bastard Main.cpp
     model/MainMenuState.cpp
     model/MenuState.cpp
     model/HighscoreList.cpp
+    model/Medikit.cpp
+    model/PauseMenuState.cpp
+    model/Weapon.cpp
+    model/Portal.cpp
+    #model/Mustard.cpp
 
     view/FloorView.cpp
     view/GameView.cpp
     view/MainMenuView.cpp
     view/HighscoreMenuView.cpp
     view/HeadsUpDisplayView.cpp
+    view/PauseMenuView.cpp
 
     logic/GameLogic.cpp
     logic/PlayerLogic.cpp
+    logic/AttackLogic.cpp
 
     utility/Animation.cpp
     utility/MusicPlayer.cpp
 
-    controller/MainMenuInputController.cpp
-    controller/GameInputController.cpp
     controller/MenuController.cpp
-    controller/HighscoreMenuInputController.cpp
+    controller/GameController.cpp
+
+    inputrouter/InputRouter.cpp
+    inputrouter/MainMenuInputRouter.cpp
+    inputrouter/GameInputRouter.cpp
+    inputrouter/HighscoreMenuInputRouter.cpp
+    inputrouter/PauseMenuInputRouter.cpp
 )
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
@@ -40,6 +54,7 @@ target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/controller/"
     "${PROJECT_SOURCE_DIR}/utility/"
     "${PROJECT_SOURCE_DIR}/logic/"
+    "${PROJECT_SOURCE_DIR}/inputrouter/"
 )
 target_link_directories(mustard-bastard PUBLIC ${SFML_BUILD_DIRECTORY})
 set(SFML_LIBRARIES

@@ -2,6 +2,9 @@
 #include "Entity.h"
 #include "FloorThing.hpp"
 #include <GameLogic.h>
+#include <Portal.hpp>
+#include <Medikit.hpp>
+#include <Weapon.hpp>
 
 #include <random>
 #include <iostream>
@@ -11,20 +14,38 @@
 
 static const EntityType AllEnemyTypes[] = {EntityType::ZombieAndCat, EntityType::IcebergAndFairy};
 
-GameLogic::GameLogic(Model* model) :
-        model(model) {
+GameLogic::GameLogic(Model* model, NeedsEnemyNotifications* needsEnemyNotifications) :
+        model(model),
+        needsEnemyNotifications(needsEnemyNotifications) {
     srand(time(NULL));
-
-    for (int p = 0; p < model->getNumberOfPlayers(); p++) {
-        playerLogic.push_back(new PlayerLogic(model->getPlayer(p)));
-    }
 
     for (auto enemyType : AllEnemyTypes) {
         enemySpawnCooldown[enemyType] = INIT_COOLDOWN.at(enemyType).getUniformRandom();
     }
 }
 
+void GameLogic::init()
+{
+    for(PlayerLogic *playerLogic : playerLogic) {
+        delete playerLogic;
+    }
+    playerLogic.clear();
+
+    for(AttackLogic *attackLogic : attackLogic) {
+        delete attackLogic;
+    }
+    attackLogic.clear();
+
+    for (int p = 0; p < model->getNumberOfPlayers(); p++) {
+        playerLogic.push_back(new PlayerLogic(model->getPlayer(p)));
+        attackLogic.push_back(new AttackLogic(model->getPlayer(p), model->getEnemies()));
+    }
+}
+
 void GameLogic::update(float timeElapsed) {
+    if(model->getGameState() == Model::GameState::Paused)
+        return;
+
     updateEnemies(timeElapsed);
     updateFloorThings(timeElapsed);
 
@@ -37,13 +58,14 @@ void GameLogic::update(float timeElapsed) {
 
 void GameLogic::move_player(int player_number, int x_sign, bool retreat, int z_sign, bool attack) {
     auto pl = playerLogic[player_number];
+    auto al = attackLogic[player_number];
     if (pl->isLocked()) {
         return;
     }
     pl->move_x(x_sign, retreat);
     pl->move_z(z_sign);
     if (attack) {
-        pl->attack();
+        al->attack();
     }
 }
 
@@ -58,20 +80,21 @@ void GameLogic::updateEnemies(float timeElapsed) {
         }
     }
 
-    for (auto enemy : model->getEnemies()) {
+    for (Enemy *enemy : model->getEnemies()) {
         enemy->doTargetUpdates(model, timeElapsed);
         enemy->doCoordUpdates(timeElapsed);
 
-        if (isEnemyTooFarAway(enemy))
-        {
+        if (isEnemyTooFarAway(enemy) || enemy->getHealth() < 1e-3f)
             killEnemy(enemy);
-        }
     }
 }
 
 void GameLogic::spawnEnemy(EntityType type, float elapsed) {
     float spawn_distance = 100;
     auto position = WorldCoordinates::RandomPositionOutside(spawn_distance);
+
+    // position = WorldCoordinates(model->getEnemies().size() * 200.0f, 0, true); // debug
+
     Enemy* enemy;
     switch (type) {
         case EntityType::ZombieAndCat:
@@ -86,6 +109,8 @@ void GameLogic::spawnEnemy(EntityType type, float elapsed) {
     float far_other_side = position.x < 0 ? 2 * WIDTH : -WIDTH;
     enemy->targetFixedX(far_other_side);
     model->getEnemies().push_back(enemy);
+
+    needsEnemyNotifications->enemyAdded();
 }
 
 bool GameLogic::isEnemyTooFarAway(Enemy* enemy) {
@@ -95,7 +120,8 @@ bool GameLogic::isEnemyTooFarAway(Enemy* enemy) {
 void GameLogic::killEnemy(Enemy* enemy) {
     for(auto it = model->getEnemies().begin(); it != model->getEnemies().end(); it++) {
         if((*it)->id == enemy->id) {
-            model->getEnemies().erase(it);
+            needsEnemyNotifications->enemyRemoved(it - model->getEnemies().begin());
+            model->getEnemies().erase(it);          
             break;
         }
     }
@@ -105,18 +131,12 @@ int GameLogic::nPlayers() {
     return model->getNumberOfPlayers();
 }
 
-void GameLogic::maybeSpawnPortal()
-{
-    bool doSpawn = rand() % PORTAL_SPAWN_MODULO < 1;
-    if (!doSpawn)
-        return;
+void GameLogic::pauseGame() {
+    model->setGameState(Model::GameState::Paused);
+}
 
-    float random_x = PLAYER_X_BORDER_MARGIN
-        + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
-    int random_z = rand() % Z_PLANES;
-
-    Portal* portal = new Portal(WorldCoordinates(random_x, random_z, true));
-    model->getFloorThings().push_back(portal);
+void GameLogic::resumeGame() {
+    model->setGameState(Model::GameState::Running);
 }
 
 auto updatePortal = [](Portal* portal, float elapsedTime) {
@@ -143,40 +163,93 @@ auto updatePortal = [](Portal* portal, float elapsedTime) {
 
 void GameLogic::updateFloorThings(float elapsedTime)
 {
-    maybeSpawnPortal();
+    maybeSpawnFloorThing(EntityType::Portal);
+    maybeSpawnFloorThing(EntityType::Medikit);
+    maybeSpawnFloorThing(EntityType::Weapon);
 
-    for (FloorThing* floory : model->getFloorThings()) {
-        auto portal = dynamic_cast<Portal*>(floory);
-        if (portal != nullptr) {
+    std::vector<FloorThing*> &modelList = model->getFloorThings();
+    for (auto it = modelList.begin(); it != modelList.end();) {
+        FloorThing *floory = *it;
+
+        if (Portal *portal = dynamic_cast<Portal*>(floory)) {
             if (!updatePortal(portal, elapsedTime)) {
-                killPortal(floory);
-            };
+                it = modelList.erase(it);
+                continue;
+            }
+        } else if (Medikit *medikit = dynamic_cast<Medikit*>(floory)) {
+            if (medikit->wasUsed) {
+                it = modelList.erase(it);
+                continue;
+            } else {
+                updateMedikit(medikit, elapsedTime);
+            }
+        } else if(Weapon *weapon = dynamic_cast<Weapon*>(floory)) {
+            if(weapon->pickedUp) {
+                it = modelList.erase(it);
+                continue;
+            }
         }
+
+        it++;
     }
 }
 
-void GameLogic::killPortal(FloorThing* floorThing)
-{
-    int id = floorThing->id;
+void GameLogic::maybeSpawnFloorThing(EntityType type) {
+    bool doSpawn = rand() % FLOOR_THING_SPAWN_MODULO.at(type) < 1;
+    if (!doSpawn)
+        return;
 
-    auto modelList = model->getFloorThings();
-    for(auto it = modelList.begin(); it != modelList.end(); it++) {
-        if((*it)->id == id) {
-            modelList.erase(it);
-            break;
-        }
+    float random_x = PLAYER_X_BORDER_MARGIN
+        + (float)(rand() % 1000) * 0.001 * (WIDTH - 2 * PLAYER_X_BORDER_MARGIN);
+    int random_z = rand() % Z_PLANES;
+
+    WorldCoordinates coords(random_x, random_z, true);
+
+    switch(type) {
+    case EntityType::Portal:
+        model->getFloorThings().push_back(new Portal(coords));
+        break;
+    case EntityType::Medikit:
+        coords.x_speed = MEDIKIT_INITIAL_X_SPEED_PX_PER_S;
+        coords.y = HEIGHT*0.5 + MEDIKIT_SPAWN_HEIGHT_OFFSET;
+        coords.y_speed = MEDIKIT_FALL_SPEED_PX_PER_S;
+        model->getFloorThings().push_back(new Medikit(coords));
+        break;
+    case EntityType::Weapon:
+        model->getFloorThings().push_back(Weapon::getAxe(coords));
+        break;
+    default:
+        break;
     }
+}
+
+void GameLogic::updateMedikit(Medikit *medikit, float elapsedTime) {
+    if(!medikit->spawning)
+        return;
+
+    medikit->coords.x_acc = -MEDIKIT_X_FREQUENCY_PER_S*(medikit->coords.x-medikit->x0);
+    medikit->doCoordUpdates(elapsedTime);
+    medikit->spawning = medikit->coords.y > 1e-3f;
 }
 
 void GameLogic::handlePlayerCollisions(PlayerLogic *playerLogic, float elapsed)
 {
-    for (Entity* entity : model->getFloorThings()) {
-        if (!playerLogic->canCollide()) {
+    if (!playerLogic->canCollide()) {
+        return;
+    }
+
+    auto handleCollision = [=](Entity* entity) {
+        if (!entity->canCollide()) {
             return;
         }
-        if (!entity->canCollide()) {
-            continue;
-        }
         playerLogic->handleCollisions(entity, elapsed);
+    };
+
+    for (Entity* entity : model->getFloorThings()) {
+        handleCollision(entity);
+    }
+
+    for (Entity* entity : model->getEnemies()) {
+        handleCollision(entity);
     }
 }

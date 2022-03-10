@@ -1,9 +1,8 @@
 #include "Animation.hpp"
 
-Animation::Animation(sf::Sprite *sprite, double delay, double initialTimeOffset)
+Animation::Animation(sf::Sprite *sprite, double delay)
     : _sprite(sprite)
     , _delay(delay)
-    , _initialTimeOffset(initialTimeOffset)
 {
 }
 
@@ -19,7 +18,12 @@ void Animation::addFrame(int left, int top, int width, int height)
 
 void Animation::update(double elapsedTime)
 {
-    _sprite->setTextureRect(_frameRectangles.at(int((_initialTimeOffset + elapsedTime)/_delay) % _frameRectangles.size()));
+    update(elapsedTime, 0.0);
+}
+
+void Animation::update(double elapsedTime, double phase)
+{
+    _sprite->setTextureRect(_frameRectangles.at(int(elapsedTime/_delay + phase) % _frameRectangles.size()));
 }
 
 void Animation::setFrameDelay(double delay)
