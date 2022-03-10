@@ -1,9 +1,10 @@
 #pragma once
 
 #include <map>
-#include "WorldCoordinates.h"
-#include <Entity.h>
-#include <GameLogicConst.h>
+
+#include <WorldCoordinates.hpp>
+#include <Entity.hpp>
+#include <GameLogicConst.hpp>
 
 class Model;
 

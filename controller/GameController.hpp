@@ -7,11 +7,11 @@
 #include <View.hpp>
 #include <InputRouter.hpp>
 
-#include <Model.h>
+#include <Model.hpp>
 #include <GameView.hpp>
 #include <HeadsUpDisplayView.hpp>
 #include <GameInputRouter.hpp>
-#include <GameLogic.h>
+#include <GameLogic.hpp>
 
 #include <PauseMenuState.hpp>
 #include <PauseMenuView.hpp>

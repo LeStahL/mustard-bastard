@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "View.hpp"
-#include "Player.h"
+#include <View.hpp>
+#include <Player.hpp>
 
 class HeadsUpDisplayView : public View
 {

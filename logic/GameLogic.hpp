@@ -1,13 +1,13 @@
-#ifndef GAMELOGIC_H
-#define GAMELOGIC_H
+#pragma once
 
-#include "Entity.h"
 #include <map>
-#include <Model.h>
-#include <PlayerLogic.h>
+
+#include <Entity.hpp>
+#include <Model.hpp>
+#include <PlayerLogic.hpp>
 #include <AttackLogic.hpp>
 #include <FloorThing.hpp>
-#include <GameLogicConst.h>
+#include <GameLogicConst.hpp>
 #include <Medikit.hpp>
 #include <NeedsEnemyNotifications.hpp>
 
@@ -43,5 +43,3 @@ class GameLogic {
     void handlePlayerCollisions(PlayerLogic* playerLogic, float elapsedTime);
 
 };
-
-#endif /* GAMELOGIC_H */

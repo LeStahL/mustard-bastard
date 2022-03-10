@@ -1,16 +1,17 @@
-#include "Enemy.hpp"
-#include "Entity.h"
-#include "FloorThing.hpp"
-#include <GameLogic.h>
+#include <GameLogic.hpp>
+
+#include <iostream>
+#include <algorithm>
+#include <random>
+#include <time.h>
+
+#include <Enemy.hpp>
+#include <Entity.hpp>
+#include <FloorThing.hpp>
 #include <Portal.hpp>
 #include <Medikit.hpp>
 #include <Weapon.hpp>
-
-#include <random>
-#include <iostream>
-#include <algorithm>
-#include <const.h>
-#include <time.h>
+#include <const.hpp>
 
 static const EntityType AllEnemyTypes[] = {EntityType::ZombieAndCat, EntityType::IcebergAndFairy};
 

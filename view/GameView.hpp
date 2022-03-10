@@ -9,9 +9,9 @@
 #include <View.hpp>
 #include <NeedsEnemyNotifications.hpp>
 
-#include <Model.h>
+#include <Model.hpp>
 #include <Animation.hpp>
-#include <FloorView.h>
+#include <FloorView.hpp>
 #include <Portal.hpp>
 #include <Medikit.hpp>
 

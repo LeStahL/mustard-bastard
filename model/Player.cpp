@@ -1,6 +1,6 @@
-#include <Player.h>
-#include <WorldCoordinates.h>
-#include "Weapon.hpp"
+#include <Player.hpp>
+#include <WorldCoordinates.hpp>
+#include <Weapon.hpp>
 
 Player::Player(std::string name, WorldCoordinates coords) :
     Entity(EntityType::Player, coords),

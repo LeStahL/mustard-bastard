@@ -9,24 +9,23 @@ add_executable(mustard-bastard
     Main.cpp
     Application.cpp
 
-    model/Model.cpp
-    model/Entity.cpp
-    model/WorldCoordinates.cpp
-    model/Player.cpp
-    model/Enemy.cpp
-    model/MainMenuState.cpp
     model/MenuState.cpp
+    model/MainMenuState.cpp
     model/HighscoreList.cpp
+    model/Model.cpp
+    model/WorldCoordinates.cpp
+    model/Entity.cpp
+    model/Player.cpp
+    model/Weapon.cpp
+    model/Enemy.cpp
+    model/Portal.cpp
     model/Medikit.cpp
     model/PauseMenuState.cpp
-    model/Weapon.cpp
-    model/Portal.cpp
-    #model/Mustard.cpp
 
-    view/FloorView.cpp
-    view/GameView.cpp
     view/MainMenuView.cpp
     view/HighscoreMenuView.cpp
+    view/GameView.cpp
+    view/FloorView.cpp
     view/HeadsUpDisplayView.cpp
     view/PauseMenuView.cpp
 
@@ -42,10 +41,11 @@ add_executable(mustard-bastard
 
     inputrouter/InputRouter.cpp
     inputrouter/MainMenuInputRouter.cpp
-    inputrouter/GameInputRouter.cpp
     inputrouter/HighscoreMenuInputRouter.cpp
+    inputrouter/GameInputRouter.cpp
     inputrouter/PauseMenuInputRouter.cpp
 )
+
 target_include_directories(mustard-bastard PUBLIC
     "${PROJECT_SOURCE_DIR}/thirdparty/SFML/include/"
     "${PROJECT_SOURCE_DIR}/."

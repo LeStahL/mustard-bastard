@@ -2,14 +2,14 @@
 
 #include <string>
 
-#include <Entity.h>
+#include <Entity.hpp>
+#include <WorldCoordinates.hpp>
 #include <Weapon.hpp>
-#include <GameLogicConst.h>
-#include <AttackState.hpp>
+#include <GameLogicConst.hpp>
 #include <Cooldown.hpp>
-#include <ViewConst.h>
+#include <ViewConst.hpp>
 
-enum PlayerState {
+enum class PlayerState {
     Standing,
     Walking,
     Attacking,

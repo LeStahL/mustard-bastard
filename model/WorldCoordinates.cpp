@@ -1,6 +1,7 @@
 #include <cstdlib>
-#include "WorldCoordinates.h"
-#include <helpers.h>
+
+#include <WorldCoordinates.hpp>
+#include <helpers.hpp>
 
 WorldCoordinates::WorldCoordinates(float x, int z, bool upWorld) :
     x(x),

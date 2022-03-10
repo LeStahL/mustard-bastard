@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utility>
-#include <WorldCoordinates.h>
+#include <WorldCoordinates.hpp>
 
 enum class EntityType {
     Player,

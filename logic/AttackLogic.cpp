@@ -1,5 +1,6 @@
 #include <AttackLogic.hpp>
-#include <GameLogicConst.h>
+
+#include <GameLogicConst.hpp>
 
 AttackLogic::AttackLogic(Player *player, std::vector<Enemy *> &enemies) :
     player(player),

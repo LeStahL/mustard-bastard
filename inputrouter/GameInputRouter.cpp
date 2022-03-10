@@ -1,7 +1,10 @@
-#include <map>
 #include <GameInputRouter.hpp>
+
+#include <map>
+
 #include <SFML/Window.hpp>
-#include <const.h>
+
+#include <const.hpp>
 #include <GameController.hpp>
 
 GameInputRouter::GameInputRouter(GameLogic& gameLogic, GameController *gameController) :
@@ -9,7 +12,7 @@ GameInputRouter::GameInputRouter(GameLogic& gameLogic, GameController *gameContr
         gameController(gameController) {
 }
 
-enum Key
+enum class Key
 {
     Up,
     Left,

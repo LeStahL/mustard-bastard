@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FloorThing.hpp>
-#include <GameLogicConst.h>
+#include <GameLogicConst.hpp>
 
 class Portal : public FloorThing {
     // hack: just make everything public so we can pfriemel around in it

@@ -1,8 +1,8 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #include <vector>
-#include <Player.h>
+
+#include <Player.hpp>
 #include <Enemy.hpp>
 #include <FloorThing.hpp>
 
@@ -45,5 +45,3 @@ class Model {
     std::vector<Enemy*>& getEnemies();
     std::vector<FloorThing*>& getFloorThings();
 };
-
-#endif /* MODEL_H */

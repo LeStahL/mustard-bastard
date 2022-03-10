@@ -1,12 +1,14 @@
-#include <PlayerLogic.h>
-#include <Player.h>
-#include <GameLogicConst.h>
-#include <Portal.hpp>
-#include <Medikit.hpp>
-#include <const.h>
+#include <PlayerLogic.hpp>
+
 #include <algorithm>
 #include <stdexcept>
 #include <cmath>
+
+#include <Player.hpp>
+#include <GameLogicConst.hpp>
+#include <Portal.hpp>
+#include <Medikit.hpp>
+#include <const.hpp>
 
 void PlayerLogic::beginWarp() {
     player->state = PlayerState::Warping;

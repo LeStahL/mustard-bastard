@@ -1,5 +1,6 @@
-#include "FloorView.h"
-#include <const.h>
+#include <FloorView.hpp>
+
+#include <const.hpp>
 #include <utility>
 
 FloorView::FloorView(sf::RenderWindow *window) :

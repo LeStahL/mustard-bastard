@@ -1,8 +1,9 @@
-#include "Entity.h"
 #include <Enemy.hpp>
-#include <helpers.h>
-#include <Model.h>
-#include <ViewConst.h>
+
+#include <Entity.hpp>
+#include <helpers.hpp>
+#include <Model.hpp>
+#include <ViewConst.hpp>
 
 Enemy::Enemy(EntityType type, WorldCoordinates coords) :
     Entity(type, coords),

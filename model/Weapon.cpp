@@ -1,5 +1,5 @@
 #include <Weapon.hpp>
-#include <ViewConst.h>
+#include <ViewConst.hpp>
 
 Weapon::Weapon(
         WeaponType type,

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <Player.h>
+#include <Player.hpp>
 #include <Enemy.hpp>
 
 class AttackLogic {

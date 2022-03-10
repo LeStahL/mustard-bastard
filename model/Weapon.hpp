@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FloorThing.hpp>
-#include <WorldCoordinates.h>
+#include <WorldCoordinates.hpp>
 
 constexpr float WEAPON_HAND_DAMAGE = 5.0f;
 constexpr float WEAPON_HAND_ATTACKRANGE = 30.0f;

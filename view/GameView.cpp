@@ -5,12 +5,12 @@
 #include <random>
 #include <algorithm>
 
-#include <ViewConst.h>
-#include <GameLogic.h>
-#include <GameLogicConst.h>
-#include <Entity.h>
+#include <ViewConst.hpp>
+#include <GameLogic.hpp>
+#include <GameLogicConst.hpp>
+#include <Entity.hpp>
 #include <Portal.hpp>
-#include <const.h>
+#include <const.hpp>
 
 std::map<PlayerState, Model::GraphicsId> playerStateToSprite = {
     { PlayerState::Standing, Model::GraphicsId::player_standing },
@@ -246,8 +246,10 @@ void GameView::enemyRemoved(int index)
 bool GameView::loadAnimationData(AnimationType type, AnimationAssetInformation information) {
     AnimationData data;
 
+    bool result = true;
+
     data.texture = new sf::Texture();
-    data.texture->loadFromFile(information.assetPath);
+    result &= data.texture->loadFromFile(information.assetPath);
     data.sprite = new sf::Sprite(*data.texture);
     data.sprite->setOrigin(sf::Vector2f(.5*information.width, information.height));
 
@@ -258,5 +260,5 @@ bool GameView::loadAnimationData(AnimationType type, AnimationAssetInformation i
         animation.addFrame(assetInformations.at(type).width*i, 0, assetInformations.at(type).width, assetInformations.at(type).height);
     _animations.push_back(animation);
 
-    return true;
+    return result;
 }

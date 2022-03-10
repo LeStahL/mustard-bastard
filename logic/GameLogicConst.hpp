@@ -1,9 +1,10 @@
 #pragma once
 
 #include <map>
+
 #include <Interval.hpp>
-#include <Entity.h>
-#include <SimpleEnumsAndStructs.h>
+#include <Entity.hpp>
+#include <SimpleEnumsAndStructs.hpp>
 #include <Weapon.hpp>
 
 constexpr float PLAYER_MOVE_X_SPEED = 160.0;

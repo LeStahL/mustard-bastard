@@ -1,8 +1,9 @@
 #pragma once
 
-#include "WorldCoordinates.h"
 #include <map>
-#include <Entity.h>
+
+#include <WorldCoordinates.hpp>
+#include <Entity.hpp>
 
 class FloorThing : public Entity {
     public:

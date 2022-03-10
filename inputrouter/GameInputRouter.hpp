@@ -1,7 +1,8 @@
 #pragma once
 
-#include <GameLogic.h>
-#include "InputRouter.hpp"
+#include <GameLogic.hpp>
+#include <InputRouter.hpp>
+
 class GameController;
 
 class GameInputRouter : public InputRouter {

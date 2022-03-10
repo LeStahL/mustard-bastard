@@ -1,8 +1,9 @@
-#include "Enemy.hpp"
-#include <Model.h>
+#include <Model.hpp>
 
-#include <WorldCoordinates.h>
 #include <iostream>
+
+#include <Enemy.hpp>
+#include <WorldCoordinates.hpp>
 
 const WorldCoordinates START_PLAYER1 = WorldCoordinates(40., 1, true);
 const WorldCoordinates START_PLAYER2 = WorldCoordinates(440., 410, true);

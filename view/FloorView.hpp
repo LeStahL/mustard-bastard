@@ -1,9 +1,8 @@
-#ifndef VIEW_STUFF_H
-#define VIEW_STUFF_H
+#pragma once
 
 #include <utility>
 #include <SFML/Graphics.hpp>
-#include <WorldCoordinates.h>
+#include <WorldCoordinates.hpp>
 
 class FloorView
 {
@@ -17,5 +16,3 @@ class FloorView
         int getBackgroundBaseLine(WorldCoordinates coords);
         std::pair<int, int> getBothBaseLines(WorldCoordinates coords);
 };
-
-#endif

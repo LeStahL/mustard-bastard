@@ -1,15 +1,16 @@
-#include "HeadsUpDisplayView.hpp"
-
-#include "const.h"
+#include <HeadsUpDisplayView.hpp>
 
 #include <iostream>
+
+#include <const.hpp>
 
 HeadsUpDisplayView::HeadsUpDisplayView(sf::RenderWindow *renderWindow)
     : _renderWindow(renderWindow)
     , _player1(nullptr)
     , _player2(nullptr)
 {
-    auto _ = _font.loadFromFile("assets/FiraCode-Regular.ttf");
+    if(!_font.loadFromFile("assets/FiraCode-Regular.ttf"))
+        std::cout << "Failed to read font!" << std::endl;
 }
 
 void HeadsUpDisplayView::setPlayer1(Player *player) {
