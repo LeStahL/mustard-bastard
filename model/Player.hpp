@@ -31,6 +31,7 @@ public:
     float health = .5f;
     long points = 0;
     float mustardness = 0.;
+    float attackTime = 0.0f;
 
     const float HALFWIDTH = BASTARD_STANDING_PIXEL_WIDTH*0.5f; // <-- put that... elsewhere? it's a bit arbitrary yet.
 
